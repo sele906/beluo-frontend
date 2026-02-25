@@ -1,0 +1,45 @@
+
+.wrapper {
+    height: 100vh;
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 60px 1fr;
+    grid-template-areas: 
+        "header header"
+        "sidebar main"
+    ;
+}
+
+.header {
+    grid-area: header;
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    border: 1px solid black;
+}
+
+.main {
+    grid-area: main;
+    border: 1px solid black;
+}
+
+/* 모바일 */
+
+@media (max-width: 600px) {
+
+    .wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: 60px 1fr 50px;
+        grid-template-areas: 
+            "header"
+            "main"
+            "sidebar"
+        ;
+    }
+    
+}

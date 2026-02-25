@@ -1,0 +1,25 @@
+.sidebarWeb {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebarMobile {
+    display: none;
+}
+
+/* 모바일 */
+
+@media (max-width: 600px) {
+
+    .sidebarMobile {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .sidebarWeb {
+        display: none;
+    }
+    
+}

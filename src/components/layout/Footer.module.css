@@ -1,0 +1,12 @@
+.footer {
+    grid-area: footer;
+    border: 1px solid black;
+}
+
+/* 모바일 */
+
+@media (max-width: 600px) {
+    .footer {
+        display: none;
+    }
+}
