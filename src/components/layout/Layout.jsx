@@ -1,11 +1,13 @@
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
+import { getConversationList } from "../../api/chatApi";
+
 
 import classes from "./Layout.module.css";
 
 const Layout = () => {
+
     return (
         <div className={classes.wrapper}>
             <div className={classes.header}>
@@ -15,6 +17,7 @@ const Layout = () => {
             <div className={classes.sidebar}>
                 <Sidebar />
             </div>
+
             <div className={classes.main}>
                 <Outlet />
             </div>
@@ -23,3 +26,7 @@ const Layout = () => {
 }
 
 export default Layout;
+
+export async function loader() {
+  return await getConversationList();
+}

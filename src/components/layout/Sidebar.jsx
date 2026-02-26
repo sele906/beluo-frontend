@@ -1,13 +1,25 @@
 import { Link } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 
 import classes from "./Sidebar.module.css";
 
 function Sidebar() {
+    const recentConversations = useLoaderData();
+
     return (
         <>
             <div className={classes.sidebarWeb}>
-                <p><Link to="/create">Create</Link></p>
-                <p><Link to="/chatlist">Chatlist</Link></p>
+                <div><Link to="/create">Create</Link></div>
+                <div>
+                    <Link to="/chatlist">Chatlist</Link>
+                    <div className={classes.recentConversations}>
+                        {recentConversations.map((r) => 
+                            <p key={r.sessionId}>
+                                <Link to={`/chat?sessionId=${r.sessionId}&chatName=${r.conversationName}`} title={r.characterName}>{r.conversationName}</Link>
+                            </p>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <div className={classes.sidebarMobile}>
@@ -21,3 +33,4 @@ function Sidebar() {
 }
 
 export default Sidebar;
+

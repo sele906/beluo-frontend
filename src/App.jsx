@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { chatApi } from "./api/chatApi";
 import Router from "./routes/Router";
 import { RouterProvider } from "react-router-dom";
 import "./styles/reset.css";
