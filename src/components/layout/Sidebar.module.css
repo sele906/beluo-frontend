@@ -1,25 +1,202 @@
+/* 웹 사이드바 */
+
 .sidebarWeb {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    background: var(--surface);
+    padding: 16px 12px;
+    gap: 8px;
+    overflow-y: auto;
+}
+
+/* 추가하기 */
+.createSection {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.createBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--accent);
+    border-radius: 10px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 12px var(--accent-glow-sm);
+}
+
+.createBtn:hover {
+    opacity: 0.88;
+    box-shadow: 0 4px 20px var(--accent-glow-lg);
+}
+
+.createIcon {
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+/* 채팅목록 */
+.chatSection {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-height: 0;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.sectionTitle:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.sectionTitle svg {
+    font-size: 15px;
+}
+
+/* 최근 대화 목록 */
+
+.recentConversations {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.chatItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 400;
+    transition: color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.chatItem:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.chatDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.chatItem:hover .chatDot {
+    background: var(--accent);
+}
+
+.chatName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.empty {
+    padding: 12px 10px;
+    color: var(--text-dim);
+    font-size: 12px;
 }
 
 .sidebarMobile {
     display: none;
 }
 
+
+
 /* 모바일 */
 
 @media (max-width: 600px) {
 
+    .sidebarWeb {
+        display: none;
+    }
+
+    /* 컨테이너 */
     .sidebarMobile {
         display: flex;
         flex-direction: row;
-        width: 100%;
+        align-items: center;
         justify-content: space-around;
+        width: 100%;
+        height: 100%;
+        padding: 0 8px;
+        background: rgba(22, 22, 22, 0.97);
+        border-top: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
     }
 
-    .sidebarWeb {
-        display: none;
+    /* 개별 탭 */
+    .navItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+        text-decoration: none;
+        color: var(--text-muted);
+        transition: color 0.2s ease;
+    }
+
+    /* 활성 탭 */
+    .navItemActive {
+        color: var(--accent);
+    }
+
+    /* 아이콘 배경 pill */
+    .navIconWrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 3px 16px;
+        border-radius: 14px;
+        transition: background 0.2s ease;
+        background: transparent;
+    }
+
+    .navItemActive .navIconWrap {
+        background: var(--accent-glow-sm);
+    }
+
+    /* 라벨 */
+    .navLabel {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.2px;
     }
     
 }

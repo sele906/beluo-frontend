@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 import { getConversationList } from "../../api/chatApi";
 
-
 import classes from "./Layout.module.css";
 
 const Layout = () => {

@@ -1,0 +1,199 @@
+
+/* ── 전체 컨테이너 ── */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 32px 28px;
+    gap: 20px;
+    color: var(--text);
+}
+
+/* ── 타이틀 행 ── */
+.titleRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--text);
+}
+
+/* ── 검색바 ── */
+.searchBar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.2s ease;
+}
+
+.searchBar:focus-within {
+    border-color: var(--accent);
+}
+
+.searchIcon {
+    font-size: 18px;
+    color: var(--text-subtle);
+    flex-shrink: 0;
+}
+
+.searchInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.searchInput::placeholder {
+    color: var(--text-dim);
+}
+
+.clearBtn {
+    background: transparent;
+    border: none;
+    color: var(--text-subtle);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: color 0.2s ease;
+    line-height: 1;
+}
+
+.clearBtn:hover {
+    color: var(--text);
+}
+
+/* ── 목록 ── */
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* ── 개별 아이템 ── */
+.item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    cursor: pointer;
+}
+
+.item:hover {
+    background: var(--surface-2);
+    border-color: var(--border);
+}
+
+.item:hover .arrow {
+    color: var(--accent);
+}
+
+/* ── 아바타 ── */
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--avatar-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    flex-shrink: 0;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* ── 텍스트 ── */
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 0;
+}
+
+.chatName {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.charName {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-subtle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── 화살표 ── */
+.arrow {
+    font-size: 22px;
+    color: var(--text-dim);
+    transition: color 0.15s ease;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+/* ── 빈 상태 ── */
+.empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex: 1;
+    padding: 60px 0;
+    color: var(--text-dim);
+}
+
+.emptyIcon {
+    font-size: 40px;
+    opacity: 0.5;
+}
+
+.empty p {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* ── 모바일 ── */
+@media (max-width: 600px) {
+    .container {
+        padding: 24px 16px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+}

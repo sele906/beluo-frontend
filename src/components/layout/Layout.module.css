@@ -1,31 +1,33 @@
 
 .wrapper {
     height: 100vh;
-    border: 1px solid black;
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 220px 1fr;
     grid-template-rows: 60px 1fr;
     grid-template-areas: 
         "header header"
         "sidebar main"
     ;
+    background: var(--bg);
 }
 
 .header {
     grid-area: header;
-    border: 1px solid black;
+    border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .sidebar {
     grid-area: sidebar;
-    border: 1px solid black;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
 }
 
 .main {
     grid-area: main;
-    border: 1px solid black;
+    overflow-y: auto;
 }
 
 /* 모바일 */

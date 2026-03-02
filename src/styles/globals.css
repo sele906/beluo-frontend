@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* ── 폰트 ── */
+    --font: 'Outfit', sans-serif;
+
+    /* ── 배경 ── */
+    --bg:        #0d0d0d;
+    --surface:   #111111;
+    --surface-2: #1a1a1a;
+    --surface-3: #1e1e1e;
+
+    /* ── 텍스트 ── */
+    --text:         #ffffff;
+    --text-muted:   #888888;
+    --text-subtle:  #555555;
+    --text-dim:     #444444;
+
+    /* ── 포인트 색 ── */
+    --accent:          #4B70D3;
+    --accent-glow-sm:  rgba(75, 112, 211, 0.15);
+    --accent-glow-md:  rgba(75, 112, 211, 0.30);
+    --accent-glow-lg:  rgba(75, 112, 211, 0.45);
+
+    /* ── 보더 ── */
+    --border:       rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.25);
+
+    /* ── 아바타 그라디언트 ── */
+    --avatar-gradient: linear-gradient(135deg, #2a3f8a, #4B70D3);
+
+    /* ── 보더 라디우스 ── */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 14px;
+}
+
+* {
+    font-family: var(--font);
+    box-sizing: border-box;
+}
