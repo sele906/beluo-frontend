@@ -75,6 +75,7 @@ function ChatRoom() {
   };
 
   return (
+    <div className={classes.chatRoomWrapper}>
     <div className={classes.container}>
 
       {/* ── 상단 타이틀 바 ── */}
@@ -143,6 +144,7 @@ function ChatRoom() {
         </button>
       </div>
 
+    </div>
     </div>
   );
 }

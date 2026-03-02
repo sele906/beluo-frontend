@@ -169,6 +169,7 @@
         text-decoration: none;
         color: var(--text-muted);
         transition: color 0.2s ease;
+        font-size: 20px;
     }
 
     /* 활성 탭 */
@@ -182,7 +183,7 @@
         flex-direction: column;
         align-items: center;
         gap: 3px;
-        padding: 3px 16px;
+        padding: 4px 16px;
         border-radius: 14px;
         transition: background 0.2s ease;
         background: transparent;

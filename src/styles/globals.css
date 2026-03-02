@@ -39,3 +39,16 @@
     font-family: var(--font);
     box-sizing: border-box;
 }
+
+@media (max-width: 600px) {
+    button, a {
+        -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+    }
+
+    button:active, a:active {
+        background-color: rgba(0,0,0,0.05);
+        transform: scale(0.97);
+        opacity: 0.9;
+    }
+}

@@ -1,5 +1,12 @@
 
 /* ── 전체 레이아웃 ── */
+
+.chatRoomWrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    height: 100%;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -78,9 +85,9 @@
 
 /* ── AI 아바타 ── */
 .aiAvatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     background: var(--avatar-gradient);
     display: flex;
     align-items: center;

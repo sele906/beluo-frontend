@@ -50,7 +50,7 @@
 
 /* ── 검색 인풋 ── */
 .searchInput {
-    width: 180px;
+    width: 240px;
     background: transparent;
     border: none;
     outline: none;
@@ -131,8 +131,12 @@
         padding: 0 16px;
     }
 
+    .logoImg {
+        height: 20px;
+    }
+
     .searchInput {
-        width: 130px;
+        width: 110px;
     }
 
     /* 로그인/로그아웃 텍스트 숨기고 아이콘만 */
