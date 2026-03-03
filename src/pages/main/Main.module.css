@@ -1,4 +1,162 @@
 .main {
     width: 100%;
     height: 100%;
+    padding: 28px 0 28px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.main::-webkit-scrollbar {
+    width: 4px;
+}
+
+.main::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.main::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 99px;
+}
+
+/* ── 섹션 ── */
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sectionTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.2px;
+}
+
+/* ── 카드 가로 슬라이드 ── */
+.cardGrid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.cardGrid::-webkit-scrollbar {
+    height: 4px;
+}
+
+.cardGrid::-webkit-scrollbar-track {
+    background: var(--surface);
+}
+
+.cardGrid::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 99px;
+}
+
+/* ── 카드 ── */
+.card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+    width: 250px;
+    scroll-snap-align: start;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.cardLink {
+    text-decoration: none;
+}
+
+.card:hover {
+    /* transform: translateY(-3px); */
+    background: var(--surface-3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border-color: var(--border-hover);
+}
+
+/* ── 카드 이미지 ── */
+.cardImageWrap {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    background: var(--surface-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cardImagePlaceholder {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--avatar-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* ── 카드 바디 ── */
+.cardBody {
+    padding: 12px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cardName {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cardPersonality {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── 태그 ── */
+.cardTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 2px;
+}
+
+.tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--accent-glow-sm);
+    color: var(--accent);
+    border: 1px solid rgba(75, 112, 211, 0.25);
+}
+
+/* ── 모바일 ── */
+@media (max-width: 600px) {
+    .main {
+        padding: 20px 0 20px 16px;
+        gap: 32px;
+    }
+
+    .card {
+        width: 150px;
+    }
 }

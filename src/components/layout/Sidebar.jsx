@@ -14,7 +14,7 @@ function Sidebar() {
                 <div className={classes.createSection}>
                     <Link to="/create" className={classes.createBtn}>
                         <BiPlusCircle className={classes.createIcon} />
-                        <span>새 채팅 시작하기</span>
+                        <span>새 캐릭터 만들기</span>
                     </Link>
                 </div>
 

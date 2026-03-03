@@ -5,15 +5,27 @@ import ChatList from "../pages/chat/ChatList";
 import Create from "../pages/create/Create";
 import MyPage from "../pages/mypage/MyPage";
 import ChatRoom from "../pages/chat/ChatRoom";
+import CharacterDetailModal, {loader as characterDetailLoader} from "../pages/character/CharacterDetailModal";
 
 const Router = createBrowserRouter([
     {path: '/', element: <Layout />, loader: getConversationList, children: [
-        {path: '/', element: <Main />},
-        {path: '/chatlist', element: <ChatList />},
-        {path: '/create', element: <Create />},
-        {path: '/mypage', element: <MyPage />},
+        
+        {path: '/', element: <Main />, children: [
+            {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+        ]},
 
-        {path: '/chat', element: <ChatRoom />}
+        // {path: '/search', element: <Search />, children: [
+        //     {path: 'character/:id', element: <CharacterDetailModal />}
+        // ]},
+
+        // {path: '/mypage', element: <MyPage />, children: [
+        //     {path: 'character/:id', element: <CharacterDetailModal />}
+        // ]},
+
+        {path: '/chatlist', element: <ChatList />}, 
+        {path: '/create', element: <Create />},
+        {path: '/chat', element: <ChatRoom />},
+
     ]}
 ]);
 

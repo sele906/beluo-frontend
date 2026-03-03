@@ -10,7 +10,6 @@ const isLoggedIn = true;
 function Header() {
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
-    const [userMenuOpen, setUserMenuOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleSearchSubmit = (e) => {
@@ -24,6 +23,14 @@ function Header() {
         setSearchOpen(false);
         setSearchValue("");
     };
+
+    const closeMenu = () => setUserMenuOpen(false);
+
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const menuItems = [
+        { to: "/mypage", icon: <BiUser />, label: "마이메뉴" },
+        { icon: <BiLogOut />, label: "로그아웃", onClick: closeMenu },
+    ];
 
     return (
         <header className={classes.header}>
@@ -58,43 +65,31 @@ function Header() {
                     </button>
                 </div>
 
-                {/* 로그인 / 로그아웃 */}
                 {isLoggedIn ? (
                     <div className={classes.userMenu}>
-                        <button
-                            className={classes.iconBtn}
-                            onClick={() => setUserMenuOpen(prev => !prev)}
-                        >
+                        <button className={classes.iconBtn} onClick={() => setUserMenuOpen(prev => !prev)}>
                             <BiSolidUser />
                         </button>
 
                         {userMenuOpen && (
                             <div className={classes.dropdown}>
-                                <Link
-                                    to="/mypage"
-                                    className={classes.dropdownItem}
-                                    onClick={() => setUserMenuOpen(false)}
-                                >
-                                    <BiUser  />
-                                    마이메뉴
-                                </Link>
-
-                                <button
-                                    className={classes.dropdownItem}
-                                    onClick={() => {
-                                        setUserMenuOpen(false);
-                                    }}
-                                >
-                                    <BiLogOut />
-                                    로그아웃
-                                </button>
+                                {menuItems.map(({ to, icon, label, onClick }) =>
+                                    to ? (
+                                        <Link key={label} to={to} className={classes.dropdownItem} onClick={closeMenu}>
+                                            {icon} {label}
+                                        </Link>
+                                    ) : (
+                                        <button key={label} className={classes.dropdownItem} onClick={onClick}>
+                                            {icon} {label}
+                                        </button>
+                                    )
+                                )}
                             </div>
                         )}
                     </div>
                 ) : (
                     <Link to="/login" className={`${classes.authBtn} ${classes.authBtnLogin}`}>
-                        <BiLogIn />
-                        <span>로그인</span>
+                        <BiLogIn /><span>로그인</span>
                     </Link>
                 )}
 
