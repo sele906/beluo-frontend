@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BiSearch, BiX, BiLogIn, BiLogOut } from "react-icons/bi";
+import { BiSearch, BiX, BiSolidUser, BiUser, BiLogIn, BiLogOut } from "react-icons/bi";
 import classes from "./Header.module.css";
 import logo from "../../assets/logo.svg";
 
 // 로그인 상태는 나중에 실제 auth 연결하면 교체
-const isLoggedIn = false;
+const isLoggedIn = true;
 
 function Header() {
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleSearchSubmit = (e) => {
@@ -59,10 +60,37 @@ function Header() {
 
                 {/* 로그인 / 로그아웃 */}
                 {isLoggedIn ? (
-                    <button className={classes.authBtn} onClick={() => {}}>
-                        <BiLogOut />
-                        <span>로그아웃</span>
-                    </button>
+                    <div className={classes.userMenu}>
+                        <button
+                            className={classes.iconBtn}
+                            onClick={() => setUserMenuOpen(prev => !prev)}
+                        >
+                            <BiSolidUser />
+                        </button>
+
+                        {userMenuOpen && (
+                            <div className={classes.dropdown}>
+                                <Link
+                                    to="/mypage"
+                                    className={classes.dropdownItem}
+                                    onClick={() => setUserMenuOpen(false)}
+                                >
+                                    <BiUser  />
+                                    마이메뉴
+                                </Link>
+
+                                <button
+                                    className={classes.dropdownItem}
+                                    onClick={() => {
+                                        setUserMenuOpen(false);
+                                    }}
+                                >
+                                    <BiLogOut />
+                                    로그아웃
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 ) : (
                     <Link to="/login" className={`${classes.authBtn} ${classes.authBtnLogin}`}>
                         <BiLogIn />
