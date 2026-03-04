@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BiSearch, BiMessageDetail, BiChevronRight } from "react-icons/bi";
 import { getConversationList } from "../../api/chatApi";
+import Avatar from "../../components/common/Avatar";
+
 import classes from "./ChatList.module.css";
 
 function ChatList() {
@@ -58,17 +60,17 @@ function ChatList() {
                     filtered.map((c) => (
                         <Link
                             key={c.sessionId}
-                            to={`/chat?sessionId=${c.sessionId}&chatName=${c.conversationName}`}
+                            to={`/chat?sessionId=${c.sessionId}`}
                             title={c.characterName}
                             className={classes.item}
                         >
                             {/* 아바타 */}
                             <div className={classes.avatar}>
-                                {c.anonymousImg ? (
-                                    <img src={c.anonymousImg} alt="avatar" className={classes.avatarImg} />
-                                ) : (
-                                    c.characterName?.charAt(0).toUpperCase()
-                                )}
+                                <Avatar
+                                    filePath={c.characterThumbFilePath}
+                                    name={c.characterName}
+                                    className={classes.avatarImg}
+                                />
                             </div>
 
                             {/* 텍스트 */}

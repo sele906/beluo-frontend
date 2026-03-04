@@ -1,13 +1,29 @@
+import { useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import { getCharacterDetail } from "../../api/chatApi";
+import { getCharacterDetail, createConversation } from "../../api/chatApi";
+import Avatar from '../../components/common/Avatar';
+
 import classes from "./CharacterDetailModal.module.css";
 
 function CharacterDetailModal() {
     const detail = useLoaderData();
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleBackdropClick = () => navigate(-1);
     const handleModalClick = (e) => e.stopPropagation();
+
+    const handleStartChat = async () => {
+        setIsLoading(true);
+        try {
+            const sessionId = await createConversation(detail.id);
+            navigate(`/chat?sessionId=${sessionId}`);
+        } catch (error) {
+            console.error("대화 생성 실패:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className={classes.backdrop} onClick={handleBackdropClick}>
@@ -15,7 +31,11 @@ function CharacterDetailModal() {
 
                 {/* 아바타 */}
                 <div className={classes.avatar}>
-                    {detail.characterName?.charAt(0).toUpperCase()}
+                    <Avatar
+                        filePath={detail.characterFilePath}
+                        name={detail.characterName}
+                        className={classes.avatarImg}
+                    />
                 </div>
 
                 {/* 이름 */}
@@ -40,9 +60,10 @@ function CharacterDetailModal() {
                 {/* 대화하기 버튼 */}
                 <button
                     className={classes.chatBtn}
-                    onClick={() => navigate(`/chat?sessionId=NEW&chatName=${detail.characterName}&characterId=${detail.id}`)}
+                    onClick={handleStartChat}
+                    disabled={isLoading}
                 >
-                    대화 시작하기
+                    {isLoading ? "생성 중..." : "대화 시작하기"}
                 </button>
 
             </div>

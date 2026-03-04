@@ -14,6 +14,17 @@
     background: var(--bg);
 }
 
+/* ── 페이지 로딩 화면 ── */
+.pageLoader {
+    max-width: 900px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+}
+
 /* ── 상단 타이틀 바 ── */
 .topBar {
     display: flex;
@@ -37,6 +48,7 @@
     font-weight: 600;
     color: var(--text);
     flex-shrink: 0;
+    overflow: hidden;
 }
 
 .topName {
@@ -97,6 +109,7 @@
     color: var(--text);
     flex-shrink: 0;
     margin-bottom: 2px;
+    overflow: hidden;
 }
 
 /* ── AI 아바타 이미지 ── */
@@ -157,6 +170,12 @@
 @keyframes bounce {
     0%, 60%, 100% { transform: translateY(0); background: var(--text-subtle); }
     30%           { transform: translateY(-6px); background: var(--accent); }
+}
+
+/* pageLoader 안의 점은 좀 더 크게 */
+.pageLoader .loadingDots span {
+    width: 10px;
+    height: 10px;
 }
 
 /* ── 입력창 ── */

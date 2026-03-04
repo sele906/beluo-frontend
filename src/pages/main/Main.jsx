@@ -1,15 +1,31 @@
 import { useState, useEffect } from "react";
 import { getCharacterList } from "../../api/chatApi";
-import classes from "./Main.module.css";
 import { Link, Outlet } from "react-router-dom";
+import Avatar from "../../components/common/Avatar";
+
+import classes from "./Main.module.css";
+
+// const Avatar = ({ filePath, name, imgClassName, placeholderClassName }) => {
+//   if (filePath) {
+//     return <img src={`http://localhost:8080/fileupload${filePath}`} alt="avatar" className={imgClassName} />;
+//   }
+//   return (
+//     <div className={placeholderClassName}>
+//       {name?.charAt(0).toUpperCase()}
+//     </div>
+//   );
+// };
 
 const CharacterCard = ({ character }) => (
     <div className={classes.card}>
     <Link className={classes.cardLink} to={"/character/" + character.id}>
         <div className={classes.cardImageWrap}>
-            <div className={classes.cardImagePlaceholder}>
-                {character.characterName?.charAt(0).toUpperCase()}
-            </div>
+            <Avatar
+                filePath={character.characterFilePath}
+                name={character.characterName}
+                imgClassName={classes.cardImage}
+                placeholderClassName={classes.cardImagePlaceholder}
+            />
         </div>
         <div className={classes.cardBody}>
             <h4 className={classes.cardName}>{character.characterName}</h4>

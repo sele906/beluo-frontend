@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getMessageList, sendChat } from "../../api/chatApi";
-import { Form, redirect } from "react-router-dom";
+import { getConversationDetail, sendChat } from "../../api/chatApi";
+import Avatar from "../../components/common/Avatar";
 
 import { BiRightArrowAlt } from "react-icons/bi";
 import classes from "./ChatRoom.module.css";
@@ -9,11 +9,12 @@ import classes from "./ChatRoom.module.css";
 function ChatRoom() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("sessionId");
-  const conversationName = searchParams.get("chatName");
 
+  const [info, setInfo] = useState({});
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
 
   const bottomRef = useRef(null);
 
@@ -22,15 +23,22 @@ function ChatRoom() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // 채팅방 입장 시 기존 메시지 불러오기
+  // 채팅방 입장 시 기존 세팅 불러오기
   useEffect(() => {
     if (!sessionId) return;
     async function fetchMessages() {
       try {
-        const data = await getMessageList(sessionId);
-        setMessages(data);
+        const data = await getConversationDetail(sessionId);
+        setMessages(data.messages ?? []);
+        setInfo({
+          characterName: data.characterName,
+          characterThumbFilePath: data.characterThumbFilePath,
+          conversationName: data.conversationName
+        });
       } catch (error) {
-        console.error("대화 불러오기 실패:", error);
+        console.error("정보 불러오기 실패:", error);
+      } finally {
+        setIsPageLoading(false); 
       }
     }
     fetchMessages();
@@ -76,6 +84,17 @@ function ChatRoom() {
     }
   };
 
+  // 페이지 로딩
+  if (isPageLoading) {
+    return (
+      <div className={classes.pageLoader}>
+        <span className={classes.loadingDots}>
+          <span /><span /><span />
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className={classes.chatRoomWrapper}>
     <div className={classes.container}>
@@ -83,13 +102,13 @@ function ChatRoom() {
       {/* ── 상단 타이틀 바 ── */}
       <div className={classes.topBar}>
         <div className={classes.topAvatar}>
-          {messages[0]?.anonymousImg ? (
-            <img src={messages[0].anonymousImg} alt="avatar" className={classes.topAvatarImg} />
-          ) : (
-            conversationName?.charAt(0).toUpperCase()
-          )}
+          <Avatar
+            filePath={info.characterThumbFilePath}
+            name={info.characterName}
+            className={classes.aiAvatarImg}
+          />
         </div>
-        <span className={classes.topName}>{conversationName}</span>
+        <span className={classes.topName}>{info.conversationName}</span>
       </div>
 
       {/* ── 메시지 영역 ── */}
@@ -103,11 +122,11 @@ function ChatRoom() {
             {/* AI 아바타 */}
             {m.role !== "user" && (
               <div className={classes.aiAvatar}>
-                {m.anonymousImg ? (
-                  <img src={m.anonymousImg} alt="avatar" className={classes.aiAvatarImg} />
-                ) : (
-                  conversationName?.charAt(0).toUpperCase()
-                )}
+                <Avatar
+                  filePath={info.characterThumbFilePath}
+                  name={info.characterName}
+                  className={classes.aiAvatarImg}
+                />
               </div>
             )}
 

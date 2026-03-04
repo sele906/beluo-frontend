@@ -31,7 +31,7 @@ function Sidebar() {
                             recentConversations.map((r) => (
                                 <Link
                                     key={r.sessionId}
-                                    to={`/chat?sessionId=${r.sessionId}&chatName=${r.conversationName}`}
+                                    to={`/chat?sessionId=${r.sessionId}`}
                                     title={r.characterName}
                                     className={classes.chatItem}
                                 >

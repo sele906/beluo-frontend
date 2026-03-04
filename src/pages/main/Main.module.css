@@ -82,7 +82,6 @@
     border-color: var(--border-hover);
 }
 
-/* ── 카드 이미지 ── */
 .cardImageWrap {
     width: 100%;
     aspect-ratio: 3 / 2;
@@ -90,11 +89,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
+/* 이미지 있을 때 */
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 이미지 없을 때 */
 .cardImagePlaceholder {
-    width: 52px;
-    height: 52px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     background: var(--avatar-gradient);
     display: flex;
@@ -158,5 +166,10 @@
 
     .card {
         width: 150px;
+    }
+
+    .cardImagePlaceholder {
+        width: 52px;
+        height: 52px;
     }
 }
