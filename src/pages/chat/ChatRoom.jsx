@@ -35,6 +35,7 @@ function ChatRoom() {
           characterThumbFilePath: data.characterThumbFilePath,
           conversationName: data.conversationName
         });
+        console.log(data);
       } catch (error) {
         console.error("정보 불러오기 실패:", error);
       } finally {
