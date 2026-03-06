@@ -32,7 +32,7 @@ function ChatRoom() {
         setMessages(data.messages ?? []);
         setInfo({
           characterName: data.characterName,
-          characterThumbFilePath: data.characterThumbFilePath,
+          characterImgUrl: data.characterImgUrl,
           conversationName: data.conversationName
         });
       } catch (error) {
@@ -103,9 +103,10 @@ function ChatRoom() {
       <div className={classes.topBar}>
         <div className={classes.topAvatar}>
           <Avatar
-            filePath={info.characterThumbFilePath}
+            filePath={info.characterImgUrl}
             name={info.characterName}
             className={classes.aiAvatarImg}
+            size={150}
           />
         </div>
         <span className={classes.topName}>{info.conversationName}</span>
@@ -123,9 +124,10 @@ function ChatRoom() {
             {m.role !== "user" && (
               <div className={classes.aiAvatar}>
                 <Avatar
-                  filePath={info.characterThumbFilePath}
+                  filePath={info.characterImgUrl}
                   name={info.characterName}
                   className={classes.aiAvatarImg}
+                  size={150}
                 />
               </div>
             )}

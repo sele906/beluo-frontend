@@ -40,7 +40,7 @@
 .avatar {
     width: 120px;
     height: 120px;
-    border-radius: 24px;          /* 둥근 사각형 */
+    border-radius: 50%;          
     background: var(--avatar-gradient);
     display: flex;
     align-items: center;
@@ -66,8 +66,8 @@
     color: var(--text);
 }
 
-/* ── 성격 ── */
-.personality {
+/* ── 요약 ── */
+.summary {
     font-size: 13px;
     color: var(--text-muted);
     text-align: center;

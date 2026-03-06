@@ -67,9 +67,10 @@ function ChatList() {
                             {/* 아바타 */}
                             <div className={classes.avatar}>
                                 <Avatar
-                                    filePath={c.characterThumbFilePath}
+                                    filePath={c.characterImgUrl}
                                     name={c.characterName}
                                     className={classes.avatarImg}
+                                    size={200}
                                 />
                             </div>
 

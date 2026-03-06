@@ -32,7 +32,7 @@ function CharacterDetailModal() {
                 {/* 아바타 */}
                 <div className={classes.avatar}>
                     <Avatar
-                        filePath={detail.characterFilePath}
+                        filePath={detail.characterImgUrl}
                         name={detail.characterName}
                         className={classes.avatarImg}
                     />
@@ -42,7 +42,7 @@ function CharacterDetailModal() {
                 <h2 className={classes.name}>{detail.characterName}</h2>
 
                 {/* 성격 */}
-                <p className={classes.personality}>{detail.personality}</p>
+                <p className={classes.summary}>{detail.summary}</p>
 
                 {/* 태그 */}
                 <div className={classes.tags}>

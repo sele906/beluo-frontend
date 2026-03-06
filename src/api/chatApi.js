@@ -77,7 +77,11 @@ export async function getCharacterDetail(id) {
 //create
 
 //캐릭터 생성하기
-export async function createCharacter() {
-  const res = await api.get("/character/create");
+export async function createCharacter(formData) {
+  const res = await api.post("/character/create", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res.data;
 }

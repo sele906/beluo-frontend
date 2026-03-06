@@ -5,23 +5,12 @@ import Avatar from "../../components/common/Avatar";
 
 import classes from "./Main.module.css";
 
-// const Avatar = ({ filePath, name, imgClassName, placeholderClassName }) => {
-//   if (filePath) {
-//     return <img src={`http://localhost:8080/fileupload${filePath}`} alt="avatar" className={imgClassName} />;
-//   }
-//   return (
-//     <div className={placeholderClassName}>
-//       {name?.charAt(0).toUpperCase()}
-//     </div>
-//   );
-// };
-
 const CharacterCard = ({ character }) => (
     <div className={classes.card}>
     <Link className={classes.cardLink} to={"/character/" + character.id}>
         <div className={classes.cardImageWrap}>
             <Avatar
-                filePath={character.characterFilePath}
+                filePath={character.characterImgUrl}
                 name={character.characterName}
                 imgClassName={classes.cardImage}
                 placeholderClassName={classes.cardImagePlaceholder}

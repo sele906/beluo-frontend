@@ -1,17 +1,22 @@
 import { useState, useRef } from "react";
 import { Form, useNavigate } from "react-router-dom";
+import { createCharacter } from "../../api/chatApi";
+
 import classes from "./Create.module.css";
 
 function Create() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(null);
+  const [fileObj, setFileObj] = useState(null);
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [dragging, setDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFileChange = (file) => {
     if (!file) return;
+    setFileObj(file);
     const reader = new FileReader();
     reader.onloadend = () => setPreview(reader.result);
     reader.readAsDataURL(file);
@@ -41,6 +46,37 @@ function Create() {
     setTags(tags.filter((_, i) => i !== index));
   };
 
+  //파일 핸들러
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!fileObj) return alert("이미지를 업로드해주세요.");
+    setIsSubmitting(true);
+
+    const formElements = e.target.elements;
+
+    const characterData = {
+      characterName: formElements.characterName.value,
+      summary: formElements.summary.value,
+      personality: formElements.personality.value,
+      firstMessage: formElements.firstMessage.value,
+      tag: tags,
+    };
+
+    const formData = new FormData();
+    formData.append("character", new Blob([JSON.stringify(characterData)], { type: "application/json" }));
+    formData.append("file", fileObj);
+
+    try {
+      const id = await createCharacter(formData);
+      navigate(`/character/${id}`); // 생성 후 이동 (경로 맞게 수정)
+    } catch (err) {
+      console.error("캐릭터 생성 실패:", err);
+      alert("저장에 실패했어요. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className={classes.page}>
       {/* 배경 효과 */}
@@ -54,15 +90,13 @@ function Create() {
             <span className={classes.titleLabel}>NEW CHARACTER</span>
             <h1 className={classes.title}>캐릭터 만들기</h1>
           </div>
-          {/* <button className={classes.backBtn} onClick={() => navigate(-1)}>
-            돌아가기
-          </button> */}
         </div>
 
-        <hr></hr>
+        <hr/>
 
-        <Form className={classes.form} encType="multipart/form-data">
+        <form className={classes.form} onSubmit={handleSubmit}>
           <div className={classes.layout}>
+
             {/* 왼쪽: 이미지 업로드 */}
             <div className={classes.left}>
               <div
@@ -75,9 +109,7 @@ function Create() {
                 {preview ? (
                   <>
                     <img src={preview} alt="preview" className={classes.previewImg} />
-                    <div className={classes.previewOverlay}>
-                      <span>이미지 변경</span>
-                    </div>
+                    <div className={classes.previewOverlay}><span>이미지 변경</span></div>
                   </>
                 ) : (
                   <div className={classes.dropzoneContent}>
@@ -95,14 +127,11 @@ function Create() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  name="file"
                   accept="image/*"
                   className={classes.fileInput}
                   onChange={(e) => handleFileChange(e.target.files[0])}
                 />
               </div>
-
-              
             </div>
 
             {/* 오른쪽: 입력 필드 */}
@@ -188,12 +217,12 @@ function Create() {
                 <input type="hidden" name="tags" value={JSON.stringify(tags)} />
               </div>
 
-              <button type="submit" className={classes.submitBtn}>
-                <span>저장하기</span>
+              <button type="submit" className={classes.submitBtn} disabled={isSubmitting}>
+                <span>{isSubmitting ? "저장 중..." : "저장하기"}</span>
               </button>
             </div>
           </div>
-        </Form>
+        </form>
       </div>
     </div>
   );
