@@ -19,25 +19,20 @@ export async function sendChat(message, sessionId) {
   return res.data;
 }
 
-//최근 10개 대화 출력
-// export async function getMessageList(sessionId) {
-//   const res = await api.get("/chat/messages", {
-//     params: { sessionId: sessionId },
-//   });
+//메세지 출력
+export async function getMessageList(sessionId, before) {
+  const params = { sessionId };
+  if (before) params.before = before;
 
-//   return res.data.map(item => ({
-//     id: item.id,
-//     role: item.role,
-//     content: item.content,
-//     createdAt: item.createdAt
-//   }));
-// }
+  const res = await api.get("/chat/messages", { params });
+  return res.data;
+}
 
 //conversation
 
 //채팅방 생성
 export async function createConversation(characterId) {
-    const res = await api.get("/conversation/create", { params: { characterId } });
+    const res = await api.get("/conversation/create", { params: { characterId: characterId } });
     return res.data; 
 }
 

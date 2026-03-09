@@ -23,8 +23,10 @@ const Router = createBrowserRouter([
         // ]},
 
         {path: '/chatlist', element: <ChatList />}, 
-        {path: '/create', element: <Create />},
+        
         {path: '/chat', element: <ChatRoom />},
+        {path: '/create', element: <Create />},
+        {path: '/mypage', element: <MyPage />},
 
     ]}
 ]);
