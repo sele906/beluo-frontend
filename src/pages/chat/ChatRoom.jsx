@@ -24,6 +24,7 @@ function ChatRoom() {
   const bottomRef = useRef(null);
   const topRef = useRef(null);           // 스크롤 최상단 감지용
   const messageAreaRef = useRef(null);   // 스크롤 위치 복원용
+  console.log(messageAreaRef); //다른 대화방에 갔다가 다시 들어오면 스크롤 위치 가운데로 되어있음 다른 채팅방의 스크롤 위치에 영향받는듯..??
 
   // 스크롤 제어 플래그
   const shouldScrollBottom = useRef(false);  // 바닥 스크롤 여부
@@ -38,7 +39,7 @@ function ChatRoom() {
     }
   }, [messages]);
 
-  // 페이지 로드시 스크롤
+  // 페이지 로드시 바닥 스크롤 X
   useEffect(() => {
     if (!isPageLoading) {
       requestAnimationFrame(() => {
@@ -50,6 +51,8 @@ function ChatRoom() {
   // 채팅방 입장 시 기존 세팅 불러오기
   useEffect(() => {
     if (!sessionId) return;
+
+    setIsPageLoading(true);
 
     async function init() {
       try {
@@ -130,7 +133,6 @@ function ChatRoom() {
   const typeMessage = (text) => {
     let index = 0;
     setMessages((prev) => [...prev, { role: "ai", content: "" }]);
-    shouldScrollBottom.current = true; // AI 답변 시작 시 바닥으로
 
     const interval = setInterval(() => {
       index++;
@@ -140,10 +142,13 @@ function ChatRoom() {
         if (last.role === "ai") last.content = text.slice(0, index);
         return updated;
       });
-      if (index >= text.length) clearInterval(interval);
-    }, 30);
 
-    
+      if (index >= text.length) {
+        clearInterval(interval);
+        shouldScrollBottom.current = true; // // AI 답변 완료 시 바닥으로
+      }
+
+    }, 30);
   };
 
   // 메시지 전송
@@ -152,7 +157,7 @@ function ChatRoom() {
 
     const userMessage = { role: "user", content: input, createdAt: new Date().toISOString() };
     shouldScrollBottom.current = true; // 유저 메시지 전송 시 바닥으로
-    
+
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
