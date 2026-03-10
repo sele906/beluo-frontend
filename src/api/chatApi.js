@@ -80,3 +80,15 @@ export async function createCharacter(formData) {
   });
   return res.data;
 }
+
+//auth
+
+//테스트 로그인
+export async function testLogin(formData) {
+  const res = await api.post("/testLogin", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+}
