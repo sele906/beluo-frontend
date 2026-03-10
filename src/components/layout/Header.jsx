@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiSearch, BiX, BiSolidUser, BiUser, BiLogIn, BiLogOut } from "react-icons/bi";
+import { useAuth } from "../../context/AuthContext";
+
 import classes from "./Header.module.css";
 import logo from "../../assets/logo.svg";
 
-// 로그인 상태는 나중에 실제 auth 연결하면 교체
-const isLoggedIn = true;
-
 function Header() {
+    const { isLoggedIn, logout } = useAuth();
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
@@ -24,12 +24,11 @@ function Header() {
         setSearchValue("");
     };
 
-    const closeMenu = () => setUserMenuOpen(false);
-
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const closeMenu = () => setUserMenuOpen(false);
     const menuItems = [
         { to: "/mypage", icon: <BiUser />, label: "마이메뉴" },
-        { icon: <BiLogOut />, label: "로그아웃", onClick: closeMenu },
+        { icon: <BiLogOut />, label: "로그아웃", onClick: logout },
     ];
 
     return (

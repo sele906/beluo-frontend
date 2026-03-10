@@ -5,7 +5,7 @@ import ChatList from "../pages/chat/ChatList";
 import Create from "../pages/create/Create";
 import MyPage from "../pages/mypage/MyPage";
 import ChatRoom from "../pages/chat/ChatRoom";
-import TestLogin from "../pages/test/testLogin";
+import Login from "../pages/auth/Login";
 import CharacterDetailModal, {loader as characterDetailLoader} from "../pages/character/CharacterDetailModal";
 
 const Router = createBrowserRouter([
@@ -30,7 +30,7 @@ const Router = createBrowserRouter([
         {path: '/mypage', element: <MyPage />},
 
     ]},
-    {path: '/testLogin', element: <TestLogin/>}
+    {path: '/login', element: <Login/>}
 ]);
 
 export default Router;

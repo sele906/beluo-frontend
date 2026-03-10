@@ -5,6 +5,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 //chat
@@ -84,11 +85,10 @@ export async function createCharacter(formData) {
 //auth
 
 //테스트 로그인
-export async function testLogin(formData) {
-  const res = await api.post("/testLogin", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+export async function loginApi(formData) {
+  const res = await api.post("/auth/login", {
+    email: formData.get("email"),
+    password: formData.get("password"),
   });
   return res.data;
 }
