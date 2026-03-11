@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getCharacterList } from "../../api/chatApi";
 import { Link, Outlet } from "react-router-dom";
 import Avatar from "../../components/common/Avatar";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hook/AuthContext";
 
 import classes from "./Main.module.css";
 

@@ -1,5 +1,5 @@
 import { loginApi } from "../../api/chatApi";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hook/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { BiLogoGoogle } from "react-icons/bi";
 

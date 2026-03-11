@@ -1,6 +1,6 @@
 import Router from "./routes/Router";
 import { RouterProvider } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./hook/AuthContext";
 import "./styles/reset.css";
 import './styles/globals.css'
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiSearch, BiX, BiSolidUser, BiUser, BiLogIn, BiLogOut } from "react-icons/bi";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hook/AuthContext";
 import { logoutApi } from "../../api/chatApi";
 
 import classes from "./Header.module.css";
