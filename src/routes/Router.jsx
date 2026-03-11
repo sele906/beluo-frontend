@@ -6,6 +6,8 @@ import Create from "../pages/create/Create";
 import MyPage from "../pages/mypage/MyPage";
 import ChatRoom from "../pages/chat/ChatRoom";
 import Login from "../pages/auth/Login";
+import Join from "../pages/auth/Join";
+import OAuth2Redirect from "../pages/auth/OAuth2Redirect";
 import CharacterDetailModal, {loader as characterDetailLoader} from "../pages/character/CharacterDetailModal";
 
 const Router = createBrowserRouter([
@@ -30,7 +32,9 @@ const Router = createBrowserRouter([
         {path: '/mypage', element: <MyPage />},
 
     ]},
-    {path: '/login', element: <Login/>}
+    {path: '/login', element: <Login/>},
+    {path: '/join', element: <Join/>},
+    {path: '/oauth2/redirect', element: <OAuth2Redirect/>},
 ]);
 
 export default Router;

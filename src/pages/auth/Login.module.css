@@ -90,3 +90,52 @@
     transform: scale(0.98);
     opacity: 0.8;
 }
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 4px;
+    color: var(--text-dim);
+    font-size: 12px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.googleButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 12px;
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 13px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.googleButton:hover {
+    background: var(--surface);
+    border-color: var(--text-muted);
+}
+
+.googleButton:active {
+    transform: scale(0.98);
+}
+
+.googleIcon {
+    font-size: 18px;
+    flex-shrink: 0;
+}

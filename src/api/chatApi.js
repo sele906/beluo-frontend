@@ -1,12 +1,31 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL + "/api",
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true,
 });
+
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes("/auth/refresh")) {
+      originalRequest._retry = true;
+      try {
+        await api.post("/auth/refresh");
+        return api(originalRequest);
+      } catch {
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 //chat
 
@@ -84,11 +103,22 @@ export async function createCharacter(formData) {
 
 //auth
 
-//테스트 로그인
-export async function loginApi(formData) {
-  const res = await api.post("/auth/login", {
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
+//로그인
+export async function loginApi(data) {
+  const res = await api.post("/auth/login", data);
   return res.data;
 }
+
+//회원가입
+export async function joinApi(data) {
+  const res = await api.post("/auth/join", data);
+  return res.data;
+}
+
+//로그아웃
+export async function logoutApi() {
+  const res = await api.post("/auth/logout");
+  return res.data;
+}
+
+

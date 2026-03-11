@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiSearch, BiX, BiSolidUser, BiUser, BiLogIn, BiLogOut } from "react-icons/bi";
 import { useAuth } from "../../context/AuthContext";
+import { logoutApi } from "../../api/chatApi";
 
 import classes from "./Header.module.css";
 import logo from "../../assets/logo.svg";
@@ -24,11 +25,22 @@ function Header() {
         setSearchValue("");
     };
 
+    const handleLogout = async () => {
+        try {
+            await logoutApi();
+        } catch (e) {
+            console.error(e);
+        } finally {
+            logout();
+            navigate("/");
+        }
+    };
+
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const closeMenu = () => setUserMenuOpen(false);
     const menuItems = [
         { to: "/mypage", icon: <BiUser />, label: "마이메뉴" },
-        { icon: <BiLogOut />, label: "로그아웃", onClick: logout },
+        { icon: <BiLogOut />, label: "로그아웃", onClick: handleLogout },
     ];
 
     return (

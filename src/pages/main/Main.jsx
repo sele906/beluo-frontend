@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getCharacterList } from "../../api/chatApi";
 import { Link, Outlet } from "react-router-dom";
 import Avatar from "../../components/common/Avatar";
+import { useAuth } from "../../context/AuthContext";
 
 import classes from "./Main.module.css";
 
@@ -41,7 +42,7 @@ const Section = ({ title, characters }) => (
 );
 
 function Main() {
-    const isLoggedIn = false; // 나중에 auth로 교체
+    const { isLoggedIn, logout } = useAuth();
 
     const [characterList, setCharacterList] = useState({
         popular: [],
@@ -67,10 +68,13 @@ function Main() {
         <>
             <Outlet />
             <div className={classes.main}>
-                <Section title="🔥 인기순" characters={characterList.popular} />
+
                 {showLiked && (
                     <Section title="❤️ 관심순" characters={characterList.liked} />
                 )}
+
+                <Section title="🔥 인기순" characters={characterList.popular} />
+                
                 <Section title="✨ 신규순" characters={characterList.recent} />
             </div>
         </>
