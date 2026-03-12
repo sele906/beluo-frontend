@@ -19,8 +19,8 @@ api.interceptors.response.use(
         await api.post("/auth/refresh");
         return api(originalRequest);
       } catch {
+        await api.post("/auth/logout"); // refreshToken DB 삭제
         window.location.href = "/login";
-        return Promise.reject(error);
       }
     }
     return Promise.reject(error);
@@ -86,6 +86,7 @@ export async function getCharacterList() {
 //캐릭터 상세 페이지
 export async function getCharacterDetail(id) {
   const res = await api.get("/character/detail?id=" + id);
+  console.log(res.data);
   return res.data;
 }
 

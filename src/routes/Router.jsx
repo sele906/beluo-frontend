@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout, {loader as getConversationList} from "../components/layout/Layout";
+import Layout from "../components/layout/Layout";
+import { getConversationList } from "../api/chatApi";
 import Main from "../pages/main/Main";
 import ChatList from "../pages/chat/ChatList";
 import Create from "../pages/create/Create";
@@ -11,7 +12,9 @@ import OAuth2Redirect from "../pages/auth/OAuth2Redirect";
 import CharacterDetailModal, {loader as characterDetailLoader} from "../pages/character/CharacterDetailModal";
 
 const Router = createBrowserRouter([
-    {path: '/', element: <Layout />, loader: getConversationList, children: [
+    {path: '/', element: <Layout />, loader: async () => ({
+      conversations: await getConversationList()
+    }), children: [
         
         {path: '/', element: <Main />, children: [
             {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}

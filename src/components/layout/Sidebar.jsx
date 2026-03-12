@@ -3,8 +3,7 @@ import { BiHome, BiPlusCircle, BiMessageDetail, BiSolidUser, BiChat } from "reac
 
 import classes from "./Sidebar.module.css";
 
-function Sidebar() {
-    const recentConversations = useLoaderData();
+function Sidebar({conversations}) {
 
     return (
         <>
@@ -25,10 +24,10 @@ function Sidebar() {
                     </Link>
 
                     <div className={classes.recentConversations}>
-                        {recentConversations.length === 0 ? (
+                        {conversations.length === 0 ? (
                             <p className={classes.empty}>최근 대화가 없어요</p>
                         ) : (
-                            recentConversations.map((r) => (
+                            conversations.map((r) => (
                                 <Link
                                     key={r.sessionId}
                                     to={`/chat?sessionId=${r.sessionId}`}

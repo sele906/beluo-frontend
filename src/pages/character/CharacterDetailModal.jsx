@@ -6,7 +6,7 @@ import Avatar from '../../components/common/Avatar';
 import classes from "./CharacterDetailModal.module.css";
 
 function CharacterDetailModal() {
-    const detail = useLoaderData();
+    const detail = useLoaderData(); 
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -16,7 +16,7 @@ function CharacterDetailModal() {
     const handleStartChat = async () => {
         setIsLoading(true);
         try {
-            const sessionId = await createConversation(detail.id);
+            const sessionId = await createConversation(detail.character.id);
             navigate(`/chat?sessionId=${sessionId}`);
         } catch (error) {
             console.error("대화 생성 실패:", error);
@@ -32,21 +32,21 @@ function CharacterDetailModal() {
                 {/* 아바타 */}
                 <div className={classes.avatar}>
                     <Avatar
-                        filePath={detail.characterImgUrl}
-                        name={detail.characterName}
+                        filePath={detail.character.characterImgUrl}
+                        name={detail.character.characterName}
                         className={classes.avatarImg}
                     />
                 </div>
 
                 {/* 이름 */}
-                <h2 className={classes.name}>{detail.characterName}</h2>
+                <h2 className={classes.name}>{detail.character.characterName}</h2>
 
                 {/* 성격 */}
-                <p className={classes.summary}>{detail.summary}</p>
+                <p className={classes.summary}>{detail.character.summary}</p>
 
                 {/* 태그 */}
                 <div className={classes.tags}>
-                    {detail.tag?.map((t) => (
+                    {detail.character.tag?.map((t) => (
                         <span key={t} className={classes.tag}>{t}</span>
                     ))}
                 </div>
@@ -54,7 +54,7 @@ function CharacterDetailModal() {
                 {/* 첫 메시지 미리보기 */}
                 <div className={classes.firstMessage}>
                     <span className={classes.firstMessageLabel}>첫 인사</span>
-                    <p>{detail.firstMessage}</p>
+                    <p>{detail.character.firstMessage}</p>
                 </div>
 
                 {/* 대화하기 버튼 */}

@@ -68,8 +68,18 @@ function Login() {
 
                 <button className={classes.googleButton} onClick={toGoogle}>
                     <BiLogoGoogle className={classes.googleIcon} />
-                    구글로 로그인
+                    구글로 시작하기
                 </button>
+
+                <div className={classes.authLink}>
+                    계정이 없나요?
+                    <span
+                        className={classes.link}
+                        onClick={() => navigate("/join")}
+                    >
+                        회원가입
+                    </span>
+                </div>
             </div>
         </div>
     );

@@ -139,3 +139,23 @@
     font-size: 18px;
     flex-shrink: 0;
 }
+
+.authLink {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.link {
+    margin-left: 6px;
+    color: var(--accent);
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}

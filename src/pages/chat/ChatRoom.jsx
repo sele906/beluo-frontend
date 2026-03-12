@@ -62,6 +62,9 @@ function ChatRoom() {
           characterName: detail.characterName,
           characterImgUrl: detail.characterImgUrl,
           conversationName: detail.conversationName,
+          // userId: detail.userId,
+          // userEmail: detail.userEmail,
+          // userName: detail.userName,
         });
 
         // 첫 10개 메시지 로드 (before 없이 호출 = 최신 10개)

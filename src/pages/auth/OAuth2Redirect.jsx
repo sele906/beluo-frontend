@@ -7,8 +7,12 @@ function OAuth2Redirect() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        login();
-        navigate("/", { replace: true });
+        async function processLogin() {
+            await login();
+            navigate("/", { replace: true });
+        }
+
+        processLogin();
     }, []);
 
     return null;
