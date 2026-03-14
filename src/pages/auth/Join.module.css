@@ -118,6 +118,7 @@
 @media (max-width: 600px) {
     .container {
         align-items: flex-start;
+        background: var(--surface);
     }
 
     .card {
