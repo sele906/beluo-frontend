@@ -118,13 +118,12 @@
 @media (max-width: 600px) {
     .container {
         align-items: flex-start;
-        padding-top: 40px;
     }
 
     .card {
         border: none;
         border-radius: 0;
-        padding: 32px 24px;
+        padding: 62px 24px;
         min-height: 100vh;
     }
 
