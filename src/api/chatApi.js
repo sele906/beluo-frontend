@@ -90,6 +90,16 @@ export async function getCharacterDetail(id) {
   return res.data;
 }
 
+//like
+
+export async function setAddLiked(characterId) {
+  await api.post(`/character/${characterId}/like`);
+}
+
+export async function setCancelLiked(characterId) {
+  await api.delete(`/character/${characterId}/like`);
+}
+
 //create
 
 //캐릭터 생성하기

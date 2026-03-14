@@ -13,6 +13,29 @@
     padding: 48px 40px;
     width: 100%;
     max-width: 400px;
+    position: relative;
+}
+
+.backBtn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.backBtn:hover {
+    color: var(--text);
+    background: var(--surface-2);
 }
 
 .title {
@@ -158,4 +181,47 @@
 .link:hover {
     opacity: 0.8;
     text-decoration: underline;
+}
+
+/* ── 모바일 ── */
+@media (max-width: 600px) {
+    .container {
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 0;
+        padding: 32px 24px;
+        min-height: 100vh;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        margin-bottom: 28px;
+    }
+
+    .input {
+        font-size: 16px; /* iOS 자동 확대 방지 */
+        padding: 13px 14px;
+    }
+
+    .button {
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    .googleButton {
+        padding: 15px;
+        font-size: 15px;
+    }
+
+    .backBtn {
+        display: none;
+    }
 }

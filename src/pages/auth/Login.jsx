@@ -1,3 +1,4 @@
+import { BiX } from "react-icons/bi";
 import { loginApi } from "../../api/chatApi";
 import { useAuth } from "../../hook/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +35,7 @@ function Login() {
     return (
         <div className={classes.container}>
             <div className={classes.card}>
+                <button className={classes.backBtn} onClick={() => navigate(-1)}><BiX /></button>
                 <h1 className={classes.title}>로그인</h1>
                 <p className={classes.subtitle}>계속하려면 로그인하세요</p>
 

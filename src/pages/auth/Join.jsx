@@ -1,3 +1,4 @@
+import { BiX } from "react-icons/bi";
 import { joinApi } from "../../api/chatApi";
 import { useNavigate } from "react-router-dom";
 import classes from "./Join.module.css";
@@ -27,6 +28,7 @@ function Join() {
     return (
         <div className={classes.container}>
             <div className={classes.card}>
+                <button className={classes.backBtn} onClick={() => navigate(-1)}><BiX /></button>
                 <h1 className={classes.title}>회원가입</h1>
                 <p className={classes.subtitle}>
                     계정을 만들어 서비스를 시작하세요

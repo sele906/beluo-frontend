@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCharacterList } from "../../api/chatApi";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import Avatar from "../../components/common/Avatar";
 import { useAuth } from "../../hook/AuthContext";
 
@@ -43,6 +43,7 @@ const Section = ({ title, characters }) => (
 
 function Main() {
     const { isLoggedIn, logout } = useAuth();
+    const location = useLocation();
 
     const [characterList, setCharacterList] = useState({
         popular: [],
@@ -51,6 +52,7 @@ function Main() {
     });
 
     useEffect(() => {
+        if (location.pathname !== '/') return;
         async function fetchCharacters() {
             try {
                 const data = await getCharacterList();
@@ -60,7 +62,7 @@ function Main() {
             }
         }
         fetchCharacters();
-    }, []);
+    }, [location.pathname]);
 
     const showLiked = isLoggedIn && characterList.liked?.length > 0;
 

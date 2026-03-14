@@ -59,11 +59,28 @@
     object-fit: cover;
 }
 
+/* 정보 */
+.nameInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
 /* ── 이름 ── */
 .name {
     font-size: 20px;
     font-weight: 700;
     color: var(--text);
+    margin: 0;
+}
+
+/* ── 작성자 ── */
+.userId {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin: 0;
 }
 
 /* ── 요약 ── */
@@ -72,6 +89,45 @@
     color: var(--text-muted);
     text-align: center;
     line-height: 1.6;
+}
+
+/* ── 좋아요 ── */
+.like {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.like svg {
+    font-size: 18px;
+    transition: transform 0.15s ease;
+}
+
+.like:hover {
+    border-color: #e05c7a;
+    color: #e05c7a;
+}
+
+.like:hover svg {
+    transform: scale(1.15);
+}
+
+.like:active {
+    transform: scale(0.95);
+}
+
+.liked {
+    color: #e05c7a;
+    border-color: #e05c7a;
+    background: rgba(224, 92, 122, 0.08);
 }
 
 /* ── 태그 ── */
