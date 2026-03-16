@@ -1,34 +1,47 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { BiSearch } from 'react-icons/bi'
-import classes from './MyPageCharacters.module.css'
+import { useState, useEffect } from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { BiSearch, BiPlus, BiLeftArrowAlt } from 'react-icons/bi';
+import { charactersApi } from '../../api/chatApi';
+import Avatar from '../../components/common/Avatar';
 
-// 임시 더미 데이터 (추후 API 연동)
-const initialCharacters = [
-    { id: 1, name: '아리아', personality: '차갑고 냉정하지만 속으로는 따뜻한 마법사' },
-    { id: 2, name: '루카스', personality: '밝고 장난기 많은 용사' },
-    { id: 3, name: '세라핀', personality: '조용하고 신비로운 음유시인' },
-    { id: 4, name: '레나', personality: '호기심 왕성한 연금술사' },
-    { id: 5, name: '카엘', personality: '냉철한 판단력을 가진 기사단장' },
-]
+import classes from './MyPageCharacters.module.css';
 
 function MyPageCharacters() {
-    const navigate = useNavigate()
-    const [query, setQuery] = useState('')
+    const navigate = useNavigate();
+    const [query, setQuery] = useState('');
+    const [character, setCharacters] = useState();
 
-    const filtered = initialCharacters.filter((c) =>
-        c.name.includes(query) || c.personality.includes(query)
+    useEffect(() => {
+        async function fetchCharactersInfo() {
+            try {
+                const data = await charactersApi();
+                setCharacters(data);
+            } catch (error) {
+                console.error("캐릭터 정보 불러오기 실패:", error);
+            }
+        }
+        fetchCharactersInfo();
+    }, []);
+
+    if (!character) return null;
+
+    const filtered = character.filter((c) =>
+        c.characterName?.includes(query) || c.personality?.includes(query)
     )
 
     return (
         <div className={classes.page}>
 
+            <Outlet />
+
             {/* ── 페이지 헤더 ── */}
             <div className={classes.pageHeader}>
-                <button className={classes.backBtn} onClick={() => navigate('/mypage')}>←</button>
+                <button className={classes.backBtn} onClick={() => navigate('/mypage')}><BiLeftArrowAlt/></button>
                 <span className={classes.pageTitle}>내 캐릭터</span>
-                <span className={classes.count}>{initialCharacters.length}</span>
-                <button className={classes.createBtn} onClick={() => navigate('/create')}>+ 새 캐릭터</button>
+                <span className={classes.count}>{character.length}</span>
+                <button className={classes.createBtn} onClick={() => navigate('/create')}>
+                    <BiPlus />새 캐릭터
+                </button>
             </div>
 
             {/* ── 검색창 ── */}
@@ -62,15 +75,17 @@ function MyPageCharacters() {
             ) : (
                 <div className={classes.grid}>
                     {filtered.map((char) => (
-                        <div key={char.id} className={classes.card}>
+                        <Link key={char.id} className={classes.card} to={"/character/" + char.id}>
                             <div className={classes.cardImageWrap}>
-                                {char.imageUrl
-                                    ? <img src={char.imageUrl} alt={char.name} className={classes.cardImage} />
-                                    : <div className={classes.cardImagePlaceholder}>{char.name.charAt(0)}</div>
-                                }
+                                <Avatar
+                                    filePath={char.characterImgUrl}
+                                    name={char.characterName}
+                                    imgClassName={classes.cardImage}
+                                    className={classes.cardImagePlaceholder}
+                                />
                             </div>
                             <div className={classes.cardBody}>
-                                <span className={classes.cardName}>{char.name}</span>
+                                <span className={classes.cardName}>{char.characterName}</span>
                                 {char.personality && (
                                     <span className={classes.cardDesc}>{char.personality}</span>
                                 )}
@@ -79,7 +94,7 @@ function MyPageCharacters() {
                                 <button className={classes.actionBtn}>수정</button>
                                 <button className={`${classes.actionBtn} ${classes.actionBtnDanger}`}>삭제</button>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}

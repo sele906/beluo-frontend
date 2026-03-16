@@ -1,21 +1,37 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import classes from './MyPageProfile.module.css'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { profileApi } from '../../api/chatApi';
+import { BiLeftArrowAlt } from "react-icons/bi";
+import Avatar from '../../components/common/Avatar';
 
-// 임시 더미 데이터 (추후 API 연동)
-const user = {
-    name: '홍길동',
-    email: 'user@example.com',
-}
+import classes from './MyPageProfile.module.css';
 
 function MyPageProfile() {
-    const navigate = useNavigate()
-    const [name, setName] = useState(user.name)
-    const [currentPw, setCurrentPw] = useState('')
-    const [newPw, setNewPw] = useState('')
-    const [confirmPw, setConfirmPw] = useState('')
+    const navigate = useNavigate();
+    const [user, setUser] = useState();
 
-    const initial = user.name?.charAt(0) ?? '?'
+    useEffect(() => {
+        async function fetchUserInfo() {
+            try {
+                const data = await profileApi();
+                setUser(data);
+            } catch (error) {
+                console.error("유저 정보 불러오기 실패:", error);
+            }
+        }
+        fetchUserInfo();
+    }, []);
+
+    const [name, setName] = useState('');
+    const [currentPw, setCurrentPw] = useState('');
+    const [newPw, setNewPw] = useState('');
+    const [confirmPw, setConfirmPw] = useState('');
+
+    useEffect(() => {
+        if (user) setName(user.name ?? '');
+    }, [user]);
+
+    if (!user) return null;
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -27,14 +43,18 @@ function MyPageProfile() {
 
             {/* ── 페이지 헤더 ── */}
             <div className={classes.pageHeader}>
-                <button className={classes.backBtn} onClick={() => navigate('/mypage')}>←</button>
+                <button className={classes.backBtn} onClick={() => navigate('/mypage')}><BiLeftArrowAlt/></button>
                 <span className={classes.pageTitle}>회원정보 수정</span>
             </div>
 
             {/* ── 아바타 ── */}
             <div className={classes.avatarWrap}>
-                <div className={classes.avatar}>{initial}</div>
-                <span className={classes.avatarHint}>프로필 사진은 지원하지 않습니다</span>
+                <Avatar
+                    filePath={user.userImgUrl}
+                    name={user.name}
+                    imgClassName={classes.avatarImg}
+                    size={150}
+                />
             </div>
 
             {/* ── 폼 카드 ── */}

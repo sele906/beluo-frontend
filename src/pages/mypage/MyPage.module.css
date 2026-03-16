@@ -17,20 +17,15 @@
     border-radius: 99px;
 }
 
-/* ── 프로필 + 통계 묶음 ── */
-.profileBlock {
-    background: var(--surface-2);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-lg);
-}
-
 /* ── 프로필 카드 ── */
 .profileCard {
     display: flex;
     align-items: center;
     gap: 20px;
     padding: 24px 28px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: var(--surface-2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
 }
 
 .avatar {
@@ -101,58 +96,41 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* ── 통계 카드 행 ── */
-.statRow {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+/* ── 설정 목록 ── */
+.menuList {
+    background: var(--surface-2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
 }
 
-.statCard {
+.menuItem {
     width: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
-    padding: 20px 12px;
+    justify-content: space-between;
+    padding: 16px 20px;
     background: transparent;
     border: none;
-    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    color: var(--text);
+    font-size: 14px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.15s ease;
+    text-align: left;
 }
 
-.statCard:last-child {
-    border-right: none;
+.menuItem:last-child {
+    border-bottom: none;
 }
 
-.statCard:hover {
-    background: rgba(255, 255, 255, 0.03);
+.menuItem:hover {
+    background: rgba(255, 255, 255, 0.04);
 }
 
-.statCard:active {
-    transform: scale(0.98);
-}
-
-.statNum {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-}
-
-.statLabel {
-    font-size: 12px;
+.menuChevron {
+    font-size: 18px;
     color: var(--text-muted);
-    font-weight: 500;
-}
-
-.statCardDanger .statNum {
-    color: #e05c5c;
-}
-
-.statCardDanger:hover {
-    border-color: rgba(224, 92, 92, 0.3);
-    box-shadow: 0 4px 16px rgba(224, 92, 92, 0.1);
+    flex-shrink: 0;
 }
 
 /* ── 미리보기 섹션 ── */
@@ -187,6 +165,13 @@
     cursor: pointer;
     padding: 0;
     transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.moreBtn svg {
+    font-size: 16px;
 }
 
 .moreBtn:hover {
@@ -220,6 +205,8 @@
 
 /* ── 캐릭터 카드 ── */
 .charCard {
+    text-decoration: none;
+    color: inherit;
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -303,7 +290,6 @@
         padding: 18px 20px;
         gap: 14px;
         flex-wrap: wrap;
-        border-bottom: 1px solid var(--border);
     }
 
     .avatar {
@@ -320,18 +306,6 @@
         width: 100%;
         padding: 10px;
         text-align: center;
-    }
-
-    .statNum {
-        font-size: 22px;
-    }
-
-    .statLabel {
-        font-size: 11px;
-    }
-
-    .statCard {
-        padding: 16px 8px;
     }
 
     .section {

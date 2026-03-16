@@ -37,10 +37,16 @@ const Router = createBrowserRouter([
         {path: '/chat', element: <ChatRoom />},
         {path: '/create', element: <Create />},
 
-        { path: '/mypage', element: <MyPage /> },
+        { path: '/mypage', element: <MyPage />, children: [
+            {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+        ]},
         { path: '/mypage/profile', element: <MyPageProfile /> },
-        { path: '/mypage/characters', element: <MyPageCharacters /> },
-        { path: '/mypage/liked', element: <MyPageLiked /> },
+        { path: '/mypage/characters', element: <MyPageCharacters />, children: [
+            {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+        ]},
+        { path: '/mypage/liked', element: <MyPageLiked />, children: [
+            {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+        ]},
         { path: '/mypage/blocked', element: <MyPageBlocked /> },
 
     ]},

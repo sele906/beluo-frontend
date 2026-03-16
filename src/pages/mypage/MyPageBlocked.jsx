@@ -1,25 +1,43 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { BiSearch } from 'react-icons/bi'
-import classes from './MyPageBlocked.module.css'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BiSearch, BiXCircle, BiError, BiLeftArrowAlt } from 'react-icons/bi';
+import { blockedApi, setCancelBlocked } from '../../api/chatApi';
+import Avatar from '../../components/common/Avatar';
 
-// 임시 더미 데이터 (추후 API 연동)
-const initialCharacters = [
-    { id: 20, name: '쉐도우', personality: '어둠 속에서 활동하는 암살자' },
-    { id: 21, name: '고스트', personality: '존재 자체가 불분명한 수수께끼의 인물' },
-]
+import classes from './MyPageBlocked.module.css';
 
 function MyPageBlocked() {
-    const navigate = useNavigate()
-    const [query, setQuery] = useState('')
-    const [blocked, setBlocked] = useState(initialCharacters)
+    const navigate = useNavigate();
+    const [query, setQuery] = useState('');
+    const [blocked, setBlocked] = useState();
 
-    const filtered = blocked.filter((c) =>
-        c.name.includes(query) || c.personality.includes(query)
+    useEffect(() => {
+        async function fetchBlockedCharactersInfo() {
+            try {
+                const data = await blockedApi();
+                setBlocked(data);
+            } catch (error) {
+                console.error("캐릭터 정보 불러오기 실패:", error);
+            }
+        }
+        fetchBlockedCharactersInfo();
+    }, []);
+
+    if (!blocked) return null;
+
+    const filtered = blocked.filter((b) =>
+        b.characterName?.includes(query) || b.personality?.includes(query)
     )
 
-    const handleUnblock = (id) => {
-        setBlocked((prev) => prev.filter((c) => c.id !== id))
+    const handleUnblock = async (id) => {
+        try {
+            await setCancelBlocked(id);
+            setBlocked((prev) => prev.filter((b) => b.id !== id));
+        } catch (error) {
+            if (error.response?.status !== 401) {
+                alert('차단 해제에 실패했어요');
+            }
+        }
     }
 
     return (
@@ -27,14 +45,14 @@ function MyPageBlocked() {
 
             {/* ── 페이지 헤더 ── */}
             <div className={classes.pageHeader}>
-                <button className={classes.backBtn} onClick={() => navigate('/mypage')}>←</button>
+                <button className={classes.backBtn} onClick={() => navigate('/mypage')}><BiLeftArrowAlt/></button>
                 <span className={classes.pageTitle}>차단한 캐릭터</span>
                 <span className={classes.count}>{blocked.length}</span>
             </div>
 
             {/* ── 안내 배너 ── */}
             <div className={classes.banner}>
-                ⚠ 차단한 캐릭터는 채팅 목록과 검색에 표시되지 않습니다
+                <BiError /> 차단한 캐릭터는 채팅 목록과 검색에 표시되지 않습니다
             </div>
 
             {/* ── 검색창 ── */}
@@ -55,7 +73,7 @@ function MyPageBlocked() {
             {/* ── 차단 목록 (리스트) ── */}
             {filtered.length === 0 ? (
                 <div className={classes.empty}>
-                    <span className={classes.emptyIcon}>🚫</span>
+                    <BiXCircle className={classes.emptyIcon} />
                     <span className={classes.emptyText}>
                         {query ? `"${query}" 검색 결과가 없어요` : '차단한 캐릭터가 없어요'}
                     </span>
@@ -65,13 +83,15 @@ function MyPageBlocked() {
                     {filtered.map((char) => (
                         <div key={char.id} className={classes.listItem}>
                             <div className={classes.listImageWrap}>
-                                {char.imageUrl
-                                    ? <img src={char.imageUrl} alt={char.name} className={classes.listImage} />
-                                    : <div className={classes.listImagePlaceholder}>{char.name.charAt(0)}</div>
-                                }
+                                <Avatar
+                                    filePath={char.characterImgUrl}
+                                    name={char.characterName}
+                                    imgClassName={classes.listImage}
+                                    className={classes.listImagePlaceholder}
+                                />
                             </div>
                             <div className={classes.listInfo}>
-                                <span className={classes.listName}>{char.name}</span>
+                                <span className={classes.listName}>{char.characterName}</span>
                                 {char.personality && (
                                     <span className={classes.listDesc}>{char.personality}</span>
                                 )}

@@ -46,6 +46,10 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
+.backBtn svg {
+    font-size: 20px;
+}
+
 .pageTitle {
     font-size: 16px;
     font-weight: 700;
@@ -64,6 +68,9 @@
 
 /* ── 안내 배너 ── */
 .banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 12px 16px;
     background: rgba(224, 92, 92, 0.07);
     border: 1px solid rgba(224, 92, 92, 0.2);
@@ -71,6 +78,11 @@
     font-size: 13px;
     color: #c97070;
     line-height: 1.5;
+}
+
+.banner svg {
+    font-size: 17px;
+    flex-shrink: 0;
 }
 
 /* ── 검색창 ── */
@@ -137,8 +149,9 @@
 }
 
 .emptyIcon {
-    font-size: 36px;
+    font-size: 40px;
     opacity: 0.4;
+    color: #e05c5c;
 }
 
 .emptyText {
@@ -162,11 +175,6 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 14px 16px;
-    transition: border-color 0.2s ease;
-}
-
-.listItem:hover {
-    border-color: var(--border-hover);
 }
 
 .listImageWrap {

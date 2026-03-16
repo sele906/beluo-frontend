@@ -93,11 +93,21 @@ export async function getCharacterDetail(id) {
 //like
 
 export async function setAddLiked(characterId) {
-  await api.post(`/character/${characterId}/like`);
+  await api.post(`/character/like/${characterId}`);
 }
 
 export async function setCancelLiked(characterId) {
-  await api.delete(`/character/${characterId}/like`);
+  await api.delete(`/character/like/${characterId}`);
+}
+
+//blocked
+
+export async function setAddBlocked(characterId) {
+  await api.post(`/character/blocked/${characterId}`);
+}
+
+export async function setCancelBlocked(characterId) {
+  await api.delete(`/character/blocked/${characterId}`);
 }
 
 //create
@@ -134,9 +144,33 @@ export async function logoutApi() {
 
 //mypage
 
+//마이페이지
+export async function mypageOverviewApi() {
+  const res = await api.get("/mypage/overview");
+  return res.data;
+}
+
 //회원정보
-export async function userInfoApi() {
-  const res = await api.get("/mypage/info");
+export async function profileApi() {
+  const res = await api.get("/mypage/profile");
+  return res.data;
+}
+
+//내 캐릭터
+export async function charactersApi() {
+  const res = await api.get("/mypage/characters");
+  return res.data;
+}
+
+//관심 캐릭터
+export async function likedApi() {
+  const res = await api.get("/mypage/liked");
+  return res.data;
+}
+
+//차단 캐릭터
+export async function blockedApi() {
+  const res = await api.get("/mypage/blocked");
   return res.data;
 }
 

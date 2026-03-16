@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import { getCharacterDetail, createConversation, setAddLiked, setCancelLiked } from "../../api/chatApi";
-import { BiHeart, BiSolidHeart } from "react-icons/bi";
+import { getCharacterDetail, createConversation, setAddLiked, setCancelLiked, setAddBlocked } from "../../api/chatApi";
+import { BiHeart, BiSolidHeart, BiDotsVerticalRounded } from "react-icons/bi";
 import { useAuth } from "../../hook/AuthContext";
 import Avatar from '../../components/common/Avatar';
 
@@ -14,6 +14,7 @@ function CharacterDetailModal() {
     const [isLoading, setIsLoading] = useState(false);
     const [liked, setLiked] = useState(detail.liked ?? false);
     const [likeCount, setLikeCount] = useState(detail.character.likeCount ?? 0);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const handleLike = async () => {
         if (!isLoggedIn) {
@@ -35,8 +36,27 @@ function CharacterDetailModal() {
         }
     };
 
+    const handleBlock = async () => {
+        setMenuOpen(false);
+        if (!isLoggedIn) {
+            alert('로그인이 필요한 서비스입니다.');
+            return;
+        }
+        const confirmed = window.confirm(`${detail.character.characterName}을(를) 차단하시겠어요?`);
+        if (!confirmed) return;
+        try {
+            await setAddBlocked(detail.character.id);
+            navigate('/');
+        } catch (error) {
+            if (error.response?.status !== 401) {
+                alert('차단 처리에 실패했어요');
+            }
+        }
+    };
+
     const handleBackdropClick = () => navigate(-1);
     const handleModalClick = (e) => e.stopPropagation();
+    const handleMenuToggle = (e) => { e.stopPropagation(); setMenuOpen(prev => !prev); };
 
     const handleStartChat = async () => {
         if (!isLoggedIn) {
@@ -57,6 +77,21 @@ function CharacterDetailModal() {
     return (
         <div className={classes.backdrop} onClick={handleBackdropClick}>
             <div className={classes.modal} onClick={handleModalClick}>
+
+                {/* 케밥 메뉴 */}
+                <div className={classes.menuWrapper}>
+                    <button className={classes.menuBtn} onClick={handleMenuToggle}>
+                        <BiDotsVerticalRounded />
+                    </button>
+                    {menuOpen && (
+                        <>
+                            <div className={classes.menuOverlay} onClick={(e) => { e.stopPropagation(); setMenuOpen(false); }} />
+                            <ul className={classes.dropdown}>
+                                <li onClick={handleBlock}>차단하기</li>
+                            </ul>
+                        </>
+                    )}
+                </div>
 
                 {/* 아바타 */}
                 <div className={classes.avatar}>
@@ -106,6 +141,7 @@ function CharacterDetailModal() {
                 >
                     {isLoading ? "생성 중..." : "대화 시작하기"}
                 </button>
+
 
             </div>
         </div>

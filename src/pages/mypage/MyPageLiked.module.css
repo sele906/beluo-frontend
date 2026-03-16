@@ -40,6 +40,10 @@
     transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
+.backBtn svg {
+    font-size: 20px;
+}
+
 .backBtn:hover {
     color: var(--text);
     border-color: var(--border-hover);
@@ -126,8 +130,9 @@
 }
 
 .emptyIcon {
-    font-size: 36px;
+    font-size: 40px;
     opacity: 0.4;
+    color: #e05c7a;
 }
 
 .emptyText {
@@ -144,6 +149,8 @@
 
 /* ── 카드 ── */
 .card {
+    text-decoration: none;
+    color: inherit;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -229,6 +236,10 @@
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
 }
 
 .actionBtn:hover {

@@ -1,27 +1,43 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { BiSearch } from 'react-icons/bi'
-import classes from './MyPageLiked.module.css'
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { BiSearch, BiHeart, BiLeftArrowAlt } from 'react-icons/bi';
+import { likedApi, setCancelLiked } from '../../api/chatApi';
+import Avatar from '../../components/common/Avatar';
 
-// 임시 더미 데이터 (추후 API 연동)
-const initialCharacters = [
-    { id: 10, name: '카이', personality: '거친 말투의 용병, 하지만 동료에게는 헌신적' },
-    { id: 11, name: '엘레나', personality: '왕국 최고의 치유사, 항상 미소를 잃지 않음' },
-    { id: 12, name: '다크로드', personality: '세상을 지배하려는 야망을 가진 마왕' },
-    { id: 13, name: '미나', personality: '호기심 많은 탐험가' },
-]
+import classes from './MyPageLiked.module.css';
 
 function MyPageLiked() {
-    const navigate = useNavigate()
-    const [query, setQuery] = useState('')
-    const [liked, setLiked] = useState(initialCharacters)
+    const navigate = useNavigate();
+    const [query, setQuery] = useState('');
+    const [liked, setLiked] = useState();
 
-    const filtered = liked.filter((c) =>
-        c.name.includes(query) || c.personality.includes(query)
+    useEffect(() => {
+        async function fetchLikedCharactersInfo() {
+            try {
+                const data = await likedApi();
+                setLiked(data);
+            } catch (error) {
+                console.error("캐릭터 정보 불러오기 실패:", error);
+            }
+        }
+        fetchLikedCharactersInfo();
+    }, []);
+
+    if (!liked) return null;
+
+    const filtered = liked.filter((l) =>
+        l.characterName?.includes(query) || l.personality?.includes(query)
     )
 
-    const handleUnlike = (id) => {
-        setLiked((prev) => prev.filter((c) => c.id !== id))
+    const handleUnlike = async (id) => {
+        try {
+            await setCancelLiked(id);
+            setLiked((prev) => prev.filter((l) => l.id !== id));
+        } catch (error) {
+            if (error.response?.status !== 401) {
+                alert('좋아요 취소에 실패했어요');
+            }
+        }
     }
 
     return (
@@ -29,7 +45,7 @@ function MyPageLiked() {
 
             {/* ── 페이지 헤더 ── */}
             <div className={classes.pageHeader}>
-                <button className={classes.backBtn} onClick={() => navigate('/mypage')}>←</button>
+                <button className={classes.backBtn} onClick={() => navigate('/mypage')}><BiLeftArrowAlt/></button>
                 <span className={classes.pageTitle}>관심 캐릭터</span>
                 <span className={classes.count}>{liked.length}</span>
             </div>
@@ -52,7 +68,7 @@ function MyPageLiked() {
             {/* ── 캐릭터 그리드 ── */}
             {filtered.length === 0 ? (
                 <div className={classes.empty}>
-                    <span className={classes.emptyIcon}>♡</span>
+                    <BiHeart className={classes.emptyIcon} />
                     <span className={classes.emptyText}>
                         {query ? `"${query}" 검색 결과가 없어요` : '좋아요한 캐릭터가 없어요'}
                     </span>
@@ -60,15 +76,17 @@ function MyPageLiked() {
             ) : (
                 <div className={classes.grid}>
                     {filtered.map((char) => (
-                        <div key={char.id} className={classes.card}>
+                        <Link key={char.id} className={classes.card} to={"/character/" + char.id}>
                             <div className={classes.cardImageWrap}>
-                                {char.imageUrl
-                                    ? <img src={char.imageUrl} alt={char.name} className={classes.cardImage} />
-                                    : <div className={classes.cardImagePlaceholder}>{char.name.charAt(0)}</div>
-                                }
+                                <Avatar
+                                    filePath={char.characterImgUrl}
+                                    name={char.characterName}
+                                    imgClassName={classes.cardImage}
+                                    className={classes.cardImagePlaceholder}
+                                />
                             </div>
                             <div className={classes.cardBody}>
-                                <span className={classes.cardName}>{char.name}</span>
+                                <span className={classes.cardName}>{char.characterName}</span>
                                 {char.personality && (
                                     <span className={classes.cardDesc}>{char.personality}</span>
                                 )}
@@ -76,12 +94,12 @@ function MyPageLiked() {
                             <div className={classes.cardActions}>
                                 <button
                                     className={`${classes.actionBtn} ${classes.actionBtnDanger}`}
-                                    onClick={() => handleUnlike(char.id)}
+                                    onClick={(e) => { e.preventDefault(); handleUnlike(char.id); }}
                                 >
-                                    ♥ 좋아요 취소
+                                    <BiHeart /> 좋아요 취소
                                 </button>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}
