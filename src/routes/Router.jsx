@@ -5,6 +5,10 @@ import Main from "../pages/main/Main";
 import ChatList from "../pages/chat/ChatList";
 import Create from "../pages/create/Create";
 import MyPage from "../pages/mypage/MyPage";
+import MyPageProfile from "../pages/mypage/MyPageProfile";
+import MyPageCharacters from "../pages/mypage/MyPageCharacters";
+import MyPageLiked from "../pages/mypage/MyPageLiked";
+import MyPageBlocked from "../pages/mypage/MyPageBlocked";
 import ChatRoom from "../pages/chat/ChatRoom";
 import Login from "../pages/auth/Login";
 import Join from "../pages/auth/Join";
@@ -32,7 +36,12 @@ const Router = createBrowserRouter([
         
         {path: '/chat', element: <ChatRoom />},
         {path: '/create', element: <Create />},
-        {path: '/mypage', element: <MyPage />},
+
+        { path: '/mypage', element: <MyPage /> },
+        { path: '/mypage/profile', element: <MyPageProfile /> },
+        { path: '/mypage/characters', element: <MyPageCharacters /> },
+        { path: '/mypage/liked', element: <MyPageLiked /> },
+        { path: '/mypage/blocked', element: <MyPageBlocked /> },
 
     ]},
     {path: '/login', element: <Login/>},

@@ -70,7 +70,7 @@ function CharacterDetailModal() {
                 {/* 이름 */}
                 <div className={classes.nameInfo}>
                     <h2 className={classes.name}>{detail.character.characterName}</h2>
-                    <p className={classes.userId}>@ {detail.character.userId}</p>
+                    <p className={classes.userId}>@ {detail.author.name}</p>
                 </div>
                 
                 {/* 성격 */}

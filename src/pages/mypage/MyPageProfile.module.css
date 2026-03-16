@@ -1,0 +1,227 @@
+/* ── 페이지 레이아웃 ── */
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 32px 28px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.page::-webkit-scrollbar { width: 4px; }
+.page::-webkit-scrollbar-track { background: transparent; }
+.page::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 99px;
+}
+
+/* ── 페이지 헤더 ── */
+.pageHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.backBtn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.backBtn:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.pageTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* ── 아바타 ── */
+.avatarWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0 4px;
+}
+
+.avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--avatar-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    box-shadow: 0 0 0 3px var(--accent-glow-sm);
+}
+
+.avatarHint {
+    font-size: 12px;
+    color: var(--text-subtle);
+}
+
+/* ── 폼 카드 ── */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── 섹션 ── */
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sectionTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.sectionDesc {
+    margin: -8px 0 0;
+    font-size: 12px;
+    color: var(--text-subtle);
+}
+
+/* ── 구분선 ── */
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 -28px;
+}
+
+/* ── 필드 ── */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.input {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 15px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input::placeholder {
+    color: var(--text-dim);
+}
+
+.input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow-sm);
+}
+
+.inputDisabled {
+    color: var(--text-subtle);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ── 저장 버튼 ── */
+.saveBtn {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    margin-top: 4px;
+}
+
+.saveBtn:hover {
+    opacity: 0.88;
+    box-shadow: 0 0 16px var(--accent-glow-md);
+}
+
+.saveBtn:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+}
+
+/* ── 회원 탈퇴 ── */
+.deleteBtn {
+    align-self: center;
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: var(--text-subtle);
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.2s ease;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.deleteBtn:hover {
+    color: #e05c5c;
+}
+
+/* ── 모바일 ── */
+@media (max-width: 600px) {
+    .page {
+        padding: 20px 16px;
+        gap: 16px;
+    }
+
+    .card {
+        padding: 22px 20px;
+    }
+
+    .divider {
+        margin: 0 -20px;
+    }
+
+    .input {
+        font-size: 16px; /* iOS 자동 확대 방지 */
+    }
+
+    .saveBtn {
+        padding: 15px;
+        font-size: 16px;
+    }
+}

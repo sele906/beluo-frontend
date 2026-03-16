@@ -132,4 +132,12 @@ export async function logoutApi() {
   return res.data;
 }
 
+//mypage
+
+//회원정보
+export async function userInfoApi() {
+  const res = await api.get("/mypage/info");
+  return res.data;
+}
+
 

@@ -62,9 +62,10 @@ function ChatRoom() {
           characterName: detail.characterName,
           characterImgUrl: detail.characterImgUrl,
           conversationName: detail.conversationName,
-          // userId: detail.userId,
-          // userEmail: detail.userEmail,
-          // userName: detail.userName,
+          userId: detail.userId,
+          userEmail: detail.userEmail,
+          userName: detail.userName,
+          userImgUrl: detail.userImgUrl
         });
 
         // 첫 10개 메시지 로드 (before 없이 호출 = 최신 10개)
@@ -233,6 +234,18 @@ function ChatRoom() {
                   name={info.characterName}
                   className={classes.aiAvatarImg}
                   size={150}
+                />
+              </div>
+            )}
+
+            {/* 유저 아바타 */}
+            {m.role === "user" && (
+              <div className={classes.userAvatar}>
+                <Avatar
+                  filePath={info.userImgUrl}
+                  name={info.userName}
+                  imgClassName={classes.userAvatarImg}
+                  size={72}
                 />
               </div>
             )}

@@ -1,7 +1,7 @@
 /* ── 전체 레이아웃 ── */
 
 .chatRoomWrapper {
-    max-width: 900px;
+    max-width: 800px;
     margin: 0 auto;
     height: 100%;
 }
@@ -113,6 +113,29 @@
 
 /* ── AI 아바타 이미지 ── */
 .aiAvatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* ── 유저 아바타 ── */
+.userAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--avatar-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.userAvatarImg {
     width: 100%;
     height: 100%;
     object-fit: cover;
