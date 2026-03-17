@@ -24,7 +24,6 @@ function ChatRoom() {
   const bottomRef = useRef(null);
   const topRef = useRef(null);           // 스크롤 최상단 감지용
   const messageAreaRef = useRef(null);   // 스크롤 위치 복원용
-  console.log(messageAreaRef); //다른 대화방에 갔다가 다시 들어오면 스크롤 위치 가운데로 되어있음 다른 채팅방의 스크롤 위치에 영향받는듯..??
 
   // 스크롤 제어 플래그
   const shouldScrollBottom = useRef(false);  // 바닥 스크롤 여부

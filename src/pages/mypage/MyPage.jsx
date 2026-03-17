@@ -104,8 +104,8 @@ function PreviewSection({ title, items, emptyMsg, onMore }) {
                             </div>
                             <div className={classes.charBody}>
                                 <span className={classes.charName}>{item.characterName}</span>
-                                {item.personality && (
-                                    <span className={classes.charDesc}>{item.personality}</span>
+                                {item.summary && (
+                                    <span className={classes.charDesc}>{item.summary}</span>
                                 )}
                             </div>
                         </Link>

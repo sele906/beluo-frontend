@@ -86,8 +86,8 @@ function MyPageCharacters() {
                             </div>
                             <div className={classes.cardBody}>
                                 <span className={classes.cardName}>{char.characterName}</span>
-                                {char.personality && (
-                                    <span className={classes.cardDesc}>{char.personality}</span>
+                                {char.summary && (
+                                    <span className={classes.cardDesc}>{char.summary}</span>
                                 )}
                             </div>
                             <div className={classes.cardActions}>

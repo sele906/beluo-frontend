@@ -46,7 +46,7 @@ function CharacterDetailModal() {
         if (!confirmed) return;
         try {
             await setAddBlocked(detail.character.id);
-            navigate('/');
+            navigate(-1);
         } catch (error) {
             if (error.response?.status !== 401) {
                 alert('차단 처리에 실패했어요');

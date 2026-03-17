@@ -19,7 +19,7 @@ const CharacterCard = ({ character }) => (
         </div>
         <div className={classes.cardBody}>
             <h4 className={classes.cardName}>{character.characterName}</h4>
-            <p className={classes.cardPersonality}>{character.personality}</p>
+            <p className={classes.cardPersonality}>{character.summary}</p>
             <div className={classes.cardTags}>
                 {character.tag?.map((t) => (
                     <span key={t} className={classes.tag}>{t}</span>
