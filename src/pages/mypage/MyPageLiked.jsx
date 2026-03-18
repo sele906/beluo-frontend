@@ -76,7 +76,7 @@ function MyPageLiked() {
             ) : (
                 <div className={classes.grid}>
                     {filtered.map((char) => (
-                        <Link key={char.id} className={classes.card} to={"/character/" + char.id}>
+                        <Link key={char.id} className={classes.card} to={`/character/${char.id}`}>
                             <div className={classes.cardImageWrap}>
                                 <Avatar
                                     filePath={char.characterImgUrl}

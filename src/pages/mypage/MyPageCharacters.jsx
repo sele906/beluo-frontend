@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { BiSearch, BiPlus, BiLeftArrowAlt } from 'react-icons/bi';
-import { charactersApi } from '../../api/chatApi';
+import { charactersApi, deleteCharacter } from '../../api/chatApi';
 import Avatar from '../../components/common/Avatar';
 
 import classes from './MyPageCharacters.module.css';
@@ -28,6 +28,20 @@ function MyPageCharacters() {
     const filtered = character.filter((c) =>
         c.characterName?.includes(query) || c.personality?.includes(query)
     )
+
+    async function handleDelete(id) {
+    if (!window.confirm("캐릭터를 삭제하시겠습니까?")) return;
+
+    try {
+        await deleteCharacter(id);
+
+            // UI에서 바로 제거 (핵심)
+            setCharacters((prev) => prev.filter((c) => c.id !== id));
+
+        } catch (error) {
+            console.error("삭제 실패:", error);
+        }
+    }
 
     return (
         <div className={classes.page}>
@@ -75,7 +89,7 @@ function MyPageCharacters() {
             ) : (
                 <div className={classes.grid}>
                     {filtered.map((char) => (
-                        <Link key={char.id} className={classes.card} to={"/character/" + char.id}>
+                        <Link key={char.id} className={classes.card} to={`/character/${char.id}`}>
                             <div className={classes.cardImageWrap}>
                                 <Avatar
                                     filePath={char.characterImgUrl}
@@ -91,8 +105,17 @@ function MyPageCharacters() {
                                 )}
                             </div>
                             <div className={classes.cardActions}>
-                                <button className={classes.actionBtn}>수정</button>
-                                <button className={`${classes.actionBtn} ${classes.actionBtnDanger}`}>삭제</button>
+                                <button className={classes.actionBtn} onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        navigate(`/mypage/character/${char.id}/edit`);
+                                    }}>수정</button>
+                                <button className={`${classes.actionBtn} ${classes.actionBtnDanger}`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleDelete(char.id);
+                                }}>삭제</button>
                             </div>
                         </Link>
                     ))}

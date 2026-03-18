@@ -7,6 +7,7 @@ import Create from "../pages/create/Create";
 import MyPage from "../pages/mypage/MyPage";
 import MyPageProfile from "../pages/mypage/MyPageProfile";
 import MyPageCharacters from "../pages/mypage/MyPageCharacters";
+import MyPageCharactersEdit from "../pages/mypage/MyPageCharactersEdit";
 import MyPageLiked from "../pages/mypage/MyPageLiked";
 import MyPageBlocked from "../pages/mypage/MyPageBlocked";
 import ChatRoom from "../pages/chat/ChatRoom";
@@ -40,13 +41,18 @@ const Router = createBrowserRouter([
         { path: '/mypage', element: <MyPage />, children: [
             {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
         ]},
+
         { path: '/mypage/profile', element: <MyPageProfile /> },
+
         { path: '/mypage/characters', element: <MyPageCharacters />, children: [
             {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
         ]},
+        { path: '/mypage/character/:id/edit', element: <MyPageCharactersEdit /> },
+
         { path: '/mypage/liked', element: <MyPageLiked />, children: [
             {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
         ]},
+
         { path: '/mypage/blocked', element: <MyPageBlocked /> },
 
     ]},

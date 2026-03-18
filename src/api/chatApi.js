@@ -43,7 +43,6 @@ export async function sendChat(message, sessionId) {
 export async function getMessageList(sessionId, before) {
   const params = { sessionId };
   if (before) params.before = before;
-
   const res = await api.get("/chat/messages", { params });
   return res.data;
 }
@@ -83,10 +82,9 @@ export async function getCharacterList() {
   return res.data;
 }
 
-//캐릭터 상세 페이지
-export async function getCharacterDetail(id) {
-  const res = await api.get("/character/detail?id=" + id);
-  console.log(res.data);
+//캐릭터 요약 상세 페이지
+export async function getCharacterSummaryDetail(id) {
+  const res = await api.get(`/character/${id}/summary`);
   return res.data;
 }
 
@@ -156,10 +154,41 @@ export async function profileApi() {
   return res.data;
 }
 
+//회원정보 수정하기
+export async function updateProfile(formData) {
+  const res = await api.patch(`/mypage/profile`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+}
+
 //내 캐릭터
 export async function charactersApi() {
   const res = await api.get("/mypage/characters");
   return res.data;
+}
+
+//캐릭터 상세 페이지
+export async function getCharacterDetail(id) {
+  const res = await api.get(`/mypage/characters/${id}`);
+  return res.data;
+}
+
+//캐릭터 수정하기
+export async function updateCharacter(id, formData) {
+  const res = await api.patch(`/mypage/characters/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+}
+
+//캐릭터 삭제하기
+export async function deleteCharacter(id) {
+  await api.delete(`/mypage/characters/${id}`);
 }
 
 //관심 캐릭터

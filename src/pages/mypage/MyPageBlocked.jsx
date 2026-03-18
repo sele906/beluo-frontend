@@ -92,8 +92,8 @@ function MyPageBlocked() {
                             </div>
                             <div className={classes.listInfo}>
                                 <span className={classes.listName}>{char.characterName}</span>
-                                {char.personality && (
-                                    <span className={classes.listDesc}>{char.personality}</span>
+                                {char.summary && (
+                                    <span className={classes.listDesc}>{char.summary}</span>
                                 )}
                             </div>
                             <button

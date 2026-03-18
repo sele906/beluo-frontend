@@ -8,7 +8,7 @@ import classes from "./Main.module.css";
 
 const CharacterCard = ({ character }) => (
     <div className={classes.card}>
-    <Link className={classes.cardLink} to={"/character/" + character.id}>
+    <Link className={classes.cardLink} to={`/character/${character.id}`}>
         <div className={classes.cardImageWrap}>
             <Avatar
                 filePath={character.characterImgUrl}

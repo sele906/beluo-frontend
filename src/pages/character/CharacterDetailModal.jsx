@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import { getCharacterDetail, createConversation, setAddLiked, setCancelLiked, setAddBlocked } from "../../api/chatApi";
+import { getCharacterSummaryDetail, createConversation, setAddLiked, setCancelLiked, setAddBlocked } from "../../api/chatApi";
 import { BiHeart, BiSolidHeart, BiDotsVerticalRounded } from "react-icons/bi";
 import { useAuth } from "../../hook/AuthContext";
 import Avatar from '../../components/common/Avatar';
@@ -151,5 +151,5 @@ function CharacterDetailModal() {
 export default CharacterDetailModal;
 
 export async function loader({params}) {
-    return await getCharacterDetail(params.id);
+    return await getCharacterSummaryDetail(params.id);
 }
