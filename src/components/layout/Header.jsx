@@ -43,7 +43,7 @@ function Header() {
     ];
 
     return (
-        <header className={classes.header}>
+        <header className={`${classes.header} ${searchOpen ? classes.searchMode : ""}`}>
 
             {/* 로고 */}
             <Link to="/" className={classes.logo}>

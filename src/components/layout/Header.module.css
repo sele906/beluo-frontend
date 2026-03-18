@@ -203,4 +203,25 @@
         justify-content: center;
         border-radius: 8px;
     }
+
+    /* ── 검색 모드: 헤더 전체가 검색창으로 ── */
+    .searchMode .logo,
+    .searchMode .userMenu,
+    .searchMode .authBtn {
+        display: none;
+    }
+
+    .searchMode .actions {
+        flex: 1;
+    }
+
+    .searchMode .searchWrap {
+        flex: 1;
+        width: 100%;
+    }
+
+    .searchMode .searchInput {
+        width: 100%;
+        min-width: 0;
+    }
 }
