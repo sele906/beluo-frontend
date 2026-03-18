@@ -15,7 +15,6 @@ function Header() {
 
     const handleSearchSubmit = (e) => {
         if (e.key === "Enter" && searchValue.trim()) {
-            // 나중에 검색 라우트 연결
             navigate(`/search?q=${searchValue.trim()}`);
         }
     };

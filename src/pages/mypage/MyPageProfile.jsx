@@ -63,7 +63,7 @@ function MyPageProfile() {
         const profileData = {
             name,
             userImgUrl: user.userImgUrl,
-            ...((!isGoogle && currentPw) && { currentPassword: currentPw, newPassword: newPw }),
+            ...((!isGoogle && newPw) && { password: newPw }),
         };
 
         const formData = new FormData();

@@ -76,9 +76,15 @@ export async function getConversationDetail(sessionId) {
 
 //charcter
 
-//캐릭터 목록 가져오기
-export async function getCharacterList() {
-  const res = await api.get("/character/list");
+//캐릭터 요약 목록 가져오기
+export async function getCharacterOverviewList() {
+  const res = await api.get("/character");
+  return res.data;
+}
+
+//캐릭터 검색 목록 가져오기
+export async function getCharacterList(keyword) {
+  const res = await api.get("/character/list", { params: { keyword: keyword } });
   return res.data;
 }
 

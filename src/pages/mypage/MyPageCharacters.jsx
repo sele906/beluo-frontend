@@ -26,7 +26,7 @@ function MyPageCharacters() {
     if (!character) return null;
 
     const filtered = character.filter((c) =>
-        c.characterName?.includes(query) || c.personality?.includes(query)
+        c.characterName?.includes(query) || c.summary?.includes(query)
     )
 
     async function handleDelete(id) {

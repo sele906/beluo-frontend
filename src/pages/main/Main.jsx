@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCharacterList } from "../../api/chatApi";
+import { getCharacterOverviewList } from "../../api/chatApi";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Avatar from "../../components/common/Avatar";
 import { useAuth } from "../../hook/AuthContext";
@@ -15,6 +15,7 @@ const CharacterCard = ({ character }) => (
                 name={character.characterName}
                 imgClassName={classes.cardImage}
                 placeholderClassName={classes.cardImagePlaceholder}
+                size={300}
             />
         </div>
         <div className={classes.cardBody}>
@@ -55,7 +56,7 @@ function Main() {
         if (location.pathname !== '/') return;
         async function fetchCharacters() {
             try {
-                const data = await getCharacterList();
+                const data = await getCharacterOverviewList();
                 setCharacterList(data);
             } catch (error) {
                 console.error("캐릭터 목록 불러오기 실패:", error);

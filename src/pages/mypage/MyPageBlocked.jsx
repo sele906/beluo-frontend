@@ -26,7 +26,7 @@ function MyPageBlocked() {
     if (!blocked) return null;
 
     const filtered = blocked.filter((b) =>
-        b.characterName?.includes(query) || b.personality?.includes(query)
+        b.characterName?.includes(query) || b.summary?.includes(query)
     )
 
     const handleUnblock = async (id) => {

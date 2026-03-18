@@ -26,7 +26,7 @@ function MyPageLiked() {
     if (!liked) return null;
 
     const filtered = liked.filter((l) =>
-        l.characterName?.includes(query) || l.personality?.includes(query)
+        l.characterName?.includes(query) || l.summary?.includes(query)
     )
 
     const handleUnlike = async (id) => {
