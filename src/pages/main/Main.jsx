@@ -23,7 +23,7 @@ const CharacterCard = ({ character }) => (
             <p className={classes.cardPersonality}>{character.summary}</p>
             <div className={classes.cardTags}>
                 {character.tag?.map((t) => (
-                    <span key={t} className={classes.tag}>{t}</span>
+                    <span key={t} className={classes.tag}>#{t}</span>
                 ))}
             </div>
         </div>
@@ -73,12 +73,19 @@ function Main() {
             <div className={classes.main}>
 
                 {showLiked && (
-                    <Section title="❤️ 관심순" characters={characterList.liked} />
+                    <section className={`${classes.section} ${classes.likedSection}`}>
+                        <h3 className={classes.sectionTitle}>❤️ 내가 찜한 캐릭터</h3>
+                        <div className={classes.cardGrid}>
+                            {characterList.liked.map((m) => (
+                                <CharacterCard key={m.id} character={m} />
+                            ))}
+                        </div>
+                    </section>
                 )}
 
-                <Section title="🔥 인기순" characters={characterList.popular} />
-                
-                <Section title="✨ 신규순" characters={characterList.recent} />
+                <Section title="🔥 요즘 뜨는 캐릭터" characters={characterList.popular} />
+
+                <Section title="✨ 신규 캐릭터" characters={characterList.recent} />
             </div>
         </>
     );
