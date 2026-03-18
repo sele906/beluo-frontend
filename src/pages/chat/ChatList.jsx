@@ -43,6 +43,10 @@ function ChatList() {
                     placeholder="대화 또는 캐릭터 이름 검색..."
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
                 />
                 {searchValue && (
                     <button className={classes.clearBtn} onClick={() => setSearchValue("")}>✕</button>

@@ -170,6 +170,7 @@ function MyPageProfile() {
                                     value={currentPw}
                                     onChange={(e) => setCurrentPw(e.target.value)}
                                     placeholder="현재 비밀번호"
+                                    autoComplete="current-password"
                                 />
                             </div>
 
@@ -181,6 +182,7 @@ function MyPageProfile() {
                                     value={newPw}
                                     onChange={(e) => setNewPw(e.target.value)}
                                     placeholder="새 비밀번호"
+                                    autoComplete="new-password"
                                 />
                             </div>
 
@@ -192,6 +194,7 @@ function MyPageProfile() {
                                     value={confirmPw}
                                     onChange={(e) => setConfirmPw(e.target.value)}
                                     placeholder="새 비밀번호 확인"
+                                    autoComplete="new-password"
                                 />
                             </div>
                         </div>

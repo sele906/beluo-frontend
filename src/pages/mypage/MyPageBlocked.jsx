@@ -64,6 +64,10 @@ function MyPageBlocked() {
                     placeholder="캐릭터 이름으로 검색"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
                 />
                 {query && (
                     <button className={classes.clearBtn} onClick={() => setQuery('')}>✕</button>

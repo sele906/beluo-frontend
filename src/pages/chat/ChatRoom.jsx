@@ -273,6 +273,10 @@ function ChatRoom() {
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           placeholder="메시지를 입력하세요..."
           disabled={isLoading}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
         />
         <button
           className={classes.sendBtn}
