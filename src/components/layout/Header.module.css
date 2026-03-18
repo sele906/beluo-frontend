@@ -204,7 +204,7 @@
     .authBtn {
         width: 36px;
         height: 36px;
-        padding: 0;
+        padding: 0 3px 0 0;
         justify-content: center;
         border-radius: 8px;
     }
