@@ -64,7 +64,7 @@ function Header() {
                             onChange={(e) => setSearchValue(e.target.value)}
                             onKeyDown={handleSearchSubmit}
                             autoFocus
-                            autoComplete="tickwirj"
+                            autoComplete="off"
                             autoCorrect="off"
                             autoCapitalize="off"
                             spellCheck="false"
