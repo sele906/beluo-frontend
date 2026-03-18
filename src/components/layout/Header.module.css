@@ -63,6 +63,11 @@
     color: var(--text-subtle);
 }
 
+/* ── 검색 아이콘 (searchOpen 안에 있는 버튼) ── */
+.searchWrap .iconBtn {
+    flex-shrink: 0;
+}
+
 /* ── 공통 아이콘 버튼 ── */
 .iconBtn {
     width: 36px;
@@ -218,10 +223,17 @@
     .searchMode .searchWrap {
         flex: 1;
         width: 100%;
+        background: rgba(255, 255, 255, 0.08);
+        border: none;
+        border-radius: 999px;
+        padding: 0 6px 0 14px;
+        gap: 0;
     }
 
     .searchMode .searchInput {
         width: 100%;
         min-width: 0;
+        font-size: 15px;
+        padding: 0;
     }
 }
