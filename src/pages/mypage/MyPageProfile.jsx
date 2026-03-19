@@ -102,14 +102,17 @@ function MyPageProfile() {
                 <div className={classes.avatarClickable} onClick={() => fileInputRef.current?.click()}>
                     {preview ? (
                         <img src={preview} alt="avatar" className={classes.avatarImg} />
-                    ) : (
+                    ) : user.userImgUrl ? (
                         <Avatar
                             filePath={user.userImgUrl}
                             name={user.name}
                             imgClassName={classes.avatarImg}
-                            placeholderClassName={classes.avatarPlaceholder}
                             size={150}
                         />
+                    ) : (
+                        <div className={classes.avatarPlaceholder}>
+                            {user.name?.charAt(0).toUpperCase()}
+                        </div>
                     )}
                     <div className={classes.avatarOverlay}>
                         <BiCamera size={22} />

@@ -14,7 +14,7 @@ const CharacterCard = ({ character }) => (
                 filePath={character.characterImgUrl}
                 name={character.characterName}
                 imgClassName={classes.cardImage}
-                placeholderClassName={classes.cardImagePlaceholder}
+                card={true}
                 size={300}
             />
         </div>

@@ -98,7 +98,6 @@ function CharacterDetailModal() {
                     <Avatar
                         filePath={detail.character.characterImgUrl}
                         name={detail.character.characterName}
-                        className={classes.avatarImg}
                     />
                 </div>
 
@@ -123,7 +122,7 @@ function CharacterDetailModal() {
                 {/* 태그 */}
                 <div className={classes.tags}>
                     {detail.character.tag?.map((t) => (
-                        <span key={t} className={classes.tag}>{t}</span>
+                        <span key={t} className={classes.tag}>#{t}</span>
                     ))}
                 </div>
 

@@ -59,6 +59,7 @@ export async function createConversation(characterId) {
 export async function getConversationList() {
   try {
     const res = await api.get("/conversation/list");
+    console.log(res.data);
     return res.data;
   } catch (error) {
     console.error("채팅방 목록 불러오기 실패:", error);

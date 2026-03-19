@@ -1,5 +1,6 @@
 import { Link, NavLink, useLoaderData } from "react-router-dom";
-import { BiHome, BiPlusCircle, BiMessageDetail, BiSolidUser, BiChat } from "react-icons/bi";
+import { BiHome, BiPlusCircle, BiMessageDetail, BiSolidUser, } from "react-icons/bi";
+import Avatar from "../../components/common/Avatar";
 
 import classes from "./Sidebar.module.css";
 
@@ -34,7 +35,15 @@ function Sidebar({conversations}) {
                                     title={r.characterName}
                                     className={classes.chatItem}
                                 >
-                                    <span className={classes.chatDot} />
+                                    {/* 아바타 */}
+                                    <div className={classes.avatar}>
+                                        <Avatar
+                                            filePath={r.characterImgUrl}
+                                            name={r.characterName}
+                                            size={200}
+                                        />
+                                    </div>
+
                                     <span className={classes.chatName}>{r.conversationName}</span>
                                 </Link>
                             ))

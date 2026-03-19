@@ -52,7 +52,7 @@ function MyPageBlocked() {
 
             {/* ── 안내 배너 ── */}
             <div className={classes.banner}>
-                <BiError /> 차단한 캐릭터는 채팅 목록과 검색에 표시되지 않습니다
+                <BiError /> 차단한 캐릭터는 채팅 · 관심 · 검색 목록에서 숨겨집니다
             </div>
 
             {/* ── 검색창 ── */}

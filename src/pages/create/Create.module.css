@@ -254,6 +254,19 @@
   min-height: 90px;
 }
 
+.textarea::-webkit-scrollbar {
+    width: 3px;
+}
+
+.textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.textarea::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
 /* 태그 */
 .tagBox {
   background: var(--surface);

@@ -95,7 +95,7 @@ function MyPageCharacters() {
                                     filePath={char.characterImgUrl}
                                     name={char.characterName}
                                     imgClassName={classes.cardImage}
-                                    className={classes.cardImagePlaceholder}
+                                    card={true}
                                 />
                             </div>
                             <div className={classes.cardBody}>

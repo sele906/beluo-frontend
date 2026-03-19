@@ -38,7 +38,6 @@ function MyPage() {
                     <Avatar
                         filePath={user.userImgUrl}
                         name={user.name}
-                        imgClassName={classes.avatarImg}
                         size={128}
                     />
                 </div>

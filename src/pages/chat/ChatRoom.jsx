@@ -199,7 +199,6 @@ function ChatRoom() {
           <Avatar
             filePath={info.characterImgUrl}
             name={info.characterName}
-            className={classes.aiAvatarImg}
             size={150}
           />
         </div>
@@ -231,7 +230,6 @@ function ChatRoom() {
                 <Avatar
                   filePath={info.characterImgUrl}
                   name={info.characterName}
-                  className={classes.aiAvatarImg}
                   size={150}
                 />
               </div>
@@ -243,7 +241,6 @@ function ChatRoom() {
                 <Avatar
                   filePath={info.userImgUrl}
                   name={info.userName}
-                  imgClassName={classes.userAvatarImg}
                   size={72}
                 />
               </div>

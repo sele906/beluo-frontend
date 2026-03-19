@@ -73,7 +73,6 @@ function ChatList() {
                                 <Avatar
                                     filePath={c.characterImgUrl}
                                     name={c.characterName}
-                                    className={classes.avatarImg}
                                     size={200}
                                 />
                             </div>

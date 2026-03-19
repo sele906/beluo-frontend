@@ -54,7 +54,6 @@ function Create() {
   //파일 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!fileObj) return alert("이미지를 업로드해주세요.");
     setIsSubmitting(true);
 
     const formElements = e.target.elements;
@@ -69,7 +68,9 @@ function Create() {
 
     const formData = new FormData();
     formData.append("character", new Blob([JSON.stringify(characterData)], { type: "application/json" }));
-    formData.append("file", fileObj);
+    if (fileObj) {
+      formData.append("file", fileObj);
+    }
 
     try {
       const id = await createCharacter(formData);

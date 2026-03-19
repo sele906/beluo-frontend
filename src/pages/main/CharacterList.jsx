@@ -47,7 +47,7 @@ function CharacterList() {
                                         filePath={char.characterImgUrl}
                                         name={char.characterName}
                                         imgClassName={classes.cardImage}
-                                        placeholderClassName={classes.cardImagePlaceholder}
+                                        card={true}
                                     />
                                 </div>
                                 <div className={classes.cardBody}>

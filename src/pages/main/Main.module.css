@@ -194,6 +194,10 @@
         flex-shrink: 1;
     }
 
+    .cardImageWrap {
+        aspect-ratio: 1 / 1;
+    }
+
     .cardImagePlaceholder {
         width: 52px;
         height: 52px;
