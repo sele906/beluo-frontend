@@ -21,7 +21,7 @@ import Login from "../pages/auth/Login";
 import Join from "../pages/auth/Join";
 import OAuth2Redirect from "../pages/auth/OAuth2Redirect";
 
-import CharacterDetailModal, {loader as characterDetailLoader} from "../pages/character/CharacterDetailModal";
+import CharacterDetailModal, {loader as characterDetailLoader} from "../components/common/CharacterDetailModal";
 import PrivateRoute from "../components/common/PrivateRoute";
 
 const Router = createBrowserRouter([

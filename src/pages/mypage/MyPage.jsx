@@ -94,7 +94,7 @@ function PreviewSection({ title, items, emptyMsg, onMore }) {
             ) : (
                 <div className={classes.cardGrid}>
                     {(items ?? []).map((item) => (
-                        <Link key={item.id} className={classes.charCard} to={`/character/${item.id}`}>
+                        <Link key={item.id} className={classes.charCard} to={`character/${item.id}`}>
                             <div className={classes.charImageWrap}>
                                 {item.characterImgUrl
                                     ? <img src={item.characterImgUrl} alt={item.characterName} className={classes.charImage} />

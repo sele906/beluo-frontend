@@ -3,7 +3,7 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import { getCharacterSummaryDetail, createConversation, setAddLiked, setCancelLiked, setAddBlocked } from "../../api/chatApi";
 import { BiHeart, BiSolidHeart, BiDotsVerticalRounded } from "react-icons/bi";
 import { useAuth } from "../../hook/AuthContext";
-import Avatar from '../../components/common/Avatar';
+import Avatar from './Avatar';
 
 import classes from "./CharacterDetailModal.module.css";
 
@@ -106,7 +106,7 @@ function CharacterDetailModal() {
                     <h2 className={classes.name}>{detail.character.characterName}</h2>
                     <p className={classes.userId}>@ {detail.author.name}</p>
                 </div>
-                
+
                 {/* 성격 */}
                 <p className={classes.summary}>{detail.character.summary}</p>
 
@@ -140,7 +140,6 @@ function CharacterDetailModal() {
                 >
                     {isLoading ? "생성 중..." : "대화 시작하기"}
                 </button>
-
 
             </div>
         </div>

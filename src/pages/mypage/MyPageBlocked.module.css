@@ -61,9 +61,9 @@
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 20px;
-    background: rgba(224, 92, 92, 0.12);
-    color: #e05c5c;
-    border: 1px solid rgba(224, 92, 92, 0.25);
+    background: var(--danger-glow-sm);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
 }
 
 /* ── 안내 배너 ── */
@@ -72,69 +72,17 @@
     align-items: center;
     gap: 8px;
     padding: 12px 16px;
-    background: rgba(224, 92, 92, 0.07);
-    border: 1px solid rgba(224, 92, 92, 0.2);
+    background: var(--danger-glow-xs);
+    border: 1px solid var(--danger-glow-md);
     border-radius: var(--radius-md);
     font-size: 13px;
-    color: #c97070;
+    color: var(--danger-muted);
     line-height: 1.5;
 }
 
 .banner svg {
     font-size: 17px;
     flex-shrink: 0;
-}
-
-/* ── 검색창 ── */
-.searchWrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0 14px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.searchWrap:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow-sm);
-}
-
-.searchIcon {
-    font-size: 18px;
-    flex-shrink: 0;
-    color: var(--text-subtle);
-}
-
-.searchInput {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-size: 14px;
-    padding: 12px 0;
-}
-
-.searchInput::placeholder {
-    color: var(--text-dim);
-}
-
-.clearBtn {
-    background: none;
-    border: none;
-    color: var(--text-subtle);
-    font-size: 12px;
-    cursor: pointer;
-    padding: 2px 4px;
-    transition: color 0.2s ease;
-    flex-shrink: 0;
-}
-
-.clearBtn:hover {
-    color: var(--text-muted);
 }
 
 /* ── 빈 상태 ── */
@@ -151,7 +99,7 @@
 .emptyIcon {
     font-size: 40px;
     opacity: 0.4;
-    color: #e05c5c;
+    color: var(--danger);
 }
 
 .emptyText {
@@ -238,9 +186,9 @@
     flex-shrink: 0;
     padding: 6px 14px;
     background: transparent;
-    border: 1px solid rgba(224, 92, 92, 0.3);
+    border: 1px solid var(--danger-glow-lg);
     border-radius: var(--radius-sm);
-    color: #c97070;
+    color: var(--danger-muted);
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
@@ -249,9 +197,9 @@
 }
 
 .unblockBtn:hover {
-    background: rgba(224, 92, 92, 0.1);
-    border-color: #e05c5c;
-    color: #e05c5c;
+    background: var(--danger-glow-sm);
+    border-color: var(--danger);
+    color: var(--danger);
 }
 
 /* ── 모바일 ── */

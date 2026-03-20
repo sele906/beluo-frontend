@@ -18,13 +18,35 @@
 
     /* ── 포인트 색 ── */
     --accent:          #4B70D3;
+    --accent-light:    #7B96E8;
     --accent-glow-sm:  rgba(75, 112, 211, 0.15);
     --accent-glow-md:  rgba(75, 112, 211, 0.30);
     --accent-glow-lg:  rgba(75, 112, 211, 0.45);
+    --accent-border:   rgba(75, 112, 211, 0.25);
+
+    /* ── 위험/삭제 색 ── */
+    --danger:          #e05c5c;
+    --danger-muted:    #c97070;
+    --danger-glow-xs:  rgba(224, 92, 92, 0.07);
+    --danger-glow-sm:  rgba(224, 92, 92, 0.12);
+    --danger-glow-md:  rgba(224, 92, 92, 0.20);
+    --danger-border:   rgba(224, 92, 92, 0.25);
+    --danger-glow-lg:  rgba(224, 92, 92, 0.30);
+
+    /* ── 좋아요 색 ── */
+    --like:            #e05c7a;
+    --like-glow-sm:    rgba(224, 92, 122, 0.08);
 
     /* ── 보더 ── */
-    --border:       rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(255, 255, 255, 0.25);
+    --border:          rgba(255, 255, 255, 0.08);
+    --border-subtle:   rgba(255, 255, 255, 0.12);
+    --border-hover:    rgba(255, 255, 255, 0.25);
+
+    /* ── 인터랙션 ── */
+    --surface-hover:   rgba(255, 255, 255, 0.05);
+    --surface-glass:   rgba(18, 18, 18, 0.98);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.10);
+    --overlay:         rgba(0, 0, 0, 0.55);
 
     /* ── 아바타 그라디언트 ── */
     --avatar-gradient: linear-gradient(135deg, #2a3f8a, #4B70D3);

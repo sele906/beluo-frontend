@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { BiSearch, BiPlus, BiLeftArrowAlt } from 'react-icons/bi';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { BiPlus, BiLeftArrowAlt } from 'react-icons/bi';
 import { charactersApi, deleteCharacter } from '../../api/chatApi';
-import Avatar from '../../components/common/Avatar';
+import CharacterCard from '../../components/common/CharacterCard';
+import SearchBar from '../../components/common/SearchBar';
 
 import classes from './MyPageCharacters.module.css';
 
@@ -59,19 +60,11 @@ function MyPageCharacters() {
             </div>
 
             {/* ── 검색창 ── */}
-            <div className={classes.searchWrap}>
-                <BiSearch className={classes.searchIcon} />
-                <input
-                    className={classes.searchInput}
-                    type="text"
-                    placeholder="캐릭터 이름, 성격으로 검색"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                />
-                {query && (
-                    <button className={classes.clearBtn} onClick={() => setQuery('')}>✕</button>
-                )}
-            </div>
+            <SearchBar
+                value={query}
+                onChange={setQuery}
+                placeholder="캐릭터 이름, 성격으로 검색"
+            />
 
             {/* ── 캐릭터 그리드 ── */}
             {filtered.length === 0 ? (
@@ -89,35 +82,22 @@ function MyPageCharacters() {
             ) : (
                 <div className={classes.grid}>
                     {filtered.map((char) => (
-                        <Link key={char.id} className={classes.card} to={`/character/${char.id}`}>
-                            <div className={classes.cardImageWrap}>
-                                <Avatar
-                                    filePath={char.characterImgUrl}
-                                    name={char.characterName}
-                                    imgClassName={classes.cardImage}
-                                    card={true}
-                                />
-                            </div>
-                            <div className={classes.cardBody}>
-                                <span className={classes.cardName}>{char.characterName}</span>
-                                {char.summary && (
-                                    <span className={classes.cardDesc}>{char.summary}</span>
-                                )}
-                            </div>
-                            <div className={classes.cardActions}>
-                                <button className={classes.actionBtn} onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        navigate(`/mypage/character/${char.id}/edit`);
-                                    }}>수정</button>
-                                <button className={`${classes.actionBtn} ${classes.actionBtnDanger}`}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    handleDelete(char.id);
-                                }}>삭제</button>
-                            </div>
-                        </Link>
+                        <CharacterCard
+                            key={char.id}
+                            character={char}
+                            actions={
+                                <>
+                                    <button
+                                        className={classes.actionBtn}
+                                        onClick={() => navigate(`/mypage/character/${char.id}/edit`)}
+                                    >수정</button>
+                                    <button
+                                        className={`${classes.actionBtn} ${classes.actionBtnDanger}`}
+                                        onClick={() => handleDelete(char.id)}
+                                    >삭제</button>
+                                </>
+                            }
+                        />
                     ))}
                 </div>
             )}

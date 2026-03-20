@@ -25,58 +25,6 @@
     color: var(--text);
 }
 
-/* ── 검색바 ── */
-.searchBar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    transition: border-color 0.2s ease;
-}
-
-.searchBar:focus-within {
-    border-color: var(--accent);
-}
-
-.searchIcon {
-    font-size: 18px;
-    color: var(--text-subtle);
-    flex-shrink: 0;
-}
-
-.searchInput {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-size: 14px;
-    font-weight: 400;
-}
-
-.searchInput::placeholder {
-    color: var(--text-dim);
-}
-
-.clearBtn {
-    background: transparent;
-    border: none;
-    color: var(--text-subtle);
-    font-size: 13px;
-    cursor: pointer;
-    padding: 2px 4px;
-    border-radius: 4px;
-    transition: color 0.2s ease;
-    line-height: 1;
-}
-
-.clearBtn:hover {
-    color: var(--text);
-}
-
 /* ── 목록 ── */
 .list {
     display: flex;
@@ -93,7 +41,7 @@
     background: transparent;
 }
 .list::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--scrollbar-thumb);
     border-radius: 4px;
 }
 

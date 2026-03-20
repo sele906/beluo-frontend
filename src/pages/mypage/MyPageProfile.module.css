@@ -43,7 +43,7 @@
 .backBtn:hover {
     color: var(--text);
     border-color: var(--border-hover);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--surface-hover);
 }
 
 .backBtn svg {
@@ -100,7 +100,7 @@
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.55);
+    background: var(--overlay);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -250,7 +250,7 @@
 }
 
 .deleteBtn:hover {
-    color: #e05c5c;
+    color: var(--danger);
 }
 
 /* ── 모바일 ── */

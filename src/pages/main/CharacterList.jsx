@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link, Outlet, useSearchParams } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
 import { getCharacterList } from "../../api/chatApi";
-import Avatar from "../../components/common/Avatar";
+import CharacterCard from "../../components/common/CharacterCard";
 
 import classes from './CharacterList.module.css';
 
@@ -41,27 +41,12 @@ function CharacterList() {
                 ) : (
                     <div className={classes.grid}>
                         {characters.map((char) => (
-                            <Link key={char.id} className={classes.card} to={`character/${char.id}`}>
-                                <div className={classes.cardImageWrap}>
-                                    <Avatar
-                                        filePath={char.characterImgUrl}
-                                        name={char.characterName}
-                                        imgClassName={classes.cardImage}
-                                        card={true}
-                                    />
-                                </div>
-                                <div className={classes.cardBody}>
-                                    <span className={classes.cardName}>{char.characterName}</span>
-                                    {char.summary && (
-                                        <span className={classes.cardDesc}>{char.summary}</span>
-                                    )}
-                                    <div className={classes.cardTags}>
-                                        {char.tag?.map((t) => (
-                                            <span key={t} className={classes.tag}>#{t}</span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </Link>
+                            <CharacterCard
+                                key={char.id}
+                                character={char}
+                                to={{ pathname: `character/${char.id}`, search: searchParams.toString() }}
+                                showTags
+                            />
                         ))}
                     </div>
                 )}

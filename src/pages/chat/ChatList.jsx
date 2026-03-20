@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BiSearch, BiMessageDetail, BiChevronRight } from "react-icons/bi";
+import { BiMessageDetail, BiChevronRight } from "react-icons/bi";
 import { getConversationList } from "../../api/chatApi";
 import Avatar from "../../components/common/Avatar";
+import SearchBar from "../../components/common/SearchBar";
 
 import classes from "./ChatList.module.css";
 
@@ -35,23 +36,11 @@ function ChatList() {
             </div>
 
             {/* 검색 */}
-            <div className={classes.searchBar}>
-                <BiSearch className={classes.searchIcon} />
-                <input
-                    className={classes.searchInput}
-                    type="text"
-                    placeholder="대화 또는 캐릭터 이름 검색..."
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                />
-                {searchValue && (
-                    <button className={classes.clearBtn} onClick={() => setSearchValue("")}>✕</button>
-                )}
-            </div>
+            <SearchBar
+                value={searchValue}
+                onChange={setSearchValue}
+                placeholder="대화 또는 캐릭터 이름 검색..."
+            />
 
             {/* 목록 */}
             <div className={classes.list}>

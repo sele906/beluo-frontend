@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BiSearch, BiXCircle, BiError, BiLeftArrowAlt } from 'react-icons/bi';
+import { BiXCircle, BiError, BiLeftArrowAlt } from 'react-icons/bi';
 import { blockedApi, setCancelBlocked } from '../../api/chatApi';
 import Avatar from '../../components/common/Avatar';
+import SearchBar from '../../components/common/SearchBar';
 
 import classes from './MyPageBlocked.module.css';
 
@@ -56,23 +57,11 @@ function MyPageBlocked() {
             </div>
 
             {/* ── 검색창 ── */}
-            <div className={classes.searchWrap}>
-                <BiSearch className={classes.searchIcon} />
-                <input
-                    className={classes.searchInput}
-                    type="text"
-                    placeholder="캐릭터 이름으로 검색"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                />
-                {query && (
-                    <button className={classes.clearBtn} onClick={() => setQuery('')}>✕</button>
-                )}
-            </div>
+            <SearchBar
+                value={query}
+                onChange={setQuery}
+                placeholder="캐릭터 이름으로 검색"
+            />
 
             {/* ── 차단 목록 (리스트) ── */}
             {filtered.length === 0 ? (

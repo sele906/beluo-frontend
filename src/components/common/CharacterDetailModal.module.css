@@ -101,8 +101,8 @@
 }
 
 .like:hover {
-    border-color: #e05c7a;
-    color: #e05c7a;
+    border-color: var(--like);
+    color: var(--like);
 }
 
 .like:hover svg {
@@ -114,9 +114,9 @@
 }
 
 .liked {
-    color: #e05c7a;
-    border-color: #e05c7a;
-    background: rgba(224, 92, 122, 0.08);
+    color: var(--like);
+    border-color: var(--like);
+    background: var(--like-glow-sm);
 }
 
 /* ── 태그 ── */
@@ -133,7 +133,7 @@
     border-radius: 20px;
     background: var(--accent-glow-sm);
     color: var(--accent);
-    border: 1px solid rgba(75, 112, 211, 0.25);
+    border: 1px solid var(--accent-border);
 }
 
 /* ── 첫 메시지 ── */
@@ -254,7 +254,7 @@
 .dropdown li {
     padding: 9px 16px;
     font-size: 13px;
-    color: #e05c5c;
+    color: var(--danger);
     cursor: pointer;
     transition: background 0.1s ease;
 }
