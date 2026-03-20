@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams, useNavigate, Outlet } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { getConversationDetail, getMessageList, sendChat } from "../../api/chatApi";
 import Avatar from "../../components/common/Avatar";
+import ChatNameEditModal from "../../components/common/ChatNameEditModal";
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal";
 
-import { BiRightArrowAlt, BiSolidEdit } from "react-icons/bi";
+import { BiRightArrowAlt, BiDotsVerticalRounded, BiChevronLeft } from "react-icons/bi";
+import { useInfiniteScroll } from "../../hook/useInfiniteScroll";
 import classes from "./ChatRoom.module.css";
 
 function ChatRoom() {
@@ -22,9 +25,24 @@ function ChatRoom() {
   const [hasMore, setHasMore] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
+  const [kebabOpen, setKebabOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState(null); // 'rename' | 'delete' | null
+  const kebabRef = useRef(null);
+
   const bottomRef = useRef(null);
-  const topRef = useRef(null);           // 스크롤 최상단 감지용
   const messageAreaRef = useRef(null);   // 스크롤 위치 복원용
+
+  // kebab 외부 클릭 시 닫기
+  useEffect(() => {
+    if (!kebabOpen) return;
+    const handleClickOutside = (e) => {
+      if (kebabRef.current && !kebabRef.current.contains(e.target)) {
+        setKebabOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [kebabOpen]);
 
   // 스크롤 제어 플래그
   const shouldScrollBottom = useRef(false);  // 바닥 스크롤 여부
@@ -58,15 +76,7 @@ function ChatRoom() {
       try {
         // 메타데이터 로드
         const detail = await getConversationDetail(sessionId);
-        setInfo({
-          characterName: detail.characterName,
-          characterImgUrl: detail.characterImgUrl,
-          conversationName: detail.conversationName,
-          userId: detail.userId,
-          userEmail: detail.userEmail,
-          userName: detail.userName,
-          userImgUrl: detail.userImgUrl
-        });
+        setInfo(detail);
 
         // 첫 10개 메시지 로드 (before 없이 호출 = 최신 10개)
         const msgData = await getMessageList(sessionId, null);
@@ -117,21 +127,8 @@ function ChatRoom() {
     }
   }, [hasMore, isFetchingMore, nextCursor, sessionId]);
 
-  // IntersectionObserver로 최상단 감지
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMoreMessages();
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    const target = topRef.current;
-    if (target) observer.observe(target);
-    return () => { if (target) observer.unobserve(target); };
-  }, [loadMoreMessages]);
+  // 최상단 감지 (무한 스크롤)
+  const topRef = useInfiniteScroll(loadMoreMessages);
 
   // 타이핑 효과
   const typeMessage = (text) => {
@@ -194,13 +191,34 @@ function ChatRoom() {
     setInfo((prev) => ({ ...prev, conversationName: newName }));
   };
 
+  const handleDelete = async () => {
+    // TODO: deleteConversation API 연결
+    navigate('/chatlist');
+  };
+
   return (
     <div className={classes.chatRoomWrapper}>
-    <Outlet context={{ sessionId, conversationName: info.conversationName, onNameUpdate: handleNameUpdate }} />
+    {activeModal === 'rename' && (
+      <ChatNameEditModal
+        sessionId={sessionId}
+        conversationName={info.conversationName}
+        onNameUpdate={handleNameUpdate}
+        onClose={() => setActiveModal(null)}
+      />
+    )}
+    {activeModal === 'delete' && (
+      <ConfirmDeleteModal
+        onConfirm={handleDelete}
+        onClose={() => setActiveModal(null)}
+      />
+    )}
     <div className={classes.container}>
 
       {/* ── 상단 타이틀 바 ── */}
       <div className={classes.topBar}>
+        <button className={classes.backBtn} onClick={() => navigate('/chatlist')}>
+          <BiChevronLeft />
+        </button>
         <div className={classes.topAvatar}>
           <Avatar
             filePath={info.characterImgUrl}
@@ -209,9 +227,21 @@ function ChatRoom() {
           />
         </div>
         <span className={classes.topName}>{info.conversationName}</span>
-        <button className={classes.editBtn} onClick={() => navigate(`/chat/edit/${sessionId}`)}>
-          <BiSolidEdit />
-        </button>
+        <div className={classes.kebabWrapper} ref={kebabRef}>
+          <button className={classes.kebabBtn} onClick={() => setKebabOpen((o) => !o)}>
+            <BiDotsVerticalRounded />
+          </button>
+          {kebabOpen && (
+            <div className={classes.dropdown}>
+              <button className={classes.dropdownItem} onClick={() => { setKebabOpen(false); setActiveModal('rename'); }}>
+                이름 변경
+              </button>
+              <button className={`${classes.dropdownItem} ${classes.dropdownItemDanger}`} onClick={() => { setKebabOpen(false); setActiveModal('delete'); }}>
+                채팅방 삭제
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── 메시지 영역 ── */}

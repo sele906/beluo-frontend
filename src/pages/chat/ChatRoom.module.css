@@ -35,9 +35,26 @@
     flex-shrink: 0;
 }
 
-.topBar .topName + .editBtn,
-.topBar .editBtn {
-    margin-left: -8px;
+.topBar .kebabWrapper {
+    margin-left: auto;
+}
+
+.backBtn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    font-size: 24px;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.backBtn:hover {
+    color: var(--text);
 }
 
 .topAvatar {
@@ -55,32 +72,61 @@
     letter-spacing: -0.3px;
 }
 
-.editBtn {
+.kebabWrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.kebabBtn {
     background: none;
     border: none;
     color: var(--text-dim);
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 4px 4px 0 4px;
+    padding: 4px;
     border-radius: var(--radius-sm);
     transition: color 0.2s, opacity 0.2s;
-    font-size: 18px;
+    font-size: 20px;
 }
 
-/* 마우스: 기본 숨김, topBar hover 시 표시 */
-@media (pointer: fine) {
-    .editBtn {
-        opacity: 0;
-    }
+.kebabBtn:hover {
+    color: var(--text);
+}
 
-    .topBar:hover .editBtn {
-        opacity: 1;
-    }
+.dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    z-index: 50;
+    min-width: 140px;
+    overflow: hidden;
+}
 
-    .editBtn:hover {
-        color: var(--text);
-    }
+.dropdownItem {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+}
+
+.dropdownItem:hover {
+    background: var(--surface-2, var(--bg));
+}
+
+.dropdownItemDanger {
+    color: #e05a5a;
 }
 
 /* ── 메시지 스크롤 영역 ── */
@@ -265,11 +311,22 @@
 /* ── 모바일 ── */
 @media (max-width: 600px) {
     .topBar {
-        padding: 12px 16px;
+        height: 56px;
+        padding: 0 8px 0 4px;
+    }
+
+    .topAvatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .backBtn {
+        font-size: 22px;
+        padding: 4px 2px;
     }
 
     .messages {
-        padding: 16px 12px;
+        padding: 16px;
     }
 
     .bubble {

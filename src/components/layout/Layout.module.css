@@ -36,7 +36,7 @@
 
     .wrapper {
         grid-template-columns: 1fr;
-        grid-template-rows: 50px 1fr 60px;
+        grid-template-rows: 56px 1fr 60px;
         grid-template-areas:
             "header"
             "main"

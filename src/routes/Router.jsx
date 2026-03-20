@@ -7,7 +7,6 @@ import CharacterList from "../pages/main/CharacterList";
 
 import ChatList from "../pages/chat/ChatList";
 import ChatRoom from "../pages/chat/ChatRoom";
-import EditModal from "../components/common/EditModal";
 
 import Create from "../pages/create/Create";
 
@@ -46,9 +45,7 @@ const Router = createBrowserRouter([
             //채팅 목록
             {path: '/chatlist', element: <ChatList />},
 
-            {path: '/chat', element: <ChatRoom />, children: [
-                {path: 'edit/:id', element: <EditModal />}
-            ]},
+            {path: '/chat', element: <ChatRoom />},
 
             //추가하기
             {path: '/create', element: <Create />},

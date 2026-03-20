@@ -1,15 +1,9 @@
 import { useState } from 'react';
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { updateConversationName } from '../../api/chatApi';
 import { toast } from 'sonner';
+import classes from './ChatNameEditModal.module.css';
 
-import classes from './EditModal.module.css';
-
-function EditModal() {
-    const { id: sessionId } = useParams();
-    const navigate = useNavigate();
-    const { conversationName, onNameUpdate } = useOutletContext();
-
+function ChatNameEditModal({ sessionId, conversationName, onNameUpdate, onClose }) {
     const [name, setName] = useState(conversationName ?? '');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,7 +14,7 @@ function EditModal() {
         try {
             await updateConversationName(sessionId, name.trim());
             onNameUpdate(name.trim());
-            navigate(-1);
+            onClose();
         } catch (err) {
             console.error('이름 변경 실패:', err);
             toast.error('이름 변경에 실패했어요. 다시 시도해주세요.');
@@ -30,7 +24,7 @@ function EditModal() {
     };
 
     return (
-        <div className={classes.backdrop} onClick={() => navigate(-1)}>
+        <div className={classes.backdrop} onClick={onClose}>
             <div className={classes.modal} onClick={(e) => e.stopPropagation()}>
                 <h3 className={classes.title}>채팅방 이름 변경</h3>
                 <form onSubmit={handleSubmit}>
@@ -42,7 +36,7 @@ function EditModal() {
                         autoFocus
                     />
                     <div className={classes.buttons}>
-                        <button type="button" className={classes.cancelBtn} onClick={() => navigate(-1)}>
+                        <button type="button" className={classes.cancelBtn} onClick={onClose}>
                             취소
                         </button>
                         <button type="submit" className={classes.submitBtn} disabled={isSubmitting || !name.trim()}>
@@ -55,4 +49,4 @@ function EditModal() {
     );
 }
 
-export default EditModal;
+export default ChatNameEditModal;
