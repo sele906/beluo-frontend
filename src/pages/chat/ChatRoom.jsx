@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { getConversationDetail, getMessageList, sendChat } from "../../api/chatApi";
+import { getConversationDetail, getMessageList, sendChat, deleteConversation } from "../../api/chatApi";
 import Avatar from "../../components/common/Avatar";
 import ChatNameEditModal from "../../components/common/ChatNameEditModal";
 import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal";
 
 import { BiRightArrowAlt, BiDotsVerticalRounded, BiChevronLeft } from "react-icons/bi";
+import { toast } from "sonner";
 import { useInfiniteScroll } from "../../hook/useInfiniteScroll";
 import classes from "./ChatRoom.module.css";
 
@@ -192,8 +193,13 @@ function ChatRoom() {
   };
 
   const handleDelete = async () => {
-    // TODO: deleteConversation API 연결
-    navigate('/chatlist');
+    try {
+      await deleteConversation(sessionId);
+      navigate('/chatlist');
+    } catch (err) {
+      console.error('채팅방 삭제 실패:', err);
+      toast.error('삭제에 실패했어요. 다시 시도해주세요.');
+    }
   };
 
   return (

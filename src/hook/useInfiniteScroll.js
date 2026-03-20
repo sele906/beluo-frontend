@@ -23,3 +23,17 @@ export function useInfiniteScroll(onIntersect) {
 
     return sentinelRef;
 }
+
+//   import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+
+//   // 1. loadMore를 useCallback으로 감싸기 (의존성 변경 시에만 재생성)
+//   const loadMore = useCallback(async () => {
+//       if (!hasMore || isFetching) return;
+//       // ... 데이터 fetch 후 items에 append
+//   }, [hasMore, isFetching, nextCursor]);
+
+//   // 2. sentinel ref 받기
+//   const sentinelRef = useInfiniteScroll(loadMore);
+
+//   // 3. JSX에서 리스트 하단에 sentinel 배치
+//   <div ref={sentinelRef} style={{ height: 1 }} />

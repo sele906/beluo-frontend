@@ -69,6 +69,10 @@ export async function updateConversationName(sessionId, conversationName) {
   return res.data;
 }
 
+export async function deleteConversation(id) {
+  await api.delete(`/conversation/delete/${id}`);
+}
+
 // ─── character ───────────────────────────────────────────
 
 export async function getCharacterOverviewList() {

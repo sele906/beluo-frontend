@@ -126,7 +126,7 @@
 }
 
 .dropdownItemDanger {
-    color: #e05a5a;
+    color: var(--danger);
 }
 
 /* ── 메시지 스크롤 영역 ── */
