@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { BiPlus, BiLeftArrowAlt } from 'react-icons/bi';
-import { charactersApi, deleteCharacter } from '../../api/chatApi';
+import { BiPlus, BiLeftArrowAlt, BiPen } from 'react-icons/bi';
+import { getMyCharacters, deleteCharacter } from '../../api/chatApi';
 import CharacterCard from '../../components/common/CharacterCard';
 import SearchBar from '../../components/common/SearchBar';
 
@@ -15,7 +15,7 @@ function MyPageCharacters() {
     useEffect(() => {
         async function fetchCharactersInfo() {
             try {
-                const data = await charactersApi();
+                const data = await getMyCharacters();
                 setCharacters(data);
             } catch (error) {
                 console.error("캐릭터 정보 불러오기 실패:", error);
@@ -69,7 +69,7 @@ function MyPageCharacters() {
             {/* ── 캐릭터 그리드 ── */}
             {filtered.length === 0 ? (
                 <div className={classes.empty}>
-                    <span className={classes.emptyIcon}>🔮</span>
+                    <BiPen className={classes.emptyIcon} />
                     <span className={classes.emptyText}>
                         {query ? `"${query}" 검색 결과가 없어요` : '아직 만든 캐릭터가 없어요'}
                     </span>

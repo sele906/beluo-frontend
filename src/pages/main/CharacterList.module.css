@@ -60,6 +60,8 @@
 
 .emptyIcon {
     font-size: 36px;
+    color: var(--text);
+    opacity: 0.4;
 }
 
 /* ── 모바일 ── */

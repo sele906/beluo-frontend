@@ -1,13 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { profileApi, updateProfile } from '../../api/chatApi';
-import { BiLeftArrowAlt, BiCamera } from "react-icons/bi";
+import { getProfile, updateProfile, deleteProfile } from '../../api/chatApi';
+import { toast } from 'sonner';
+import { useAuth } from '../../hook/AuthContext';
+import { BiLeftArrowAlt, BiUpload } from "react-icons/bi";
 import Avatar from '../../components/common/Avatar';
 
 import classes from './MyPageProfile.module.css';
 
 function MyPageProfile() {
     const navigate = useNavigate();
+    const { logout } = useAuth();
     const fileInputRef = useRef(null);
     const [user, setUser] = useState();
     const [preview, setPreview] = useState(null);
@@ -18,11 +21,12 @@ function MyPageProfile() {
     const [newPw, setNewPw] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [dragging, setDragging] = useState(false);
 
     useEffect(() => {
         async function fetchUserInfo() {
             try {
-                const data = await profileApi();
+                const data = await getProfile();
                 setUser(data);
             } catch (error) {
                 console.error("유저 정보 불러오기 실패:", error);
@@ -37,11 +41,10 @@ function MyPageProfile() {
 
     if (!user) return null;
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
+    const handleFileChange = (file) => {
         if (!file) return;
         if (file.size > 10 * 1024 * 1024) {
-            alert("파일 크기는 10MB 이하여야 합니다.");
+            toast.error("파일 크기는 10MB 이하여야 합니다.");
             return;
         }
         setFileObj(file);
@@ -50,11 +53,17 @@ function MyPageProfile() {
         reader.readAsDataURL(file);
     };
 
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setDragging(false);
+        handleFileChange(e.dataTransfer.files[0]);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!isGoogle && newPw && newPw !== confirmPw) {
-            alert("새 비밀번호가 일치하지 않습니다.");
+            toast.error("새 비밀번호가 일치하지 않습니다.");
             return;
         }
 
@@ -74,13 +83,26 @@ function MyPageProfile() {
 
         try {
             await updateProfile(formData);
-            alert("저장되었습니다.");
+            toast.success("저장되었습니다.");
             navigate("/mypage");
         } catch (err) {
             console.error("프로필 수정 실패:", err);
-            alert("저장에 실패했어요. 다시 시도해주세요.");
+            toast.error("저장에 실패했어요. 다시 시도해주세요.");
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleDeleteProfile = async () => {
+        if (!window.confirm("정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) return;
+        try {
+            await deleteProfile();
+            logout();
+            toast.success("회원 탈퇴가 완료되었습니다.");
+            navigate("/");
+        } catch (err) {
+            console.error("회원 탈퇴 실패:", err);
+            toast.error("탈퇴에 실패했어요. 다시 시도해주세요.");
         }
     };
 
@@ -99,7 +121,13 @@ function MyPageProfile() {
 
             {/* ── 아바타 ── */}
             <div className={classes.avatarWrap}>
-                <div className={classes.avatarClickable} onClick={() => fileInputRef.current?.click()}>
+                <div
+                    className={`${classes.avatarClickable} ${dragging ? classes.dragging : ""}`}
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                    onDragLeave={() => setDragging(false)}
+                    onDrop={handleDrop}
+                >
                     {preview ? (
                         <img src={preview} alt="avatar" className={classes.avatarImg} />
                     ) : user.userImgUrl ? (
@@ -115,7 +143,7 @@ function MyPageProfile() {
                         </div>
                     )}
                     <div className={classes.avatarOverlay}>
-                        <BiCamera size={22} />
+                        <BiUpload size={20} />
                         <span>변경</span>
                     </div>
                 </div>
@@ -124,7 +152,7 @@ function MyPageProfile() {
                     type="file"
                     accept="image/*"
                     className={classes.fileInput}
-                    onChange={handleFileChange}
+                    onChange={(e) => handleFileChange(e.target.files[0])}
                 />
             </div>
 
@@ -220,7 +248,7 @@ function MyPageProfile() {
             </form>
 
             {/* ── 회원 탈퇴 ── */}
-            <button className={classes.deleteBtn}>회원 탈퇴</button>
+            <button className={classes.deleteBtn} onClick={handleDeleteProfile}>회원 탈퇴</button>
 
         </div>
     );

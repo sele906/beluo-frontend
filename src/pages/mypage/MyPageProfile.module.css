@@ -113,8 +113,14 @@
     font-weight: 500;
 }
 
-.avatarClickable:hover .avatarOverlay {
+.avatarClickable:hover .avatarOverlay,
+.dragging .avatarOverlay {
     opacity: 1;
+}
+
+.dragging {
+    border: 2px dashed var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow-sm);
 }
 
 .fileInput {

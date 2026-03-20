@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCharacterDetail, updateCharacter } from "../../api/chatApi";
+import { toast } from "sonner";
 import { BiUpload } from "react-icons/bi";
 
 import classes from "../create/Create.module.css";
@@ -17,6 +18,7 @@ function MyPageCharactersEdit() {
   const [dragging, setDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPublic, setIsPublic] = useState(true);
 
   const [form, setForm] = useState({
     characterName: "",
@@ -35,11 +37,12 @@ function MyPageCharactersEdit() {
           firstMessage: data.firstMessage ?? "",
         });
         setTags(data.tag ?? []);
+        setIsPublic(data.isPublic ?? true);
         if (data.characterImgUrl) setPreview(data.characterImgUrl);
       })
       .catch((err) => {
         console.error("캐릭터 정보 불러오기 실패:", err);
-        alert("캐릭터 정보를 불러오는데 실패했어요.");
+        toast.error("캐릭터 정보를 불러오는데 실패했어요.");
         navigate("/mypage/characters");
       })
       .finally(() => setIsLoading(false));
@@ -48,7 +51,7 @@ function MyPageCharactersEdit() {
   const handleFileChange = (file) => {
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) {
-      alert("파일 크기는 10MB 이하여야 합니다.");
+      toast.error("파일 크기는 10MB 이하여야 합니다.");
       return;
     }
     setFileObj(file);
@@ -91,6 +94,7 @@ function MyPageCharactersEdit() {
       personality: form.personality,
       firstMessage: form.firstMessage,
       tag: tags,
+      isPublic,
       characterImgUrl: preview,
     };
 
@@ -105,7 +109,7 @@ function MyPageCharactersEdit() {
       navigate("/mypage/characters");
     } catch (err) {
       console.error("캐릭터 수정 실패:", err);
-      alert("저장에 실패했어요. 다시 시도해주세요.");
+      toast.error("저장에 실패했어요. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -251,6 +255,24 @@ function MyPageCharactersEdit() {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
                   />
+                </div>
+              </div>
+
+              {/* 공개 여부 */}
+              <div className={classes.field}>
+                <label className={classes.label}>
+                  <span className={classes.labelDot} />
+                  공개 여부
+                </label>
+                <div className={classes.toggleRow}>
+                  <div className={classes.toggleLabel}>
+                    <span className={classes.toggleTitle}>{isPublic ? "공개" : "비공개"}</span>
+                    <span className={classes.toggleDesc}>{isPublic ? "모든 사용자가 이 캐릭터를 볼 수 있습니다" : "나만 이 캐릭터를 볼 수 있습니다"}</span>
+                  </div>
+                  <label className={classes.toggle}>
+                    <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
+                    <span className={classes.toggleSlider} />
+                  </label>
                 </div>
               </div>
 

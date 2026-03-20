@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiXCircle, BiError, BiLeftArrowAlt } from 'react-icons/bi';
-import { blockedApi, setCancelBlocked } from '../../api/chatApi';
+import { getBlockedCharacters, cancelBlocked } from '../../api/chatApi';
+import { toast } from 'sonner';
 import Avatar from '../../components/common/Avatar';
 import SearchBar from '../../components/common/SearchBar';
 
@@ -15,7 +16,7 @@ function MyPageBlocked() {
     useEffect(() => {
         async function fetchBlockedCharactersInfo() {
             try {
-                const data = await blockedApi();
+                const data = await getBlockedCharacters();
                 setBlocked(data);
             } catch (error) {
                 console.error("캐릭터 정보 불러오기 실패:", error);
@@ -32,11 +33,11 @@ function MyPageBlocked() {
 
     const handleUnblock = async (id) => {
         try {
-            await setCancelBlocked(id);
+            await cancelBlocked(id);
             setBlocked((prev) => prev.filter((b) => b.id !== id));
         } catch (error) {
             if (error.response?.status !== 401) {
-                alert('차단 해제에 실패했어요');
+                toast.error('차단 해제에 실패했어요');
             }
         }
     }

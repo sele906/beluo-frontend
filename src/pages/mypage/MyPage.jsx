@@ -1,6 +1,6 @@
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { mypageOverviewApi } from '../../api/chatApi';
+import { getMypageOverview } from '../../api/chatApi';
 import Avatar from '../../components/common/Avatar';
 import { BiChevronRight, BiRightArrowAlt } from 'react-icons/bi';
 import classes from './MyPage.module.css';
@@ -14,7 +14,7 @@ function MyPage() {
     useEffect(() => {
         async function fetchUserInfo() {
             try {
-                const data = await mypageOverviewApi();
+                const data = await getMypageOverview();
                 setUser(data.info);
                 setMyCharacters(data.created);
                 setLikedCharacters(data.liked);

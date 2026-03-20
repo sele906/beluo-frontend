@@ -7,6 +7,7 @@ import CharacterList from "../pages/main/CharacterList";
 
 import ChatList from "../pages/chat/ChatList";
 import ChatRoom from "../pages/chat/ChatRoom";
+import EditModal from "../components/common/EditModal";
 
 import Create from "../pages/create/Create";
 
@@ -16,6 +17,7 @@ import MyPageCharacters from "../pages/mypage/MyPageCharacters";
 import MyPageCharactersEdit from "../pages/mypage/MyPageCharactersEdit";
 import MyPageLiked from "../pages/mypage/MyPageLiked";
 import MyPageBlocked from "../pages/mypage/MyPageBlocked";
+import MyPageInquiry from "../pages/mypage/MyPageInquiry";
 
 import Login from "../pages/auth/Login";
 import Join from "../pages/auth/Join";
@@ -44,7 +46,9 @@ const Router = createBrowserRouter([
             //채팅 목록
             {path: '/chatlist', element: <ChatList />},
 
-            {path: '/chat', element: <ChatRoom />},
+            {path: '/chat', element: <ChatRoom />, children: [
+                {path: 'edit/:id', element: <EditModal />}
+            ]},
 
             //추가하기
             {path: '/create', element: <Create />},
@@ -66,6 +70,7 @@ const Router = createBrowserRouter([
             ]},
 
             { path: '/mypage/blocked', element: <MyPageBlocked /> },
+            { path: '/mypage/inquiry', element: <MyPageInquiry /> },
 
         ]},
 

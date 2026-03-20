@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, Outlet } from "react-router-dom";
 import { getConversationDetail, getMessageList, sendChat } from "../../api/chatApi";
 import Avatar from "../../components/common/Avatar";
 
-import { BiRightArrowAlt } from "react-icons/bi";
+import { BiRightArrowAlt, BiSolidEdit } from "react-icons/bi";
 import classes from "./ChatRoom.module.css";
 
 function ChatRoom() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const sessionId = searchParams.get("sessionId");
 
   const [info, setInfo] = useState({});
@@ -189,8 +190,13 @@ function ChatRoom() {
     );
   }
 
+  const handleNameUpdate = (newName) => {
+    setInfo((prev) => ({ ...prev, conversationName: newName }));
+  };
+
   return (
     <div className={classes.chatRoomWrapper}>
+    <Outlet context={{ sessionId, conversationName: info.conversationName, onNameUpdate: handleNameUpdate }} />
     <div className={classes.container}>
 
       {/* ── 상단 타이틀 바 ── */}
@@ -203,6 +209,9 @@ function ChatRoom() {
           />
         </div>
         <span className={classes.topName}>{info.conversationName}</span>
+        <button className={classes.editBtn} onClick={() => navigate(`/chat/edit/${sessionId}`)}>
+          <BiSolidEdit />
+        </button>
       </div>
 
       {/* ── 메시지 영역 ── */}

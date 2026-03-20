@@ -1,15 +1,17 @@
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation } from "react-router-dom";
 
 import classes from "./Layout.module.css";
 
 const Layout = () => {
 
     const { conversations } = useLoaderData();
+    const location = useLocation();
+    const isChatRoom = location.pathname === '/chat';
 
     return (
-        <div className={classes.wrapper}>
+        <div className={`${classes.wrapper} ${isChatRoom ? classes.chatMode : ''}`}>
             <div className={classes.header}>
                 <Header />
             </div>

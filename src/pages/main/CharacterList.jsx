@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, useSearchParams } from "react-router-dom";
 import { getCharacterList } from "../../api/chatApi";
+import { BiSearch } from "react-icons/bi";
 import CharacterCard from "../../components/common/CharacterCard";
 
 import classes from './CharacterList.module.css';
@@ -35,7 +36,7 @@ function CharacterList() {
                     <div className={classes.empty}>불러오는 중...</div>
                 ) : characters.length === 0 ? (
                     <div className={classes.empty}>
-                        <span className={classes.emptyIcon}>🔍</span>
+                        <BiSearch className={classes.emptyIcon} />
                         <span>검색 결과가 없어요</span>
                     </div>
                 ) : (

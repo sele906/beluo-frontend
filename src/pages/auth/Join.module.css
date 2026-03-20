@@ -53,6 +53,77 @@
     margin: 0 0 36px 0;
 }
 
+/* ── 아바타 ── */
+.avatarWrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.avatarClickable {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatarPlaceholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: border-color 0.2s;
+}
+
+.avatarOverlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--overlay);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.avatarClickable:hover .avatarOverlay,
+.dragging .avatarOverlay {
+    opacity: 1;
+}
+
+.dragging {
+    outline: 2px dashed var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow-sm);
+}
+
+.dragging .avatarPlaceholder {
+    border-color: var(--accent);
+}
+
+.fileInput {
+    display: none;
+}
+
 .form {
     display: flex;
     flex-direction: column;

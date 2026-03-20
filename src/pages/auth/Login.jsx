@@ -1,5 +1,6 @@
 import { BiX } from "react-icons/bi";
-import { loginApi } from "../../api/chatApi";
+import { login as loginApi } from "../../api/chatApi";
+import { toast } from "sonner";
 import { useAuth } from "../../hook/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { BiLogoGoogle } from "react-icons/bi";
@@ -24,7 +25,7 @@ function Login() {
             login();
             navigate("/");
         } catch (e) {
-            alert("이메일 또는 비밀번호가 올바르지 않습니다.");
+            toast.error("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
     };
 

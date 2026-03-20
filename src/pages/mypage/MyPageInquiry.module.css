@@ -1,0 +1,191 @@
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 32px 28px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.page::-webkit-scrollbar { width: 4px; }
+.page::-webkit-scrollbar-track { background: transparent; }
+.page::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 99px;
+}
+
+/* ── 헤더 ── */
+.pageHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.backBtn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.backBtn:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.backBtn svg {
+    font-size: 20px;
+}
+
+.pageTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* ── 폼 ── */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+}
+
+.textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    font-family: var(--font);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.textarea::placeholder {
+    color: var(--text-dim);
+}
+
+.textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow-sm);
+}
+
+.textarea::-webkit-scrollbar { width: 3px; }
+.textarea::-webkit-scrollbar-track { background: transparent; }
+.textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.charCount {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: right;
+}
+
+/* ── 제출 버튼 ── */
+.submitBtn {
+    padding: 13px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.submitBtn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px var(--accent-glow-md);
+}
+
+.submitBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ── 완료 상태 ── */
+.success {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.successIcon {
+    font-size: 52px;
+    color: var(--accent);
+}
+
+.successTitle {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.successDesc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.backToBtn {
+    margin-top: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all 0.2s;
+}
+
+.backToBtn:hover {
+    border-color: var(--border-hover);
+    color: var(--text);
+}
+
+/* ── 모바일 ── */
+@media (max-width: 600px) {
+    .page {
+        padding: 20px 16px;
+    }
+}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useLoaderData, useNavigate } from 'react-router-dom';
-import { getCharacterSummaryDetail, createConversation, setAddLiked, setCancelLiked, setAddBlocked } from "../../api/chatApi";
+import { useLoaderData, useNavigate, useLocation } from 'react-router-dom';
+import { getCharacterSummaryDetail, createConversation, addLike, cancelLike, addBlocked } from "../../api/chatApi";
+import { toast } from "sonner";
 import { BiHeart, BiSolidHeart, BiDotsVerticalRounded } from "react-icons/bi";
 import { useAuth } from "../../hook/AuthContext";
 import Avatar from './Avatar';
@@ -11,6 +12,8 @@ function CharacterDetailModal() {
     const { isLoggedIn, logout } = useAuth();
     const detail = useLoaderData();
     const navigate = useNavigate();
+    const location = useLocation();
+    const hideBlock = location.pathname.startsWith('/mypage/characters');
     const [isLoading, setIsLoading] = useState(false);
     const [liked, setLiked] = useState(detail.liked ?? false);
     const [likeCount, setLikeCount] = useState(detail.character.likeCount ?? 0);
@@ -18,20 +21,20 @@ function CharacterDetailModal() {
 
     const handleLike = async () => {
         if (!isLoggedIn) {
-            alert('로그인이 필요한 서비스입니다.');
+            toast.error('로그인이 필요한 서비스입니다.');
             return;
         }
         try {
             if (liked) {
-                await setCancelLiked(detail.character.id);
+                await cancelLike(detail.character.id);
             } else {
-                await setAddLiked(detail.character.id);
+                await addLike(detail.character.id);
             }
             setLiked(prev => !prev);
             setLikeCount(prev => liked ? prev - 1 : prev + 1);
         } catch (error) {
             if (error.response?.status !== 401) {
-                alert('좋아요 처리에 실패했어요');
+                toast.error('좋아요 처리에 실패했어요');
             }
         }
     };
@@ -39,17 +42,17 @@ function CharacterDetailModal() {
     const handleBlock = async () => {
         setMenuOpen(false);
         if (!isLoggedIn) {
-            alert('로그인이 필요한 서비스입니다.');
+            toast.error('로그인이 필요한 서비스입니다.');
             return;
         }
         const confirmed = window.confirm(`${detail.character.characterName}을(를) 차단하시겠어요?`);
         if (!confirmed) return;
         try {
-            await setAddBlocked(detail.character.id);
+            await addBlocked(detail.character.id);
             navigate(-1);
         } catch (error) {
             if (error.response?.status !== 401) {
-                alert('차단 처리에 실패했어요');
+                toast.error('차단 처리에 실패했어요');
             }
         }
     };
@@ -60,7 +63,7 @@ function CharacterDetailModal() {
 
     const handleStartChat = async () => {
         if (!isLoggedIn) {
-            alert('로그인이 필요한 서비스입니다.');
+            toast.error('로그인이 필요한 서비스입니다.');
             return;
         }
         setIsLoading(true);
@@ -79,19 +82,21 @@ function CharacterDetailModal() {
             <div className={classes.modal} onClick={handleModalClick}>
 
                 {/* 케밥 메뉴 */}
-                <div className={classes.menuWrapper}>
-                    <button className={classes.menuBtn} onClick={handleMenuToggle}>
-                        <BiDotsVerticalRounded />
-                    </button>
-                    {menuOpen && (
-                        <>
-                            <div className={classes.menuOverlay} onClick={(e) => { e.stopPropagation(); setMenuOpen(false); }} />
-                            <ul className={classes.dropdown}>
-                                <li onClick={handleBlock}>차단하기</li>
-                            </ul>
-                        </>
-                    )}
-                </div>
+                {!hideBlock && (
+                    <div className={classes.menuWrapper}>
+                        <button className={classes.menuBtn} onClick={handleMenuToggle}>
+                            <BiDotsVerticalRounded />
+                        </button>
+                        {menuOpen && (
+                            <>
+                                <div className={classes.menuOverlay} onClick={(e) => { e.stopPropagation(); setMenuOpen(false); }} />
+                                <ul className={classes.dropdown}>
+                                    <li onClick={handleBlock}>차단하기</li>
+                                </ul>
+                            </>
+                        )}
+                    </div>
+                )}
 
                 {/* 아바타 */}
                 <div className={classes.avatar}>

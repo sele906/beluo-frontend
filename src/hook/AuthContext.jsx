@@ -1,11 +1,20 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { getProfile } from "../api/chatApi";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(
-        localStorage.getItem("isLoggedIn") === "true" 
+        localStorage.getItem("isLoggedIn") === "true"
     );
+
+    useEffect(() => {
+        if (!isLoggedIn) return;
+        getProfile().catch(() => {
+            localStorage.removeItem("isLoggedIn");
+            setIsLoggedIn(false);
+        });
+    }, []);
 
     const login = () => {
         localStorage.setItem("isLoggedIn", "true");

@@ -35,6 +35,11 @@
     flex-shrink: 0;
 }
 
+.topBar .topName + .editBtn,
+.topBar .editBtn {
+    margin-left: -8px;
+}
+
 .topAvatar {
     width: 36px;
     height: 36px;
@@ -48,6 +53,34 @@
     font-weight: 600;
     color: var(--text);
     letter-spacing: -0.3px;
+}
+
+.editBtn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 4px 4px 0 4px;
+    border-radius: var(--radius-sm);
+    transition: color 0.2s, opacity 0.2s;
+    font-size: 18px;
+}
+
+/* 마우스: 기본 숨김, topBar hover 시 표시 */
+@media (pointer: fine) {
+    .editBtn {
+        opacity: 0;
+    }
+
+    .topBar:hover .editBtn {
+        opacity: 1;
+    }
+
+    .editBtn:hover {
+        color: var(--text);
+    }
 }
 
 /* ── 메시지 스크롤 영역 ── */

@@ -102,6 +102,7 @@
 .emptyIcon {
     font-size: 36px;
     opacity: 0.4;
+    color: var(--text);
 }
 
 .emptyText {

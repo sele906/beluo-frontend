@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createCharacter } from "../../api/chatApi";
+import { toast } from "sonner";
 import { BiUpload } from "react-icons/bi";
 
 import classes from "./Create.module.css";
@@ -14,11 +15,12 @@ function Create() {
   const [tagInput, setTagInput] = useState("");
   const [dragging, setDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
 
   const handleFileChange = (file) => {
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) {
-      alert("파일 크기는 10MB 이하여야 합니다.");
+      toast.error("파일 크기는 10MB 이하여야 합니다.");
       return;
     }
     setFileObj(file);
@@ -64,6 +66,7 @@ function Create() {
       personality: formElements.personality.value,
       firstMessage: formElements.firstMessage.value,
       tag: tags,
+      isPublic,
     };
 
     const formData = new FormData();
@@ -77,7 +80,7 @@ function Create() {
       navigate(`/character/${id}`); // 생성 후 이동 (경로 맞게 수정)
     } catch (err) {
       console.error("캐릭터 생성 실패:", err);
-      alert("저장에 실패했어요. 다시 시도해주세요.");
+      toast.error("저장에 실패했어요. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -217,6 +220,24 @@ function Create() {
                   />
                 </div>
                 <input type="hidden" name="tags" value={JSON.stringify(tags)} />
+              </div>
+
+              {/* 공개 여부 */}
+              <div className={classes.field}>
+                <label className={classes.label}>
+                  <span className={classes.labelDot} />
+                  공개 여부
+                </label>
+                <div className={classes.toggleRow}>
+                  <div className={classes.toggleLabel}>
+                    <span className={classes.toggleTitle}>{isPublic ? "공개" : "비공개"}</span>
+                    <span className={classes.toggleDesc}>{isPublic ? "모든 사용자가 이 캐릭터를 볼 수 있습니다" : "나만 이 캐릭터를 볼 수 있습니다"}</span>
+                  </div>
+                  <label className={classes.toggle}>
+                    <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
+                    <span className={classes.toggleSlider} />
+                  </label>
+                </div>
               </div>
 
               <button type="submit" className={classes.submitBtn} disabled={isSubmitting}>

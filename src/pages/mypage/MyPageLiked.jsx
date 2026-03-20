@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { BiHeart, BiLeftArrowAlt } from 'react-icons/bi';
-import { likedApi, setCancelLiked } from '../../api/chatApi';
+import { getLikedCharacters, cancelLike } from '../../api/chatApi';
+import { toast } from 'sonner';
 import CharacterCard from '../../components/common/CharacterCard';
 import SearchBar from '../../components/common/SearchBar';
 
@@ -15,7 +16,7 @@ function MyPageLiked() {
     useEffect(() => {
         async function fetchLikedCharactersInfo() {
             try {
-                const data = await likedApi();
+                const data = await getLikedCharacters();
                 setLiked(data);
             } catch (error) {
                 console.error("캐릭터 정보 불러오기 실패:", error);
@@ -32,11 +33,11 @@ function MyPageLiked() {
 
     const handleUnlike = async (id) => {
         try {
-            await setCancelLiked(id);
+            await cancelLike(id);
             setLiked((prev) => prev.filter((l) => l.id !== id));
         } catch (error) {
             if (error.response?.status !== 401) {
-                alert('좋아요 취소에 실패했어요');
+                toast.error('좋아요 취소에 실패했어요');
             }
         }
     }
