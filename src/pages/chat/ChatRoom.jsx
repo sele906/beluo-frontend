@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { getConversationDetail, getMessageList, sendChat, deleteConversation } from "../../api/chatApi";
+import { useParams, useNavigate } from "react-router-dom";
+import { getConversationDetail, getMessageList, sendChat, regenerateChat, confirmChat, deleteConversation } from "../../api/chatApi";
 import Avatar from "../../components/common/Avatar";
 import ChatNameEditModal from "../../components/common/ChatNameEditModal";
 import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal";
 
-import { BiRightArrowAlt, BiDotsVerticalRounded, BiChevronLeft } from "react-icons/bi";
+import { BiRightArrowAlt, BiDotsVerticalRounded, BiChevronLeft, BiRefresh, BiChevronRight, BiChevronLeft as BiChevronLeftNav } from "react-icons/bi";
 import { toast } from "sonner";
-import { useInfiniteScroll } from "../../hook/useInfiniteScroll";
+import { useChatInfiniteScroll } from "../../hook/useChatInfiniteScroll";
+import { useTypeMessage } from "../../hook/useTypeMessage";
 import classes from "./ChatRoom.module.css";
 
 function ChatRoom() {
-  const [searchParams] = useSearchParams();
+  const { id: sessionId } = useParams();
   const navigate = useNavigate();
-  const sessionId = searchParams.get("sessionId");
 
   const [info, setInfo] = useState({});
   const [messages, setMessages] = useState([]);
@@ -21,17 +21,48 @@ function ChatRoom() {
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
 
-  // 무한 스크롤 관련 상태
-  const [nextCursor, setNextCursor] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  // 미확정 AI 응답 후보들
+  const [replies, setReplies] = useState([]);
+  const [replyIdx, setReplyIdx] = useState(0);
+  const [typingText, setTypingText] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const [kebabOpen, setKebabOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null); // 'rename' | 'delete' | null
   const kebabRef = useRef(null);
-
   const bottomRef = useRef(null);
-  const messageAreaRef = useRef(null);   // 스크롤 위치 복원용
+
+  // 스크롤 제어 플래그
+  const shouldScrollBottom = useRef(false);
+
+  // 슬라이드 방향 추적 + 이동 헬퍼
+  const slideDir = useRef('right');
+  const goToPrev = () => {
+    slideDir.current = 'left';
+    setReplyIdx((i) => Math.max(0, i - 1));
+  };
+  const goToNext = () => {
+    slideDir.current = 'right';
+    const max = replies.length - 1 + (isRegenerating ? 1 : 0);
+    setReplyIdx((i) => Math.min(max, i + 1));
+  };
+
+  // 스와이프 감지
+  const touchStartX = useRef(null);
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? goToNext() : goToPrev();
+    touchStartX.current = null;
+  };
+
+  const { topRef, messageAreaRef, isFetchingMore, initCursor } = useChatInfiniteScroll(sessionId, setMessages);
+  const { typeText } = useTypeMessage(useCallback(() => {
+    setIsTyping(false);
+    shouldScrollBottom.current = true;
+  }, []));
 
   // kebab 외부 클릭 시 닫기
   useEffect(() => {
@@ -45,10 +76,7 @@ function ChatRoom() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [kebabOpen]);
 
-  // 스크롤 제어 플래그
-  const shouldScrollBottom = useRef(false);  // 바닥 스크롤 여부
-
-  // messages 변경 시 바닥 스크롤
+  // messages / typingText 변경 시 바닥 스크롤
   useEffect(() => {
     if (shouldScrollBottom.current) {
       requestAnimationFrame(() => {
@@ -56,9 +84,9 @@ function ChatRoom() {
       });
       shouldScrollBottom.current = false;
     }
-  }, [messages]);
+  }, [messages, typingText]);
 
-  // 페이지 로드시 바닥 스크롤 X
+  // 페이지 로드시 바닥 스크롤
   useEffect(() => {
     if (!isPageLoading) {
       requestAnimationFrame(() => {
@@ -75,15 +103,12 @@ function ChatRoom() {
 
     async function init() {
       try {
-        // 메타데이터 로드
         const detail = await getConversationDetail(sessionId);
         setInfo(detail);
 
-        // 첫 10개 메시지 로드 (before 없이 호출 = 최신 10개)
         const msgData = await getMessageList(sessionId, null);
         setMessages(msgData.messages ?? []);
-        setHasMore(msgData.hasMore ?? false);
-        setNextCursor(msgData.nextCursor ?? null);
+        initCursor(msgData.hasMore ?? false, msgData.nextCursor ?? null);
 
       } catch (error) {
         console.error("초기 로드 실패:", error);
@@ -95,85 +120,61 @@ function ChatRoom() {
     init();
   }, [sessionId]);
 
-  // 이전 메시지 불러오기 (무한 스크롤)
-  const loadMoreMessages = useCallback(async () => {
-    if (!hasMore || isFetchingMore || !nextCursor) return;
-
-    setIsFetchingMore(true);
-
-    // 스크롤 위치 기억 (새 메시지 추가 후 복원용)
-    const area = messageAreaRef.current;
-    const prevScrollHeight = area?.scrollHeight ?? 0;
-
-    try {
-      const msgData = await getMessageList(sessionId, nextCursor);
-      const olderMessages = msgData.messages ?? [];
-
-      // shouldScrollBottom 플래그 건드리지 않고 위에 붙이기
-      setMessages((prev) => [...olderMessages, ...prev]);
-      setHasMore(msgData.hasMore ?? false);
-      setNextCursor(msgData.nextCursor ?? null);
-
-      // 스크롤 위치 복원 (새로 추가된 높이만큼 보정)
-      requestAnimationFrame(() => {
-        if (area) {
-          area.scrollTop = area.scrollHeight - prevScrollHeight;
-        }
-      });
-
-    } catch (error) {
-      console.error("이전 메시지 로드 실패:", error);
-    } finally {
-      setIsFetchingMore(false);
-    }
-  }, [hasMore, isFetchingMore, nextCursor, sessionId]);
-
-  // 최상단 감지 (무한 스크롤)
-  const topRef = useInfiniteScroll(loadMoreMessages);
-
-  // 타이핑 효과
-  const typeMessage = (text) => {
-    let index = 0;
-    setMessages((prev) => [...prev, { role: "ai", content: "" }]);
-
-    const interval = setInterval(() => {
-      index++;
-      setMessages((prev) => {
-        const updated = [...prev];
-        const last = updated[updated.length - 1];
-        if (last.role === "ai") last.content = text.slice(0, index);
-        return updated;
-      });
-
-      if (index >= text.length) {
-        clearInterval(interval);
-        shouldScrollBottom.current = true; // // AI 답변 완료 시 바닥으로
-      }
-
-    }, 30);
-  };
-
   // 메시지 전송
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || isRegenerating) return;
+
+    // 미확정 응답이 있으면 먼저 confirm 후 messages에 추가
+    if (replies.length > 0) {
+      try {
+        await confirmChat(sessionId, replies[replyIdx]);
+        setMessages((prev) => [...prev, { role: "ai", content: replies[replyIdx] }]);
+      } catch (error) {
+        console.error("confirm 실패:", error);
+        toast.error("응답 저장에 실패했어요. 다시 시도해주세요.");
+        return;
+      }
+      setReplies([]);
+      setReplyIdx(0);
+      setTypingText("");
+    }
 
     const userMessage = { role: "user", content: input, createdAt: new Date().toISOString() };
-    shouldScrollBottom.current = true; // 유저 메시지 전송 시 바닥으로
+    shouldScrollBottom.current = true;
 
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
-    setMessages((prev) => [...prev, { role: "ai", content: "", isLoading: true }]);
 
     try {
-      const res = await sendChat(input, sessionId);
-      setMessages((prev) => prev.slice(0, -1));
-      typeMessage(res.reply);
+      const { reply } = await sendChat(input, sessionId);
+      setReplies([reply]);
+      setReplyIdx(0);
+      setIsTyping(true);
+      typeText(reply, setTypingText);
     } catch (error) {
       console.error("메시지 전송 실패:", error);
-      setMessages((prev) => prev.slice(0, -1));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // 응답 재생성
+  const handleRegenerate = async () => {
+    const newIdx = replies.length; // 곧 추가될 로딩 슬라이드 위치
+    setReplyIdx(newIdx);
+    setIsRegenerating(true);
+    try {
+      const { reply } = await regenerateChat(sessionId);
+      setReplies((prev) => [...prev, reply]);
+      setIsTyping(true);
+      typeText(reply, setTypingText);
+    } catch (error) {
+      console.error("재생성 실패:", error);
+      setReplyIdx(newIdx - 1); // 실패 시 이전 슬라이드로
+      toast.error("재생성에 실패했어요. 다시 시도해주세요.");
+    } finally {
+      setIsRegenerating(false);
     }
   };
 
@@ -201,6 +202,8 @@ function ChatRoom() {
       toast.error('삭제에 실패했어요. 다시 시도해주세요.');
     }
   };
+
+  const hasPendingReply = isLoading || isTyping || replies.length > 0;
 
   return (
     <div className={classes.chatRoomWrapper}>
@@ -263,46 +266,93 @@ function ChatRoom() {
           </div>
         )}
 
+        {/* 확정된 메시지 목록 */}
         {messages.map((m, i) => (
           <div
             key={i}
             className={`${classes.row} ${m.role === "user" ? classes.rowUser : classes.rowAi}`}
           >
-
-            {/* AI 아바타 */}
             {m.role !== "user" && (
               <div className={classes.aiAvatar}>
-                <Avatar
-                  filePath={info.characterImgUrl}
-                  name={info.characterName}
-                  size={150}
-                />
+                <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
               </div>
             )}
-
-            {/* 유저 아바타 */}
             {m.role === "user" && (
               <div className={classes.userAvatar}>
-                <Avatar
-                  filePath={info.userImgUrl}
-                  name={info.userName}
-                  size={72}
-                />
+                <Avatar filePath={info.userImgUrl} name={info.userName} size={72} />
               </div>
             )}
-
-            {/* 말풍선 */}
             <div className={`${classes.bubble} ${m.role === "user" ? classes.bubbleUser : classes.bubbleAi}`}>
-              {m.isLoading ? (
-                <span className={classes.loadingDots}>
-                  <span /><span /><span />
-                </span>
-              ) : (
-                m.content
-              )}
+              {m.content}
             </div>
           </div>
         ))}
+
+        {/* 미확정 AI 응답 슬라이더 */}
+        {hasPendingReply && (() => {
+          const isLoadingSlide = replyIdx >= replies.length;
+          const slideContent = isLoadingSlide
+            ? <span className={classes.loadingDots}><span /><span /><span /></span>
+            : (isTyping && replyIdx === replies.length - 1)
+              ? (typingText || <span className={classes.loadingDots}><span /><span /><span /></span>)
+              : replies[replyIdx];
+
+          return (
+            <div className={`${classes.row} ${classes.rowAi}`}>
+              <div className={classes.aiAvatar}>
+                <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
+              </div>
+              <div
+                className={classes.repliesSlider}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              >
+                <div
+                  key={replyIdx}
+                  className={`${classes.replySlide} ${slideDir.current === 'left' ? classes.replySlideLeft : ''}`}
+                >
+                  {slideContent}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* 재생성 컨트롤 */}
+        {!isLoading && replies.length > 0 && (
+          <div className={classes.replyControls}>
+            {(replies.length > 1 || isRegenerating) && (() => {
+              const total = replies.length + (isRegenerating ? 1 : 0);
+              return (
+                <>
+                  <button
+                    className={classes.replyNavBtn}
+                    onClick={goToPrev}
+                    disabled={replyIdx === 0}
+                  >
+                    <BiChevronLeftNav />
+                  </button>
+                  <span className={classes.replyNavText}>{replyIdx + 1} / {total}</span>
+                  <button
+                    className={classes.replyNavBtn}
+                    onClick={goToNext}
+                    disabled={replyIdx >= total - 1}
+                  >
+                    <BiChevronRight />
+                  </button>
+                </>
+              );
+            })()}
+            <button
+              className={classes.regenBtn}
+              onClick={handleRegenerate}
+              disabled={isTyping || isRegenerating}
+            >
+              <BiRefresh />
+            </button>
+          </div>
+        )}
+
         <div ref={bottomRef} />
       </div>
 
@@ -314,7 +364,7 @@ function ChatRoom() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           placeholder="메시지를 입력하세요..."
-          disabled={isLoading}
+          disabled={isLoading || isRegenerating}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -323,7 +373,7 @@ function ChatRoom() {
         <button
           className={classes.sendBtn}
           onClick={handleSend}
-          disabled={isLoading || !input.trim()}
+          disabled={isLoading || isRegenerating || !input.trim()}
           aria-label="전송"
         >
           <BiRightArrowAlt />

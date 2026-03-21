@@ -243,6 +243,105 @@
     height: 10px;
 }
 
+/* ── 이전 메시지 로딩 인디케이터 ── */
+.loadingMore {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+}
+
+/* ── 응답 슬라이더 ── */
+.repliesSlider {
+    max-width: 65%;
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.replySlide {
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: pre-wrap;
+    color: var(--text);
+    animation: slideFromRight 0.22s ease;
+}
+
+.replySlideLeft {
+    animation: slideFromLeft 0.22s ease;
+}
+
+@keyframes slideFromRight {
+    from { transform: translateX(12px); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes slideFromLeft {
+    from { transform: translateX(-12px); opacity: 0; }
+    to   { transform: translateX(0);     opacity: 1; }
+}
+
+/* ── 재생성 컨트롤 ── */
+.replyControls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0 2px 44px; /* avatar(36) + gap(8) */
+}
+
+.replyNavBtn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.replyNavBtn:hover:not(:disabled) {
+    color: var(--text);
+}
+
+.replyNavBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.replyNavText {
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 36px;
+    text-align: center;
+}
+
+.regenBtn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.regenBtn:hover:not(:disabled) {
+    color: #fff;
+}
+
+.regenBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 /* ── 입력창 ── */
 .inputBar {
     display: flex;

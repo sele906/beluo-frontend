@@ -35,6 +35,15 @@ export async function sendChat(message, sessionId) {
   return res.data;
 }
 
+export async function regenerateChat(sessionId) {
+  const res = await api.post("/chat/regenerate", { sessionId });
+  return res.data;
+}
+
+export async function confirmChat(sessionId, reply) {
+  await api.post("/chat/confirm", { sessionId, reply });
+}
+
 export async function getMessageList(sessionId, before) {
   const params = { sessionId };
   if (before) params.before = before;

@@ -45,7 +45,7 @@ const Router = createBrowserRouter([
             //채팅 목록
             {path: '/chatlist', element: <ChatList />},
 
-            {path: '/chat', element: <ChatRoom />},
+            {path: '/chat/:id', element: <ChatRoom />},
 
             //추가하기
             {path: '/create', element: <Create />},

@@ -53,7 +53,7 @@ function ChatList() {
                     filtered.map((c) => (
                         <Link
                             key={c.sessionId}
-                            to={`/chat?sessionId=${c.sessionId}`}
+                            to={`/chat/${c.sessionId}`}
                             title={c.characterName}
                             className={classes.item}
                         >
