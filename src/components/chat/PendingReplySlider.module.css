@@ -1,0 +1,43 @@
+/* ── 슬라이더 + 컨트롤 column 래퍼 ── */
+.sliderColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 65%;
+    min-width: 0;
+}
+
+/* ── 슬라이더 외형 (버블과 동일한 스타일) ── */
+.repliesSlider {
+    border-radius: 18px;
+    border-top-left-radius: 4px;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+/* ── 슬라이드 (현재 표시 중인 응답) ── */
+.replySlide {
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: pre-wrap;
+    color: var(--text);
+    animation: slideFromRight 0.22s ease;
+}
+
+.replySlideLeft {
+    animation: slideFromLeft 0.22s ease;
+}
+
+@keyframes slideFromRight {
+    from { transform: translateX(12px); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes slideFromLeft {
+    from { transform: translateX(-12px); opacity: 0; }
+    to   { transform: translateX(0);     opacity: 1; }
+}

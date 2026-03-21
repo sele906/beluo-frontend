@@ -41,7 +41,12 @@ export async function regenerateChat(sessionId) {
 }
 
 export async function confirmChat(sessionId, reply) {
-  await api.post("/chat/confirm", { sessionId, reply });
+  const res = await api.post("/chat/confirm", { sessionId, reply });
+  return res.data;
+}
+
+export async function editChat(chatId, sessionId, content) {
+  await api.patch("/chat/edit", { chatId, sessionId, content });
 }
 
 export async function getMessageList(sessionId, before) {

@@ -1,0 +1,63 @@
+/* ── 컨트롤 바 ── */
+.replyControls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+}
+
+/* ── 네비게이션 버튼 (◀ ▶) ── */
+.replyNavBtn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.replyNavBtn:hover:not(:disabled) { color: var(--text); }
+.replyNavBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.replyNavText {
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 36px;
+    text-align: center;
+}
+
+/* ── 확정 버튼 ── */
+.confirmBtn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    cursor: pointer;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.confirmBtn:hover { color: var(--accent); }
+
+/* ── 재생성 버튼 ── */
+.regenBtn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.regenBtn:hover:not(:disabled) { color: #fff; }
+.regenBtn:disabled { opacity: 0.4; cursor: not-allowed; }

@@ -1,11 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getConversationDetail, getMessageList, sendChat, regenerateChat, confirmChat, deleteConversation } from "../../api/chatApi";
+import {
+  getConversationDetail, getMessageList,
+  sendChat, regenerateChat, confirmChat, editChat,
+  deleteConversation,
+} from "../../api/chatApi";
 import Avatar from "../../components/common/Avatar";
 import ChatNameEditModal from "../../components/common/ChatNameEditModal";
 import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal";
-
-import { BiRightArrowAlt, BiDotsVerticalRounded, BiChevronLeft, BiRefresh, BiChevronRight, BiChevronLeft as BiChevronLeftNav } from "react-icons/bi";
+import MessageItem from "../../components/chat/MessageItem";
+import PendingReplySlider from "../../components/chat/PendingReplySlider";
+import ChatInputBar from "../../components/chat/ChatInputBar";
+import { BiDotsVerticalRounded, BiChevronLeft } from "react-icons/bi";
 import { toast } from "sonner";
 import { useChatInfiniteScroll } from "../../hook/useChatInfiniteScroll";
 import { useTypeMessage } from "../../hook/useTypeMessage";
@@ -15,41 +21,124 @@ function ChatRoom() {
   const { id: sessionId } = useParams();
   const navigate = useNavigate();
 
+  // ── 채팅방 메타 정보 ──────────────────────────────────────
   const [info, setInfo] = useState({});
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
 
-  // 미확정 AI 응답 후보들
+  // ── 확정된 메시지 목록 ────────────────────────────────────
+  const [messages, setMessages] = useState([]);
+
+  // ── 미확정 AI 응답 슬라이더 ───────────────────────────────
   const [replies, setReplies] = useState([]);
   const [replyIdx, setReplyIdx] = useState(0);
   const [typingText, setTypingText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
 
+  // ── 입력 / 전송 ──────────────────────────────────────────
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // ── 메시지 편집 ──────────────────────────────────────────
+  const [editingId, setEditingId] = useState(null);
+  const [editValue, setEditValue] = useState("");
+
+  // ── 케밥 메뉴 / 모달 ─────────────────────────────────────
   const [kebabOpen, setKebabOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null); // 'rename' | 'delete' | null
+
+  // ── Refs ─────────────────────────────────────────────────
   const kebabRef = useRef(null);
   const bottomRef = useRef(null);
-
-  // 스크롤 제어 플래그
   const shouldScrollBottom = useRef(false);
+  const slideDir = useRef("right");
+  const touchStartX = useRef(null);
+  const lastAiBubbleRef = useRef(null);
 
-  // 슬라이드 방향 추적 + 이동 헬퍼
-  const slideDir = useRef('right');
+  // ── 슬라이더 너비 동기화 ──────────────────────────────────
+  const [sliderWidth, setSliderWidth] = useState(undefined);
+
+  // ── 커스텀 훅 ────────────────────────────────────────────
+  const { topRef, messageAreaRef, isFetchingMore, initCursor } =
+    useChatInfiniteScroll(sessionId, setMessages);
+
+  const { typeText } = useTypeMessage(
+    useCallback(() => {
+      setIsTyping(false);
+      shouldScrollBottom.current = true;
+    }, [])
+  );
+
+  useEffect(() => {
+    const el = lastAiBubbleRef.current;
+    if (!el) { setSliderWidth(undefined); return; }
+    const ro = new ResizeObserver(([entry]) => setSliderWidth(entry.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [messages]);
+
+  // ── 파생값 ───────────────────────────────────────────────
+  const hasPendingReply = isLoading || isTyping || replies.length > 0;
+  const lastUserMsgIdx = messages.reduce((acc, m, i) => (m.role === "user" ? i : acc), -1);
+
+  // ── Effects ──────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!sessionId) return;
+    setIsPageLoading(true);
+    async function init() {
+      try {
+        const [detail, msgData] = await Promise.all([
+          getConversationDetail(sessionId),
+          getMessageList(sessionId, null),
+        ]);
+        setInfo(detail);
+        setMessages(msgData.messages ?? []);
+        initCursor(msgData.hasMore ?? false, msgData.nextCursor ?? null);
+      } catch (error) {
+        console.error("초기 로드 실패:", error);
+      } finally {
+        setIsPageLoading(false);
+      }
+    }
+    init();
+  }, [sessionId, initCursor]);
+
+  useEffect(() => {
+    if (!isPageLoading) {
+      requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: "instant" }));
+    }
+  }, [isPageLoading]);
+
+  useEffect(() => {
+    if (shouldScrollBottom.current) {
+      requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }));
+      shouldScrollBottom.current = false;
+    }
+  }, [messages, typingText]);
+
+  useEffect(() => {
+    if (!kebabOpen) return;
+    const handleClickOutside = (e) => {
+      if (kebabRef.current && !kebabRef.current.contains(e.target)) setKebabOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [kebabOpen]);
+
+  // ── 슬라이더 네비게이션 ──────────────────────────────────
+
   const goToPrev = () => {
-    slideDir.current = 'left';
+    slideDir.current = "left";
     setReplyIdx((i) => Math.max(0, i - 1));
   };
+
   const goToNext = () => {
-    slideDir.current = 'right';
+    slideDir.current = "right";
     const max = replies.length - 1 + (isRegenerating ? 1 : 0);
     setReplyIdx((i) => Math.min(max, i + 1));
   };
 
-  // 스와이프 감지
-  const touchStartX = useRef(null);
   const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
@@ -58,79 +147,17 @@ function ChatRoom() {
     touchStartX.current = null;
   };
 
-  const { topRef, messageAreaRef, isFetchingMore, initCursor } = useChatInfiniteScroll(sessionId, setMessages);
-  const { typeText } = useTypeMessage(useCallback(() => {
-    setIsTyping(false);
-    shouldScrollBottom.current = true;
-  }, []));
+  // ── 메시지 전송 ──────────────────────────────────────────
 
-  // kebab 외부 클릭 시 닫기
-  useEffect(() => {
-    if (!kebabOpen) return;
-    const handleClickOutside = (e) => {
-      if (kebabRef.current && !kebabRef.current.contains(e.target)) {
-        setKebabOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [kebabOpen]);
-
-  // messages / typingText 변경 시 바닥 스크롤
-  useEffect(() => {
-    if (shouldScrollBottom.current) {
-      requestAnimationFrame(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      });
-      shouldScrollBottom.current = false;
-    }
-  }, [messages, typingText]);
-
-  // 페이지 로드시 바닥 스크롤
-  useEffect(() => {
-    if (!isPageLoading) {
-      requestAnimationFrame(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "instant" });
-      });
-    }
-  }, [isPageLoading]);
-
-  // 채팅방 입장 시 기존 세팅 불러오기
-  useEffect(() => {
-    if (!sessionId) return;
-
-    setIsPageLoading(true);
-
-    async function init() {
-      try {
-        const detail = await getConversationDetail(sessionId);
-        setInfo(detail);
-
-        const msgData = await getMessageList(sessionId, null);
-        setMessages(msgData.messages ?? []);
-        initCursor(msgData.hasMore ?? false, msgData.nextCursor ?? null);
-
-      } catch (error) {
-        console.error("초기 로드 실패:", error);
-      } finally {
-        setIsPageLoading(false);
-      }
-    }
-
-    init();
-  }, [sessionId]);
-
-  // 메시지 전송
   const handleSend = async () => {
     if (!input.trim() || isLoading || isRegenerating) return;
 
-    // 미확정 응답이 있으면 먼저 confirm 후 messages에 추가
     if (replies.length > 0) {
       try {
         await confirmChat(sessionId, replies[replyIdx]);
         setMessages((prev) => [...prev, { role: "ai", content: replies[replyIdx] }]);
       } catch (error) {
-        console.error("confirm 실패:", error);
+        console.error("자동 확정 실패:", error);
         toast.error("응답 저장에 실패했어요. 다시 시도해주세요.");
         return;
       }
@@ -141,13 +168,20 @@ function ChatRoom() {
 
     const userMessage = { role: "user", content: input, createdAt: new Date().toISOString() };
     shouldScrollBottom.current = true;
-
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
 
     try {
-      const { reply } = await sendChat(input, sessionId);
+      const { reply, userMessageId } = await sendChat(input, sessionId);
+      if (userMessageId) {
+        setMessages((prev) => {
+          const msgs = [...prev];
+          const last = msgs.length - 1;
+          if (msgs[last]?.role === "user") msgs[last] = { ...msgs[last], id: userMessageId };
+          return msgs;
+        });
+      }
       setReplies([reply]);
       setReplyIdx(0);
       setIsTyping(true);
@@ -159,9 +193,10 @@ function ChatRoom() {
     }
   };
 
-  // 응답 재생성
+  // ── AI 응답 재생성 ────────────────────────────────────────
+
   const handleRegenerate = async () => {
-    const newIdx = replies.length; // 곧 추가될 로딩 슬라이드 위치
+    const newIdx = replies.length;
     setReplyIdx(newIdx);
     setIsRegenerating(true);
     try {
@@ -171,216 +206,217 @@ function ChatRoom() {
       typeText(reply, setTypingText);
     } catch (error) {
       console.error("재생성 실패:", error);
-      setReplyIdx(newIdx - 1); // 실패 시 이전 슬라이드로
+      setReplyIdx(newIdx - 1);
       toast.error("재생성에 실패했어요. 다시 시도해주세요.");
     } finally {
       setIsRegenerating(false);
     }
   };
 
-  // 페이지 로딩
-  if (isPageLoading) {
-    return (
-      <div className={classes.pageLoader}>
-        <span className={classes.loadingDots}>
-          <span /><span /><span />
-        </span>
-      </div>
-    );
-  }
+  // ── AI 응답 수동 확정 ─────────────────────────────────────
 
-  const handleNameUpdate = (newName) => {
-    setInfo((prev) => ({ ...prev, conversationName: newName }));
+  const handleConfirm = async () => {
+    const content = replies[replyIdx];
+    try {
+      const res = await confirmChat(sessionId, content);
+      const aiMessageId = res?.messageId ?? res?.id ?? null;
+      setMessages((prev) => [
+        ...prev,
+        { role: "ai", content, ...(aiMessageId && { id: aiMessageId }) },
+      ]);
+      setReplies([]);
+      setReplyIdx(0);
+      setTypingText("");
+    } catch (err) {
+      console.error("확정 실패:", err);
+      toast.error("확정에 실패했어요. 다시 시도해주세요.");
+    }
   };
+
+  // ── 메시지 편집 ──────────────────────────────────────────
+
+  const handleEditSave = async () => {
+    if (!editValue.trim()) return;
+    if (!editingId) {
+      toast.error("메시지 ID가 없어요. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+    const editingRole = messages.find((m) => m.id === editingId)?.role;
+    try {
+      await editChat(editingId, sessionId, editValue.trim());
+      setEditingId(null);
+      const msgData = await getMessageList(sessionId, null);
+      setMessages(msgData.messages ?? []);
+      initCursor(msgData.hasMore ?? false, msgData.nextCursor ?? null);
+
+      // 유저 메시지 편집 → AI 응답 생성 / AI 메시지 편집 → DB 저장만
+      if (editingRole === "user") {
+        const newIdx = replies.length;
+        setReplyIdx(newIdx);
+        setIsRegenerating(true);
+        try {
+          const { reply } = await regenerateChat(sessionId);
+          setReplies((prev) => [...prev, reply]);
+          setIsTyping(true);
+          typeText(reply, setTypingText);
+        } catch (err) {
+          console.error("편집 후 AI 응답 실패:", err);
+          setReplyIdx(Math.max(0, newIdx - 1));
+          toast.error("AI 응답 생성에 실패했어요. 다시 시도해주세요.");
+        } finally {
+          setIsRegenerating(false);
+        }
+      }
+    } catch (err) {
+      console.error("메시지 수정 실패:", err);
+      toast.error("수정에 실패했어요. 다시 시도해주세요.");
+    }
+  };
+
+  // ── 채팅방 설정 ──────────────────────────────────────────
+
+  const handleNameUpdate = (newName) => setInfo((prev) => ({ ...prev, conversationName: newName }));
 
   const handleDelete = async () => {
     try {
       await deleteConversation(sessionId);
-      navigate('/chatlist');
+      navigate("/chatlist");
     } catch (err) {
-      console.error('채팅방 삭제 실패:', err);
-      toast.error('삭제에 실패했어요. 다시 시도해주세요.');
+      console.error("채팅방 삭제 실패:", err);
+      toast.error("삭제에 실패했어요. 다시 시도해주세요.");
     }
   };
 
-  const hasPendingReply = isLoading || isTyping || replies.length > 0;
+  // ── 페이지 로딩 ──────────────────────────────────────────
+
+  if (isPageLoading) {
+    return (
+      <div className={classes.pageLoader}>
+        <span className={classes.loadingDots}><span /><span /><span /></span>
+      </div>
+    );
+  }
+
+  // ── 슬라이더 현재 슬라이드 내용 ──────────────────────────
+  const pendingSlideContent = (() => {
+    const dots = <span className={classes.loadingDots}><span /><span /><span /></span>;
+    if (replyIdx >= replies.length) return dots;
+    if (isTyping && replyIdx === replies.length - 1) return typingText || dots;
+    return replies[replyIdx];
+  })();
+
+  // ─────────────────────────────────────────────────────────
 
   return (
     <div className={classes.chatRoomWrapper}>
-    {activeModal === 'rename' && (
-      <ChatNameEditModal
-        sessionId={sessionId}
-        conversationName={info.conversationName}
-        onNameUpdate={handleNameUpdate}
-        onClose={() => setActiveModal(null)}
-      />
-    )}
-    {activeModal === 'delete' && (
-      <ConfirmDeleteModal
-        onConfirm={handleDelete}
-        onClose={() => setActiveModal(null)}
-      />
-    )}
-    <div className={classes.container}>
 
-      {/* ── 상단 타이틀 바 ── */}
-      <div className={classes.topBar}>
-        <button className={classes.backBtn} onClick={() => navigate('/chatlist')}>
-          <BiChevronLeft />
-        </button>
-        <div className={classes.topAvatar}>
-          <Avatar
-            filePath={info.characterImgUrl}
-            name={info.characterName}
-            size={150}
-          />
-        </div>
-        <span className={classes.topName}>{info.conversationName}</span>
-        <div className={classes.kebabWrapper} ref={kebabRef}>
-          <button className={classes.kebabBtn} onClick={() => setKebabOpen((o) => !o)}>
-            <BiDotsVerticalRounded />
+      {activeModal === "rename" && (
+        <ChatNameEditModal
+          sessionId={sessionId}
+          conversationName={info.conversationName}
+          onNameUpdate={handleNameUpdate}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
+      {activeModal === "delete" && (
+        <ConfirmDeleteModal
+          onConfirm={handleDelete}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
+
+      <div className={classes.container}>
+
+        {/* ── 상단 타이틀 바 ── */}
+        <div className={classes.topBar}>
+          <button className={classes.backBtn} onClick={() => navigate("/chatlist")}>
+            <BiChevronLeft />
           </button>
-          {kebabOpen && (
-            <div className={classes.dropdown}>
-              <button className={classes.dropdownItem} onClick={() => { setKebabOpen(false); setActiveModal('rename'); }}>
-                이름 변경
-              </button>
-              <button className={`${classes.dropdownItem} ${classes.dropdownItemDanger}`} onClick={() => { setKebabOpen(false); setActiveModal('delete'); }}>
-                채팅방 삭제
-              </button>
+          <div className={classes.topAvatar}>
+            <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
+          </div>
+          <span className={classes.topName}>{info.conversationName}</span>
+          <div className={classes.kebabWrapper} ref={kebabRef}>
+            <button className={classes.kebabBtn} onClick={() => setKebabOpen((o) => !o)}>
+              <BiDotsVerticalRounded />
+            </button>
+            {kebabOpen && (
+              <div className={classes.dropdown}>
+                <button className={classes.dropdownItem} onClick={() => { setKebabOpen(false); setActiveModal("rename"); }}>
+                  이름 변경
+                </button>
+                <button className={`${classes.dropdownItem} ${classes.dropdownItemDanger}`} onClick={() => { setKebabOpen(false); setActiveModal("delete"); }}>
+                  채팅방 삭제
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── 메시지 스크롤 영역 ── */}
+        <div className={classes.messages} ref={messageAreaRef}>
+
+          <div ref={topRef} style={{ height: 1 }} />
+
+          {isFetchingMore && (
+            <div className={classes.loadingMore}>
+              <span className={classes.loadingDots}><span /><span /><span /></span>
             </div>
           )}
+
+          {messages.map((m, i) => {
+            const isLastUser = i === lastUserMsgIdx && m.role === "user";
+            const isLastMsg = i === messages.length - 1;
+            const isLastAi = m.role === "ai" && isLastMsg;
+            const canEdit = (isLastUser && hasPendingReply) || (isLastAi && m.id);
+            return (
+              <MessageItem
+                key={m.id ?? i}
+                message={m}
+                info={info}
+                canEdit={canEdit}
+                isEditing={editingId === m.id}
+                editValue={editValue}
+                onEditStart={() => { setEditingId(m.id); setEditValue(m.content); }}
+                onEditChange={setEditValue}
+                onEditSave={handleEditSave}
+                onEditCancel={() => setEditingId(null)}
+                bubbleRef={isLastAi ? lastAiBubbleRef : undefined}
+              />
+            );
+          })}
+
+          {hasPendingReply && (
+            <PendingReplySlider
+              content={pendingSlideContent}
+              info={info}
+              replyIdx={replyIdx}
+              slideDir={slideDir.current}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              width={sliderWidth}
+              replies={replies}
+              isTyping={isTyping}
+              isRegenerating={isRegenerating}
+              onConfirm={handleConfirm}
+              onRegenerate={handleRegenerate}
+              onPrev={goToPrev}
+              onNext={goToNext}
+            />
+          )}
+
+          <div ref={bottomRef} />
         </div>
-      </div>
 
-      {/* ── 메시지 영역 ── */}
-      <div className={classes.messages} ref={messageAreaRef}>
-
-        {/* 무한 스크롤 감지 타겟 */}
-        <div ref={topRef} style={{ height: 1 }} />
-
-        {/* 위쪽 로딩 인디케이터 */}
-        {isFetchingMore && (
-          <div className={classes.loadingMore}>
-            <span className={classes.loadingDots}><span /><span /><span /></span>
-          </div>
-        )}
-
-        {/* 확정된 메시지 목록 */}
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`${classes.row} ${m.role === "user" ? classes.rowUser : classes.rowAi}`}
-          >
-            {m.role !== "user" && (
-              <div className={classes.aiAvatar}>
-                <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
-              </div>
-            )}
-            {m.role === "user" && (
-              <div className={classes.userAvatar}>
-                <Avatar filePath={info.userImgUrl} name={info.userName} size={72} />
-              </div>
-            )}
-            <div className={`${classes.bubble} ${m.role === "user" ? classes.bubbleUser : classes.bubbleAi}`}>
-              {m.content}
-            </div>
-          </div>
-        ))}
-
-        {/* 미확정 AI 응답 슬라이더 */}
-        {hasPendingReply && (() => {
-          const isLoadingSlide = replyIdx >= replies.length;
-          const slideContent = isLoadingSlide
-            ? <span className={classes.loadingDots}><span /><span /><span /></span>
-            : (isTyping && replyIdx === replies.length - 1)
-              ? (typingText || <span className={classes.loadingDots}><span /><span /><span /></span>)
-              : replies[replyIdx];
-
-          return (
-            <div className={`${classes.row} ${classes.rowAi}`}>
-              <div className={classes.aiAvatar}>
-                <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
-              </div>
-              <div
-                className={classes.repliesSlider}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-              >
-                <div
-                  key={replyIdx}
-                  className={`${classes.replySlide} ${slideDir.current === 'left' ? classes.replySlideLeft : ''}`}
-                >
-                  {slideContent}
-                </div>
-              </div>
-            </div>
-          );
-        })()}
-
-        {/* 재생성 컨트롤 */}
-        {!isLoading && replies.length > 0 && (
-          <div className={classes.replyControls}>
-            {(replies.length > 1 || isRegenerating) && (() => {
-              const total = replies.length + (isRegenerating ? 1 : 0);
-              return (
-                <>
-                  <button
-                    className={classes.replyNavBtn}
-                    onClick={goToPrev}
-                    disabled={replyIdx === 0}
-                  >
-                    <BiChevronLeftNav />
-                  </button>
-                  <span className={classes.replyNavText}>{replyIdx + 1} / {total}</span>
-                  <button
-                    className={classes.replyNavBtn}
-                    onClick={goToNext}
-                    disabled={replyIdx >= total - 1}
-                  >
-                    <BiChevronRight />
-                  </button>
-                </>
-              );
-            })()}
-            <button
-              className={classes.regenBtn}
-              onClick={handleRegenerate}
-              disabled={isTyping || isRegenerating}
-            >
-              <BiRefresh />
-            </button>
-          </div>
-        )}
-
-        <div ref={bottomRef} />
-      </div>
-
-      {/* ── 입력창 ── */}
-      <div className={classes.inputBar}>
-        <input
-          className={classes.input}
+        {/* ── 입력창 ── */}
+        <ChatInputBar
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          placeholder="메시지를 입력하세요..."
+          onChange={setInput}
+          onSend={handleSend}
           disabled={isLoading || isRegenerating}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
         />
-        <button
-          className={classes.sendBtn}
-          onClick={handleSend}
-          disabled={isLoading || isRegenerating || !input.trim()}
-          aria-label="전송"
-        >
-          <BiRightArrowAlt />
-        </button>
-      </div>
 
-    </div>
+      </div>
     </div>
   );
 }

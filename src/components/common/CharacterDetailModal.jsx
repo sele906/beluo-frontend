@@ -69,7 +69,7 @@ function CharacterDetailModal() {
         setIsLoading(true);
         try {
             const sessionId = await createConversation(detail.character.id);
-            navigate(`/chat?sessionId=${sessionId}`);
+            navigate(`/chat/${sessionId}`);
         } catch (error) {
             console.error("대화 생성 실패:", error);
         } finally {

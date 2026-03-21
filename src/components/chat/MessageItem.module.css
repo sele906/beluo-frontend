@@ -1,0 +1,121 @@
+/* ── 메시지 행 ── */
+.row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.rowUser { flex-direction: row-reverse; }
+.rowAi   { flex-direction: row; }
+
+/* ── 아바타 ── */
+.aiAvatar,
+.userAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.aiAvatar { margin-bottom: 2px; }
+
+/* ── 말풍선 ── */
+.bubble {
+    padding: 11px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.bubbleUser {
+    background: var(--accent);
+    color: var(--text);
+    border-top-right-radius: 4px;
+}
+
+.bubbleAi {
+    background: var(--surface-3);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-top-left-radius: 4px;
+}
+
+/* ── 편집 버튼 ── */
+.msgWrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    max-width: 65%;
+}
+
+.editBtn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.row:hover .editBtn { opacity: 1; }
+.editBtn:hover      { color: #fff; }
+
+/* ── 편집 UI (textarea + 저장/취소) ── */
+.editArea {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 65%;
+}
+
+.editInput {
+    background: var(--surface-3);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--font);
+    line-height: 1.55;
+    resize: none;
+    outline: none;
+    min-height: 38px;
+    field-sizing: content;
+}
+
+.editActions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.editSaveBtn,
+.editCancelBtn {
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: var(--font);
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+.editSaveBtn   { background: var(--accent); color: var(--text); }
+.editCancelBtn { background: var(--surface-3); color: var(--text-dim); border: 1px solid var(--border); }
+
+.editSaveBtn:hover,
+.editCancelBtn:hover { opacity: 0.8; }
+
+/* ── 모바일 ── */
+@media (max-width: 600px) {
+    .msgWrapper { max-width: 70%; }
+}
