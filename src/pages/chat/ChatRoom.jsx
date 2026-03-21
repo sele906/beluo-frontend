@@ -143,7 +143,16 @@ function ChatRoom() {
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) diff > 0 ? goToNext() : goToPrev();
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        // 왼쪽 스와이프: 마지막 슬라이드면 재생성, 아니면 다음으로
+        const isAtLast = replyIdx >= replies.length - 1 + (isRegenerating ? 1 : 0);
+        if (isAtLast && !isTyping && !isRegenerating) handleRegenerate();
+        else goToNext();
+      } else {
+        goToPrev();
+      }
+    }
     touchStartX.current = null;
   };
 
