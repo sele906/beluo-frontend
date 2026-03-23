@@ -54,9 +54,33 @@ function Create() {
   };
 
   //파일 핸들러
+  const LOADING_MESSAGES = [
+    "캐릭터 만드는중..",
+    "캐릭터에 감정 넣는중..",
+    "개성 불어넣는중..",
+    "말투 설정하는중..",
+    "성격 다듬는중..",
+    "버릇 추가하는중..",
+    "매력 포인트 찾는중..",
+    "취향 설정하는중.."
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    let lastIdx = -1;
+    const pickRandom = () => {
+      let idx;
+      do { idx = Math.floor(Math.random() * LOADING_MESSAGES.length); } while (idx === lastIdx);
+      lastIdx = idx;
+      return LOADING_MESSAGES[idx];
+    };
+
+    const toastId = toast.loading(pickRandom());
+    const interval = setInterval(() => {
+      toast.loading(pickRandom(), { id: toastId });
+    }, 2500);
 
     const formElements = e.target.elements;
 
@@ -77,9 +101,13 @@ function Create() {
 
     try {
       const id = await createCharacter(formData);
-      navigate(`/character/${id}`); // 생성 후 이동 (경로 맞게 수정)
+      clearInterval(interval);
+      toast.dismiss(toastId);
+      navigate(`/character/${id}`); 
     } catch (err) {
       console.error("캐릭터 생성 실패:", err);
+      clearInterval(interval);
+      toast.dismiss(toastId);
       toast.error("저장에 실패했어요. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);

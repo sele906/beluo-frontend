@@ -25,3 +25,4 @@ dist-ssr
 
 # file
 .env
+CLAUDE.md

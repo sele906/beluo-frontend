@@ -131,6 +131,14 @@
 .messages::-webkit-scrollbar-track { background: transparent; }
 .messages::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
 
+/* ── AI 경고 문구 ── */
+.disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: -8px 0 8px 0;
+}
+
 /* ── 이전 메시지 로딩 인디케이터 ── */
 .loadingMore {
     display: flex;
@@ -168,7 +176,7 @@
 /* ── 모바일 ── */
 @media (max-width: 600px) {
     .topBar    { height: 56px; padding: 0 8px 0 4px; }
-    .topAvatar { width: 30px; height: 30px; }
-    .backBtn   { font-size: 22px; padding: 4px 2px; }
+    .topAvatar { width: 28px; height: 28px; }
+    .backBtn   { font-size: 22px; padding: 4px 2px; margin: 0 -10px 0 0;}
     .messages  { padding: 16px; }
 }

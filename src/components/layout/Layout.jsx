@@ -8,7 +8,7 @@ const Layout = () => {
 
     const { conversations } = useLoaderData();
     const location = useLocation();
-    const isChatRoom = location.pathname === '/chat';
+    const isChatRoom = location.pathname.startsWith('/chat/');
 
     return (
         <div className={`${classes.wrapper} ${isChatRoom ? classes.chatMode : ''}`}>

@@ -72,7 +72,7 @@ function ChatRoom() {
   useEffect(() => {
     const el = lastAiBubbleRef.current;
     if (!el) { setSliderWidth(undefined); return; }
-    const ro = new ResizeObserver(([entry]) => setSliderWidth(entry.contentRect.width));
+    const ro = new ResizeObserver(() => setSliderWidth(el.offsetWidth));
     ro.observe(el);
     return () => ro.disconnect();
   }, [messages]);
@@ -366,6 +366,8 @@ function ChatRoom() {
         <div className={classes.messages} ref={messageAreaRef}>
 
           <div ref={topRef} style={{ height: 1 }} />
+
+          <p className={classes.disclaimer}>AI가 생성한 내용은 허구이며 실제 인물·사건과 무관합니다.</p>
 
           {isFetchingMore && (
             <div className={classes.loadingMore}>

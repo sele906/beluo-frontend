@@ -2,6 +2,17 @@ import Avatar from "../common/Avatar";
 import { BiPencil } from "react-icons/bi";
 import classes from "./MessageItem.module.css";
 
+export function renderWithItalics(text, italicClass) {
+  if (typeof text !== "string") return text;
+  const parts = text.split(/(\*[^*]+\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+      return <em key={i} className={italicClass}>{part.slice(1, -1)}</em>;
+    }
+    return part;
+  });
+}
+
 /**
  * 확정된 메시지 한 행 (말풍선 + 편집 UI)
  *
@@ -46,7 +57,7 @@ function MessageItem({ message: m, info, canEdit, isEditing, editValue, onEditCh
           {/* 유저: 버튼이 말풍선 왼쪽 / AI: 버튼이 말풍선 오른쪽 */}
           {isUser && canEdit && <button className={classes.editBtn} onClick={onEditStart}><BiPencil /></button>}
           <div ref={bubbleRef} className={`${classes.bubble} ${isUser ? classes.bubbleUser : classes.bubbleAi}`}>
-            {m.content}
+            {renderWithItalics(m.content, classes.italic)}
           </div>
           {!isUser && canEdit && <button className={classes.editBtn} onClick={onEditStart}><BiPencil /></button>}
         </div>

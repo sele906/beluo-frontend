@@ -21,14 +21,19 @@
 .aiAvatar { margin-bottom: 2px; }
 
 /* ── 말풍선 ── */
+.italic {
+    color: var(--text-muted);
+}
+
 .bubble {
     padding: 11px 16px;
     border-radius: 18px;
     font-size: 14px;
     font-weight: 400;
-    line-height: 1.55;
+    line-height: 1.7;
     word-break: break-word;
     white-space: pre-wrap;
+    text-align: justify;
 }
 
 .bubbleUser {
@@ -81,11 +86,15 @@
     background: var(--surface-3);
     border: 1px solid var(--accent);
     border-radius: 12px;
-    padding: 10px 14px;
+    padding: 11px 16px;
     color: var(--text);
     font-size: 14px;
     font-family: var(--font);
-    line-height: 1.55;
+    font-weight: 400;
+    line-height: 1.7;
+    word-break: break-word;
+    white-space: pre-wrap;
+    text-align: justify;
     resize: none;
     outline: none;
     min-height: 38px;

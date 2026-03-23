@@ -16,14 +16,19 @@
     overflow: hidden;
 }
 
+.italic {
+    color: var(--text-muted);
+}
+
 /* ── 슬라이드 (현재 표시 중인 응답) ── */
 .replySlide {
     padding: 11px 16px;
     font-size: 14px;
     font-weight: 400;
-    line-height: 1.55;
+    line-height: 1.7;
     word-break: break-word;
     white-space: pre-wrap;
+    text-align: justify;
     color: var(--text);
     animation: slideFromRight 0.22s ease;
 }

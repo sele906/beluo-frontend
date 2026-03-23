@@ -31,7 +31,7 @@ function Sidebar({conversations}) {
                             conversations.map((r) => (
                                 <Link
                                     key={r.sessionId}
-                                    to={`/chat?sessionId=${r.sessionId}`}
+                                    to={`/chat/${r.sessionId}`}
                                     title={r.characterName}
                                     className={classes.chatItem}
                                 >

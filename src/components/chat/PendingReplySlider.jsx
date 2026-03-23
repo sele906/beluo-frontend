@@ -2,6 +2,7 @@ import Avatar from "../common/Avatar";
 import ReplyControls from "./ReplyControls";
 import classes from "./PendingReplySlider.module.css";
 import rowClasses from "./MessageItem.module.css";
+import { renderWithItalics } from "./MessageItem";
 
 /**
  * 미확정 AI 응답 슬라이더 + 컨트롤 (같은 column 안에 배치)
@@ -26,7 +27,7 @@ function PendingReplySlider({
             key={replyIdx}
             className={`${classes.replySlide} ${slideDir === "left" ? classes.replySlideLeft : ""}`}
           >
-            {content}
+            {renderWithItalics(content, classes.italic)}
           </div>
         </div>
 
