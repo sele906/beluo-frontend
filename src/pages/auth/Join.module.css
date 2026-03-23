@@ -53,6 +53,15 @@
     margin: 0 0 36px 0;
 }
 
+/* ── 프로필 라벨 ── */
+.profileLabel {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
 /* ── 아바타 ── */
 .avatarWrap {
     display: flex;

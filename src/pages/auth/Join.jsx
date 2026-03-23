@@ -56,6 +56,7 @@ function Join() {
                 <p className={classes.subtitle}>계정을 만들어 서비스를 시작하세요</p>
 
                 {/* 프로필 이미지 */}
+                <p className={classes.profileLabel}>프로필 설정</p>
                 <div className={classes.avatarWrap}>
                     <div
                         className={`${classes.avatarClickable} ${dragging ? classes.dragging : ""}`}
@@ -72,7 +73,6 @@ function Join() {
                             </div>
                         )}
                         <div className={classes.avatarOverlay}>
-                            <BiUpload size={18} />
                             <span>변경</span>
                         </div>
                     </div>

@@ -77,6 +77,10 @@ function ChatRoom() {
     return () => ro.disconnect();
   }, [messages]);
 
+  useEffect(() => {
+    if (isLoading) setSliderWidth(undefined);
+  }, [isLoading]);
+
   // ── 파생값 ───────────────────────────────────────────────
   const hasPendingReply = isLoading || isTyping || replies.length > 0;
   const lastUserMsgIdx = messages.reduce((acc, m, i) => (m.role === "user" ? i : acc), -1);

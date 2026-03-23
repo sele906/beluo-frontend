@@ -106,7 +106,7 @@ export async function getCharacterSummaryDetail(id) {
 
 export async function createCharacter(formData) {
   const res = await api.post("/character/create", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { "Content-Type": undefined },
   });
   return res.data;
 }
@@ -142,7 +142,9 @@ export async function join(user, file) {
   const formData = new FormData();
   formData.append("user", new Blob([JSON.stringify(user)], { type: "application/json" }));
   if (file) formData.append("file", file);
-  const res = await api.post("/auth/join", formData);
+  const res = await api.post("/auth/join", formData, {
+    headers: { "Content-Type": undefined },
+  });
   return res.data;
 }
 

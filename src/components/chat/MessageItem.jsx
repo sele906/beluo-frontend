@@ -57,7 +57,7 @@ function MessageItem({ message: m, info, canEdit, isEditing, editValue, onEditCh
           {/* 유저: 버튼이 말풍선 왼쪽 / AI: 버튼이 말풍선 오른쪽 */}
           {isUser && canEdit && <button className={classes.editBtn} onClick={onEditStart}><BiPencil /></button>}
           <div ref={bubbleRef} className={`${classes.bubble} ${isUser ? classes.bubbleUser : classes.bubbleAi}`}>
-            {renderWithItalics(m.content, classes.italic)}
+            {renderWithItalics(m.content, isUser ? undefined : classes.italic)}
           </div>
           {!isUser && canEdit && <button className={classes.editBtn} onClick={onEditStart}><BiPencil /></button>}
         </div>
