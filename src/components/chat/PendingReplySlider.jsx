@@ -12,37 +12,39 @@ function PendingReplySlider({
   replies, isTyping, isRegenerating, onConfirm, onRegenerate, onPrev, onNext,
 }) {
   return (
-    <div className={`${rowClasses.row} ${rowClasses.rowAi}`}>
-      <div className={rowClasses.aiAvatar}>
-        <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
-      </div>
-
-      <div className={classes.sliderColumn} style={width ? { width } : undefined}>
-        <div
-          className={classes.repliesSlider}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
-          <div
-            key={replyIdx}
-            className={`${classes.replySlide} ${slideDir === "left" ? classes.replySlideLeft : ""}`}
-          >
-            {renderWithItalics(content, classes.italic)}
-          </div>
+    <div
+      className={`${rowClasses.row} ${rowClasses.rowAi}`}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <div
+        key={replyIdx}
+        className={`${classes.slideGroup} ${slideDir === "left" ? classes.slideGroupLeft : ""}`}
+      >
+        <div className={rowClasses.aiAvatar}>
+          <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
         </div>
 
-        {replies.length > 0 && (
-          <ReplyControls
-            replies={replies}
-            replyIdx={replyIdx}
-            isTyping={isTyping}
-            isRegenerating={isRegenerating}
-            onConfirm={onConfirm}
-            onRegenerate={onRegenerate}
-            onPrev={onPrev}
-            onNext={onNext}
-          />
-        )}
+        <div className={classes.sliderColumn} style={replyIdx >= replies.length ? { width: 88 } : width ? { width } : undefined}>
+          <div className={classes.repliesSlider}>
+            <div className={classes.replySlide}>
+              {renderWithItalics(content, classes.italic)}
+            </div>
+          </div>
+
+          {replies.length > 0 && (
+            <ReplyControls
+              replies={replies}
+              replyIdx={replyIdx}
+              isTyping={isTyping}
+              isRegenerating={isRegenerating}
+              onConfirm={onConfirm}
+              onRegenerate={onRegenerate}
+              onPrev={onPrev}
+              onNext={onNext}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

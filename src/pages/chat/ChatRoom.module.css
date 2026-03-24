@@ -165,6 +165,11 @@
 .loadingDots span:nth-child(2) { animation-delay: 0.2s; }
 .loadingDots span:nth-child(3) { animation-delay: 0.4s; }
 
+/* ── 버블 전용: 3개 점 중앙 정렬 ── */
+.loadingDotsBubble {
+    justify-content: center;
+}
+
 @keyframes bounce {
     0%, 60%, 100% { transform: translateY(0);   background: var(--text-subtle); }
     30%           { transform: translateY(-6px); background: var(--accent); }

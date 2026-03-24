@@ -312,7 +312,7 @@ function ChatRoom() {
 
   // ── 슬라이더 현재 슬라이드 내용 ──────────────────────────
   const pendingSlideContent = (() => {
-    const dots = <span className={classes.loadingDots}><span /><span /><span /></span>;
+    const dots = <span className={`${classes.loadingDots} ${classes.loadingDotsBubble}`}><span /><span /><span /></span>;
     if (replyIdx >= replies.length) return dots;
     if (isTyping && replyIdx === replies.length - 1) return typingText || dots;
     return replies[replyIdx];

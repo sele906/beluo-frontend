@@ -1,10 +1,25 @@
+/* ── 슬라이드 그룹: avatar + column 전체 애니메이션 ── */
+.slideGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 75%;
+    min-width: 0;
+    animation: slideFromRight 0.22s ease;
+}
+
+.slideGroupLeft {
+    animation: slideFromLeft 0.22s ease;
+}
+
 /* ── 슬라이더 + 컨트롤 column 래퍼 ── */
 .sliderColumn {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    max-width: 65%;
     min-width: 0;
+    flex: 1;
 }
 
 /* ── 슬라이더 외형 (버블과 동일한 스타일) ── */
@@ -30,11 +45,6 @@
     white-space: pre-wrap;
     text-align: justify;
     color: var(--text);
-    animation: slideFromRight 0.22s ease;
-}
-
-.replySlideLeft {
-    animation: slideFromLeft 0.22s ease;
 }
 
 @keyframes slideFromRight {
