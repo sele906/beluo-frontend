@@ -201,6 +201,11 @@ function ChatRoom() {
       typeText(reply, setTypingText);
     } catch (error) {
       console.error("메시지 전송 실패:", error);
+      if (error.response?.status === 400) {
+        toast("베타 기간에는 채팅이 하루에 50회로 제한돼요.", { description: "더 나은 서비스를 위해 조금만 기다려 주세요." });
+        setMessages((prev) => prev.slice(0, -1));
+        setInput(input);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -220,7 +225,7 @@ function ChatRoom() {
     } catch (error) {
       console.error("재생성 실패:", error);
       setReplyIdx(newIdx - 1);
-      toast.error("재생성에 실패했어요. 다시 시도해주세요.");
+      error.response?.status === 400 ? toast("베타 기간에는 채팅이 하루에 50회로 제한돼요.", { description: "더 나은 서비스를 위해 조금만 기다려 주세요." }) : toast.error("재생성에 실패했어요. 다시 시도해주세요.");
     } finally {
       setIsRegenerating(false);
     }

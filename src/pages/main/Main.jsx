@@ -47,6 +47,11 @@ function Main() {
             <Outlet />
             <div className={classes.main}>
 
+                <div className={classes.betaBanner}>
+                    <p className={classes.betaTitle}>현재 베타 서비스 중이에요</p>
+                    <p className={classes.betaDesc}>채팅은 하루 50회로 제한돼요</p>
+                </div>
+
                 {showLiked && (
                     <section className={`${classes.section} ${classes.likedSection}`}>
                         <h3 className={classes.sectionTitle}>❤️ 내가 찜한 캐릭터</h3>

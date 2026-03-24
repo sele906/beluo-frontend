@@ -21,6 +21,33 @@
     border-radius: 99px;
 }
 
+/* ── 베타 배너 ── */
+.betaBanner {
+    display: none;
+    position: relative;
+    background: linear-gradient(135deg, #2d1b6b 0%, #1a0f3e 50%, #2a1060 100%);
+    border-radius: var(--radius-md);
+    padding: 22px 20px;
+}
+
+.betaTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 1;
+}
+
+.betaDesc {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.65);
+    position: relative;
+    z-index: 1;
+}
+
 /* ── 섹션 ── */
 .section {
     display: flex;
@@ -78,6 +105,10 @@
 
 /* ── 모바일 ── */
 @media (max-width: 600px) {
+    .betaBanner {
+        display: block;
+    }
+
     .main {
         padding: 20px 16px 20px 16px;
         gap: 32px;
