@@ -369,9 +369,9 @@ function ChatRoom() {
         {/* ── 메시지 스크롤 영역 ── */}
         <div className={classes.messages} ref={messageAreaRef}>
 
-          <div ref={topRef} style={{ height: 1 }} />
-
           <p className={classes.disclaimer}>AI가 생성한 내용은 허구이며 실제 인물·사건과 무관합니다.</p>
+
+          <div ref={topRef} style={{ height: 1 }} />
 
           {isFetchingMore && (
             <div className={classes.loadingMore}>
