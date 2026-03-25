@@ -10,6 +10,7 @@ import classes from "./ChatList.module.css";
 function ChatList() {
     const [conversationList, setConversationList] = useState([]);
     const [searchValue, setSearchValue] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function fetchConversations() {
@@ -18,6 +19,8 @@ function ChatList() {
                 setConversationList(data);
             } catch (error) {
                 console.error("대화 목록 불러오기 실패:", error);
+            } finally {
+                setIsLoading(false);
             }
         }
         fetchConversations();
@@ -44,13 +47,16 @@ function ChatList() {
 
             {/* 목록 */}
             <div className={classes.list}>
-                {filtered.length === 0 ? (
+                {isLoading ? (
+                    <div className={classes.loader}>
+                        <span className={classes.loadingDots}><span /><span /><span /></span>
+                    </div>
+                ) : filtered.length === 0 ? (
                     <div className={classes.empty}>
                         <BiMessageDetail className={classes.emptyIcon} />
                         <p>{searchValue ? "검색 결과가 없어요" : "아직 대화가 없어요"}</p>
                     </div>
-                ) : (
-                    filtered.map((c) => (
+                ) : filtered.map((c) => (
                         <Link
                             key={c.sessionId}
                             to={`/chat/${c.sessionId}`}
@@ -75,8 +81,7 @@ function ChatList() {
                             {/* 화살표 */}
                             <span className={classes.arrow}><BiChevronRight /></span>
                         </Link>
-                    ))
-                )}
+                ))}
             </div>
 
         </div>

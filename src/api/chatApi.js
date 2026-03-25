@@ -210,3 +210,14 @@ export async function getBlockedCharacters() {
 export async function submitInquiry(content) {
   await api.post("/mypage/inquiry", { content });
 }
+
+export async function getModel() {
+  const res = await api.get("/mypage/model");
+  return res.data;
+}
+
+export async function updateModel(model) {
+  await api.post("/mypage/model", model, {
+    headers: { "Content-Type": "text/plain" },
+  });
+}

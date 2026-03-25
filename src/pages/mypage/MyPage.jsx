@@ -72,6 +72,10 @@ function MyPage() {
                     <span>차단한 캐릭터</span>
                     <BiChevronRight className={classes.menuChevron} />
                 </button>
+                <button className={classes.menuItem} onClick={() => navigate('/mypage/model')}>
+                    <span>AI 모델 변경하기</span>
+                    <BiChevronRight className={classes.menuChevron} />
+                </button>
                 <button className={classes.menuItem} onClick={() => navigate('/mypage/inquiry')}>
                     <span>문의사항</span>
                     <BiChevronRight className={classes.menuChevron} />

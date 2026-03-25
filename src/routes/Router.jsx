@@ -16,6 +16,7 @@ import MyPageCharacters from "../pages/mypage/MyPageCharacters";
 import MyPageCharactersEdit from "../pages/mypage/MyPageCharactersEdit";
 import MyPageLiked from "../pages/mypage/MyPageLiked";
 import MyPageBlocked from "../pages/mypage/MyPageBlocked";
+import MyPageModel from "../pages/mypage/MyPageModel";
 import MyPageInquiry from "../pages/mypage/MyPageInquiry";
 
 import Login from "../pages/auth/Login";
@@ -67,6 +68,7 @@ const Router = createBrowserRouter([
             ]},
 
             { path: '/mypage/blocked', element: <MyPageBlocked /> },
+            { path: '/mypage/model', element: <MyPageModel /> },
             { path: '/mypage/inquiry', element: <MyPageInquiry /> },
 
         ]},
