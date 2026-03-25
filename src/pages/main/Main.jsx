@@ -48,8 +48,10 @@ function Main() {
             <div className={classes.main}>
 
                 <div className={classes.betaBanner}>
-                    <p className={classes.betaTitle}>현재 베타 서비스 중이에요</p>
-                    <p className={classes.betaDesc}>채팅은 하루 50회로 제한돼요</p>
+                    
+                    <p className={classes.betaBadge}>BETA</p>
+                    <p className={classes.betaTitle}>지금은 베타 기간이에요</p>
+                    <p className={classes.betaDesc}>하루 50번까지 자유롭게 대화해보세요</p>
                 </div>
 
                 {showLiked && (

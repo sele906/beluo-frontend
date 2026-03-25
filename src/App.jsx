@@ -8,7 +8,7 @@ import './styles/globals.css'
 function App() {
   return (
     <AuthProvider>
-      <Toaster theme="dark" position="top-center" richColors />
+      <Toaster theme="light" position="top-center" richColors />
       <RouterProvider router={Router}/>
     </AuthProvider>
   );
