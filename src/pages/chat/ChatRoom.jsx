@@ -59,7 +59,7 @@ function ChatRoom() {
   const [sliderWidth, setSliderWidth] = useState(undefined);
 
   // ── 커스텀 훅 ────────────────────────────────────────────
-  const { topRef, messageAreaRef, isFetchingMore, initCursor } =
+  const { topRef, messageAreaRef, isFetchingMore, hasMore, initCursor } =
     useChatInfiniteScroll(sessionId, setMessages);
 
   const { typeText } = useTypeMessage(
@@ -371,10 +371,10 @@ function ChatRoom() {
           </div>
         </div>
 
+        
+
         {/* ── 메시지 스크롤 영역 ── */}
         <div className={classes.messages} ref={messageAreaRef}>
-
-          <p className={classes.disclaimer}>AI가 생성한 내용은 허구이며 실제 인물·사건과 무관합니다.</p>
 
           <div ref={topRef} style={{ height: 1 }} />
 
@@ -382,6 +382,10 @@ function ChatRoom() {
             <div className={classes.loadingMore}>
               <span className={classes.loadingDots}><span /><span /><span /></span>
             </div>
+          )}
+
+          {!hasMore && !isFetchingMore && (
+            <p className={classes.disclaimer}>AI가 생성한 내용은 허구이며 실제 인물·사건과 무관합니다.</p>
           )}
 
           {messages.map((m, i) => {

@@ -136,6 +136,7 @@
     text-align: center;
     font-size: 11px;
     color: var(--text-muted);
+    margin: -16px 0 4px 0;
 }
 
 /* ── 이전 메시지 로딩 인디케이터 ── */

@@ -11,6 +11,7 @@ import { useInfiniteScroll } from "./useInfiniteScroll";
  *   topRef: React.RefObject,
  *   messageAreaRef: React.RefObject,
  *   isFetchingMore: boolean,
+ *   hasMore: boolean,
  *   initCursor: (hasMore: boolean, nextCursor: string|null) => void,
  * }}
  */
@@ -58,5 +59,5 @@ export function useChatInfiniteScroll(sessionId, setMessages) {
     setNextCursor(initialNextCursor);
   }, []);
 
-  return { topRef, messageAreaRef, isFetchingMore, initCursor };
+  return { topRef, messageAreaRef, isFetchingMore, hasMore, initCursor };
 }
