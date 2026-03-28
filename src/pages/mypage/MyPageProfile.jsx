@@ -1,27 +1,70 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getProfile, updateProfile, deleteProfile } from '../../api/chatApi';
+import { getProfile, updateProfile, deleteProfile, sendVerifyEmailApi, checkVerifyCodeApi } from '../../api/chatApi';
 import { toast } from 'sonner';
 import { useAuth } from '../../hook/AuthContext';
-import { BiLeftArrowAlt, BiUpload } from "react-icons/bi";
+import { BiLeftArrowAlt, BiCheckCircle } from "react-icons/bi";
 import Avatar from '../../components/common/Avatar';
+import AvatarUpload from '../../components/common/AvatarUpload';
+import BirthdaySelect from '../../components/common/BirthdaySelect';
+import EmailVerifyField from '../../components/common/EmailVerifyField';
 
 import classes from './MyPageProfile.module.css';
+
+// ── 생년월일 유틸 ──────────────────────────────────────────
+const toBirth = (year, month, day) =>
+    `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+const parseBirth = (birth) => {
+    if (!birth) return null;
+    const [year, month, day] = birth.slice(0, 10).split("-");
+    if (!year || !month || !day) return null;
+    return { year, month: String(Number(month)), day: String(Number(day)) };
+};
+
+// ── 검증 규칙 ──────────────────────────────────────────────
+const validateName = (v) => v.trim() ? "" : "이름을 입력해주세요.";
+
+const validateNewPw = (v) => {
+    if (!v) return "";
+    if (v.length < 8) return "8자 이상 입력해주세요.";
+    if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(v)) return "영문과 숫자를 모두 포함해주세요.";
+    return "";
+};
+
+const validateEmail = (v) => {
+    if (!v.trim()) return "이메일을 입력해주세요.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "올바른 이메일 형식이 아닙니다.";
+    return "";
+};
 
 function MyPageProfile() {
     const navigate = useNavigate();
     const { logout } = useAuth();
-    const fileInputRef = useRef(null);
+    const emailTimerRef = useRef(null);
+
     const [user, setUser] = useState();
     const [preview, setPreview] = useState(null);
     const [fileObj, setFileObj] = useState(null);
 
+    // 폼 필드
     const [name, setName] = useState('');
+    const [birthYear, setBirthYear] = useState(null);
+    const [birthMonth, setBirthMonth] = useState(null);
+    const [birthDay, setBirthDay] = useState(null);
     const [currentPw, setCurrentPw] = useState('');
     const [newPw, setNewPw] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
+
+    // 이메일 변경 인증
+    const [emailEditing, setEmailEditing] = useState(false);
+    const [newEmail, setNewEmail] = useState('');
+    const [emailVerifyStep, setEmailVerifyStep] = useState('none'); // none | sent | verified
+    const [emailVerifyCode, setEmailVerifyCode] = useState('');
+    const [emailTimeLeft, setEmailTimeLeft] = useState(0);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [dragging, setDragging] = useState(false);
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         async function fetchUserInfo() {
@@ -36,50 +79,126 @@ function MyPageProfile() {
     }, []);
 
     useEffect(() => {
-        if (user) setName(user.name ?? '');
+        if (!user) return;
+        setName(user.name ?? '');
+        const parsed = parseBirth(user.birth);
+        if (parsed) {
+            setBirthYear ({ value: parsed.year,  label: `${parsed.year}년`  });
+            setBirthMonth({ value: parsed.month, label: `${parsed.month}월` });
+            setBirthDay  ({ value: parsed.day,   label: `${parsed.day}일`   });
+        }
     }, [user]);
+
+    useEffect(() => () => clearInterval(emailTimerRef.current), []);
 
     if (!user) return null;
 
-    const handleFileChange = (file) => {
-        if (!file) return;
-        if (file.size > 10 * 1024 * 1024) {
-            toast.error("파일 크기는 10MB 이하여야 합니다.");
-            return;
+    const isGoogle = user.provider === 'google';
+
+    // ── 타이머 ──
+    const startEmailTimer = () => {
+        setEmailTimeLeft(300);
+        clearInterval(emailTimerRef.current);
+        emailTimerRef.current = setInterval(() => {
+            setEmailTimeLeft(prev => {
+                if (prev <= 1) { clearInterval(emailTimerRef.current); return 0; }
+                return prev - 1;
+            });
+        }, 1000);
+    };
+
+    // ── 이메일 인증 ──
+    const handleSendEmailVerify = async () => {
+        const err = validateEmail(newEmail);
+        if (err) { setFieldError('newEmail', err); return; }
+        try {
+            await sendVerifyEmailApi(newEmail);
+            setEmailVerifyStep('sent');
+            setEmailVerifyCode('');
+            startEmailTimer();
+            setFieldError('newEmail', '');
+            toast.success('인증번호가 발송되었습니다.');
+        } catch {
+            toast.error('인증번호 발송에 실패했습니다.');
         }
+    };
+
+    const handleCheckEmailVerify = async () => {
+        if (emailVerifyCode.length < 6) return;
+        try {
+            await checkVerifyCodeApi(newEmail, emailVerifyCode);
+            clearInterval(emailTimerRef.current);
+            setEmailVerifyStep('verified');
+            setEmailEditing(false);
+            setFieldError('newEmail', '');
+            toast.success('이메일 인증이 완료되었습니다.');
+        } catch {
+            toast.error('인증번호가 올바르지 않습니다.');
+        }
+    };
+
+    // ── 에러 단일 세팅 ──
+    const setFieldError = (field, msg) =>
+        setErrors(prev => msg ? { ...prev, [field]: msg } : (({ [field]: _, ...rest }) => rest)(prev));
+
+    // ── onChange 시 에러 재검증 ──
+    const handleNameChange = (v) => {
+        setName(v);
+        if (errors.name) setFieldError("name", validateName(v));
+    };
+
+    const handleNewPwChange = (v) => {
+        setNewPw(v);
+        if (errors.newPw) setFieldError("newPw", validateNewPw(v));
+        if (errors.confirmPw) setFieldError("confirmPw", v !== confirmPw ? "비밀번호가 일치하지 않습니다." : "");
+    };
+
+    const handleConfirmPwChange = (v) => {
+        setConfirmPw(v);
+        if (errors.confirmPw) setFieldError("confirmPw", newPw !== v ? "비밀번호가 일치하지 않습니다." : "");
+    };
+
+    const handleFileChange = (file) => {
         setFileObj(file);
         const reader = new FileReader();
         reader.onloadend = () => setPreview(reader.result);
         reader.readAsDataURL(file);
     };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setDragging(false);
-        handleFileChange(e.dataTransfer.files[0]);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!isGoogle && newPw && newPw !== confirmPw) {
-            toast.error("새 비밀번호가 일치하지 않습니다.");
-            return;
+        const newErrors = {};
+
+        const nameErr = validateName(name);
+        if (nameErr) newErrors.name = nameErr;
+
+        if (!isGoogle && emailEditing) newErrors.newEmail = "이메일 인증을 완료해주세요.";
+
+        if (!isGoogle && newPw) {
+            const newPwErr = validateNewPw(newPw);
+            if (newPwErr) newErrors.newPw = newPwErr;
+            else if (newPw !== confirmPw) newErrors.confirmPw = "비밀번호가 일치하지 않습니다.";
         }
+
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length > 0) return;
 
         setIsSubmitting(true);
 
         const profileData = {
             name,
             userImgUrl: user.userImgUrl,
-            ...((!isGoogle && newPw) && { password: newPw }),
+            ...(birthYear && birthMonth && birthDay && {
+                birth: toBirth(birthYear.value, birthMonth.value, birthDay.value),
+            }),
+            ...(!isGoogle && emailVerifyStep === 'verified' && { email: newEmail }),
+            ...(!isGoogle && newPw && { password: newPw }),
         };
 
         const formData = new FormData();
         formData.append("user", new Blob([JSON.stringify(profileData)], { type: "application/json" }));
-        if (fileObj) {
-            formData.append("file", fileObj);
-        }
+        if (fileObj) formData.append("file", fileObj);
 
         try {
             await updateProfile(formData);
@@ -106,8 +225,6 @@ function MyPageProfile() {
         }
     };
 
-    const isGoogle = user.provider === 'google';
-
     return (
         <div className={classes.page}>
 
@@ -121,70 +238,122 @@ function MyPageProfile() {
 
             {/* ── 아바타 ── */}
             <div className={classes.avatarWrap}>
-                <div
-                    className={`${classes.avatarClickable} ${dragging ? classes.dragging : ""}`}
-                    onClick={() => fileInputRef.current?.click()}
-                    onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-                    onDragLeave={() => setDragging(false)}
-                    onDrop={handleDrop}
-                >
-                    {preview ? (
-                        <img src={preview} alt="avatar" className={classes.avatarImg} />
-                    ) : user.userImgUrl ? (
-                        <Avatar
-                            filePath={user.userImgUrl}
-                            name={user.name}
-                            imgClassName={classes.avatarImg}
-                            size={150}
-                        />
-                    ) : (
-                        <div className={classes.avatarPlaceholder}>
-                            {user.name?.charAt(0).toUpperCase()}
-                        </div>
-                    )}
-                    <div className={classes.avatarOverlay}>
-                        <BiUpload size={20} />
-                        <span>변경</span>
-                    </div>
-                </div>
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className={classes.fileInput}
-                    onChange={(e) => handleFileChange(e.target.files[0])}
+                <AvatarUpload
+                    preview={preview}
+                    onChange={handleFileChange}
+                    fallback={
+                        user.userImgUrl ? (
+                            <Avatar
+                                filePath={user.userImgUrl}
+                                name={user.name}
+                                imgClassName={classes.avatarImg}
+                                size={150}
+                            />
+                        ) : (
+                            <div className={classes.avatarPlaceholder}>
+                                {user.name?.charAt(0).toUpperCase()}
+                            </div>
+                        )
+                    }
+                    size={96}
                 />
+                <span className={classes.creditBadge}>{(user.credit ?? 0).toLocaleString()} 크레딧</span>
             </div>
 
             {/* ── 폼 카드 ── */}
-            <form className={classes.card} onSubmit={handleSubmit}>
+            <form className={classes.card} onSubmit={handleSubmit} noValidate>
 
+                {/* 기본 정보 */}
                 <div className={classes.section}>
                     <span className={classes.sectionTitle}>기본 정보</span>
 
                     <div className={classes.field}>
                         <label className={classes.label}>이름</label>
                         <input
-                            className={classes.input}
+                            className={`${classes.input} ${errors.name ? classes.inputError : ""}`}
                             type="text"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => handleNameChange(e.target.value)}
+                            onBlur={(e) => setFieldError("name", validateName(e.target.value))}
                             placeholder="이름을 입력하세요"
+                            maxLength={10}
                         />
+                        {errors.name && <span className={classes.errorMsg}>{errors.name}</span>}
                     </div>
 
                     <div className={classes.field}>
                         <label className={classes.label}>이메일</label>
-                        <input
-                            className={`${classes.input} ${classes.inputDisabled}`}
-                            type="email"
-                            value={user.email}
-                            disabled
+
+                        {/* 기본: readonly + 변경하기 버튼 */}
+                        {!emailEditing && (
+                            <div className={classes.inlineRow}>
+                                <input
+                                    className={`${classes.input} ${classes.inputDisabled}`}
+                                    type="email"
+                                    value={emailVerifyStep === 'verified' ? newEmail : user.email}
+                                    disabled
+                                />
+                                {!isGoogle && emailVerifyStep !== 'verified' && (
+                                    <button
+                                        type="button"
+                                        className={classes.verifyBtn}
+                                        onClick={() => setEmailEditing(true)}
+                                    >
+                                        변경하기
+                                    </button>
+                                )}
+                                {emailVerifyStep === 'verified' && (
+                                    <div className={classes.verifiedBadge}>
+                                        <BiCheckCircle size={15} />
+                                        인증 완료
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* 편집 중: EmailVerifyField */}
+                        {emailEditing && (
+                            <EmailVerifyField
+                                value={newEmail}
+                                onChange={(v) => {
+                                    setNewEmail(v);
+                                    setEmailVerifyStep('none');
+                                    if (errors.newEmail) setFieldError('newEmail', validateEmail(v));
+                                }}
+                                verifyStep={emailVerifyStep}
+                                sendLabel={emailVerifyStep === 'sent' ? '재발송' : '인증하기'}
+                                onSend={handleSendEmailVerify}
+                                code={emailVerifyCode}
+                                onCodeChange={setEmailVerifyCode}
+                                onConfirm={handleCheckEmailVerify}
+                                timeLeft={emailTimeLeft}
+                                error={errors.newEmail}
+                                placeholder="변경할 이메일"
+                                autoFocus
+                            />
+                        )}
+                    </div>
+                </div>
+
+                <div className={classes.divider} />
+
+                {/* 생년월일 */}
+                <div className={classes.section}>
+                    <span className={classes.sectionTitle}>생년월일</span>
+
+                    <div className={classes.field}>
+                        <BirthdaySelect
+                            year={birthYear}
+                            month={birthMonth}
+                            day={birthDay}
+                            onYearChange={setBirthYear}
+                            onMonthChange={setBirthMonth}
+                            onDayChange={setBirthDay}
                         />
                     </div>
                 </div>
 
-                {/* 구글 로그인은 비밀번호 변경 불가 */}
+                {/* 비밀번호 변경 (구글 제외) */}
                 {!isGoogle && (
                     <>
                         <div className={classes.divider} />
@@ -208,25 +377,29 @@ function MyPageProfile() {
                             <div className={classes.field}>
                                 <label className={classes.label}>새 비밀번호</label>
                                 <input
-                                    className={classes.input}
+                                    className={`${classes.input} ${errors.newPw ? classes.inputError : ""}`}
                                     type="password"
                                     value={newPw}
-                                    onChange={(e) => setNewPw(e.target.value)}
-                                    placeholder="새 비밀번호"
+                                    onChange={(e) => handleNewPwChange(e.target.value)}
+                                    onBlur={(e) => setFieldError("newPw", validateNewPw(e.target.value))}
+                                    placeholder="영문+숫자 8자 이상"
                                     autoComplete="new-password"
                                 />
+                                {errors.newPw && <span className={classes.errorMsg}>{errors.newPw}</span>}
                             </div>
 
                             <div className={classes.field}>
                                 <label className={classes.label}>새 비밀번호 확인</label>
                                 <input
-                                    className={classes.input}
+                                    className={`${classes.input} ${errors.confirmPw ? classes.inputError : ""}`}
                                     type="password"
                                     value={confirmPw}
-                                    onChange={(e) => setConfirmPw(e.target.value)}
+                                    onChange={(e) => handleConfirmPwChange(e.target.value)}
+                                    onBlur={() => setFieldError("confirmPw", newPw && newPw !== confirmPw ? "비밀번호가 일치하지 않습니다." : "")}
                                     placeholder="새 비밀번호 확인"
                                     autoComplete="new-password"
                                 />
+                                {errors.confirmPw && <span className={classes.errorMsg}>{errors.confirmPw}</span>}
                             </div>
                         </div>
                     </>

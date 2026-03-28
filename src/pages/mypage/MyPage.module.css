@@ -63,6 +63,21 @@
     text-overflow: ellipsis;
 }
 
+
+.creditBadge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-glow-sm);
+    border: 1px solid var(--accent-glow-md);
+    border-radius: 99px;
+    padding: 2px 8px;
+    margin-top: 2px;
+}
+
 .editBtn {
     flex-shrink: 0;
     padding: 8px 18px;
@@ -282,7 +297,7 @@
     .avatar {
         width: 52px;
         height: 52px;
-        font-size: 20px; /* placeholder 글자 크기 */
+        font-size: 20px;
     }
 
     .name {

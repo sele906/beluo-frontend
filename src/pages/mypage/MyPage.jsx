@@ -44,6 +44,7 @@ function MyPage() {
                 <div className={classes.profileInfo}>
                     <span className={classes.name}>{user.name}</span>
                     <span className={classes.email}>{user.email}</span>
+                    <span className={classes.creditBadge}>{(user.credit ?? 0).toLocaleString()} 크레딧</span>
                 </div>
                 <button className={classes.editBtn} onClick={() => navigate('/mypage/profile')}>
                     회원정보 수정
@@ -73,7 +74,7 @@ function MyPage() {
                     <BiChevronRight className={classes.menuChevron} />
                 </button>
                 <button className={classes.menuItem} onClick={() => navigate('/mypage/model')}>
-                    <span>AI 모델 변경하기</span>
+                    <span>AI 모델 설정</span>
                     <BiChevronRight className={classes.menuChevron} />
                 </button>
                 <button className={classes.menuItem} onClick={() => navigate('/mypage/inquiry')}>

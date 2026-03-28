@@ -57,20 +57,21 @@
 }
 
 /* ── 아바타 ── */
+.profileLabel {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+}
+
 .avatarWrap {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 8px 0 4px;
-}
-
-.avatarClickable {
-    position: relative;
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    cursor: pointer;
-    flex-shrink: 0;
 }
 
 .avatarImg {
@@ -96,36 +97,6 @@
     color: var(--text-muted);
 }
 
-.avatarOverlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: var(--overlay);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    opacity: 0;
-    transition: opacity 0.2s;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 500;
-}
-
-.avatarClickable:hover .avatarOverlay,
-.dragging .avatarOverlay {
-    opacity: 1;
-}
-
-.dragging {
-    border: 2px dashed var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow-sm);
-}
-
-.fileInput {
-    display: none;
-}
 
 /* ── 폼 카드 ── */
 .card {
@@ -200,9 +171,91 @@
 }
 
 .inputDisabled {
-    color: var(--text-subtle);
+    color: var(--text-muted);
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+/* ── 에러 상태 ── */
+.inputError {
+    border-color: var(--error, #f87171) !important;
+}
+
+.inputError:focus {
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18) !important;
+}
+
+.errorMsg {
+    font-size: 12px;
+    color: var(--error, #f87171);
+}
+
+
+/* ── react-select 스크롤바 ── */
+:global(.app-select__menu-list)::-webkit-scrollbar {
+    width: 4px;
+}
+
+:global(.app-select__menu-list)::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+:global(.app-select__menu-list)::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+:global(.app-select__menu-list)::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── 이메일 인증 ── */
+.inlineRow {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.inlineRow .input {
+    flex: 1;
+    min-width: 0;
+}
+
+.verifyBtn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.verifyBtn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.verifyBtn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+
+.verifiedBadge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--success, #4ade80);
+    padding: 0 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* ── 구글 안내 ── */

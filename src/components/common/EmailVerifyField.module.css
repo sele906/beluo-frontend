@@ -1,0 +1,118 @@
+.wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.row {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.row .input {
+    flex: 1;
+    min-width: 0;
+}
+
+.input {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 15px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+.input::placeholder {
+    color: var(--text-dim);
+}
+
+.input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow-sm);
+}
+
+.input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.inputError {
+    border-color: var(--error, #f87171) !important;
+}
+
+.inputError:focus {
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18) !important;
+}
+
+.verifyBtn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.verifyBtn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.verifyBtn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.codeWrap {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+}
+
+.codeWrap .input {
+    padding-right: 60px;
+}
+
+.timer {
+    position: absolute;
+    right: 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    pointer-events: none;
+}
+
+.verifiedBadge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--success, #4ade80);
+    padding: 0 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.errorMsg {
+    font-size: 12px;
+    color: var(--error, #f87171);
+}
+
+@media (max-width: 600px) {
+    .input {
+        font-size: 16px;
+    }
+}

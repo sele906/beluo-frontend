@@ -1,5 +1,5 @@
 import { Link, NavLink, useLoaderData } from "react-router-dom";
-import { BiHome, BiPlusCircle, BiMessageDetail, BiSolidUser, } from "react-icons/bi";
+import { BiHome, BiPlusCircle, BiMessageDetail, BiUser, } from "react-icons/bi";
 import Avatar from "../../components/common/Avatar";
 
 import classes from "./Sidebar.module.css";
@@ -74,7 +74,7 @@ function Sidebar({conversations}) {
                 </NavLink>
                 <NavLink to="/mypage" className={({ isActive }) => `${classes.navItem} ${isActive ? classes.navItemActive : ""}`}>
                     <span className={classes.navIconWrap}>
-                        <BiSolidUser />
+                        <BiUser />
                         <span className={classes.navLabel}>마이</span>
                     </span>
                 </NavLink>

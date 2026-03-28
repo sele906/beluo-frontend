@@ -193,6 +193,9 @@
         border: none;
         border-radius: 0;
         height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .title {

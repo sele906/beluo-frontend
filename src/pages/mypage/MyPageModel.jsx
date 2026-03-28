@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BiLeftArrowAlt } from 'react-icons/bi';
+import { BiLeftArrowAlt, BiWallet } from 'react-icons/bi';
 import { getModel, updateModel } from '../../api/chatApi';
 import { toast } from 'sonner';
 
@@ -9,32 +9,33 @@ import classes from './MyPageModel.module.css';
 const MODEL_OPTIONS = [
     {
         value: 'free',
-        label: '기본 모델',
-        desc: '답변 로딩 속도가 느릴 수 있어요',
-        badge: null,
+        label: '베이직',
+        desc: '빠르고 가벼운 기본 대화를 제공해요',
+        credit: 1,
     },
     {
         value: 'gpt',
-        label: 'GPT',
-        desc: 'gpt-4o-mini 기반의 빠르고 안정적인 답변을 제공해요',
-        badge: '유료',
+        label: '스탠다드',
+        desc: 'gpt-5-mini 기반의 빠르고 안정적인 답변을 제공해요',
+        credit: 3,
     },
     {
         value: 'claude',
-        label: 'Claude',
+        label: '프로',
         desc: 'Claude Sonnet 4.6 기반의 풍부하고 자연스러운 답변을 제공해요',
-        badge: '유료',
+        credit: 5,
     },
 ];
 
 function MyPageModel() {
     const navigate = useNavigate();
     const [selected, setSelected] = useState(null);
+    const [credit, setCredit] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         getModel()
-            .then((model) => setSelected(model))
+            .then((data) => { setSelected(data.model); setCredit(data.credit); })
             .catch((err) => console.error('모델 설정 불러오기 실패:', err));
     }, []);
 
@@ -59,6 +60,8 @@ function MyPageModel() {
         }
     };
 
+    const selectedOption = MODEL_OPTIONS.find((o) => o.value === selected);
+
     return (
         <div className={classes.page}>
 
@@ -69,32 +72,56 @@ function MyPageModel() {
                 <span className={classes.pageTitle}>AI 모델 설정</span>
             </div>
 
-            <p className={classes.desc}>대화에 사용할 AI 모델을 선택하세요</p>
-
-            <div className={classes.options}>
-                {MODEL_OPTIONS.map((opt) => (
-                    <button
-                        key={opt.value}
-                        className={`${classes.optionCard} ${selected === opt.value ? classes.optionCardSelected : ''}`}
-                        onClick={() => setSelected(opt.value)}
-                    >
-                        <div className={classes.optionTop}>
-                            <span className={classes.optionLabel}>{opt.label}</span>
-                            {opt.badge && <span className={classes.optionBadge}>{opt.badge}</span>}
-                        </div>
-                        <p className={classes.optionDesc}>{opt.desc}</p>
-                        <span className={classes.radioIndicator} />
-                    </button>
-                ))}
+            {/* ── 크레딧 섹션 ── */}
+            <div className={classes.creditSection}>
+                <div className={classes.creditTop}>
+                    <BiWallet className={classes.creditIcon} />
+                    <span className={classes.creditSectionLabel}>내 크레딧</span>
+                </div>
+                <div className={classes.creditBalance}>
+                    <span className={classes.creditAmount}>{(credit ?? 0).toLocaleString()}</span>
+                    <span className={classes.creditUnit}>크레딧</span>
+                </div>
+                {selectedOption && (
+                    <div className={classes.creditInfo}>
+                        현재 모델 기준 약{' '}
+                        <strong>{Math.floor((credit ?? 0) / selectedOption.credit).toLocaleString()}회</strong>
+                        {' '} 메세지 전송 또는 답변 재생성 가능
+                    </div>
+                )}
             </div>
 
-            <button
-                className={classes.saveBtn}
-                onClick={handleSave}
-                disabled={isSaving}
-            >
-                {isSaving ? '저장 중...' : '저장하기'}
-            </button>
+            {/* ── 모델 선택 섹션 ── */}
+            <div className={classes.modelSection}>
+                <div className={classes.modelSectionHeader}>
+                    <span className={classes.modelSectionTitle}>모델 선택</span>
+                    <span className={classes.modelSectionDesc}>모델마다 차감되는 크레딧이 달라요</span>
+                </div>
+                <div className={classes.options}>
+                    {MODEL_OPTIONS.map((opt) => (
+                        <button
+                            key={opt.value}
+                            className={`${classes.optionCard} ${selected === opt.value ? classes.optionCardSelected : ''}`}
+                            onClick={() => setSelected(opt.value)}
+                        >
+                            <div className={classes.optionTop}>
+                                <span className={classes.optionLabel}>{opt.label}</span>
+                                <span className={classes.optionBadge}>{opt.credit} 크레딧</span>
+                            </div>
+                            <p className={classes.optionDesc}>{opt.desc}</p>
+                            <span className={classes.radioIndicator} />
+                        </button>
+                    ))}
+                </div>
+
+                <button
+                    className={classes.saveBtn}
+                    onClick={handleSave}
+                    disabled={isSaving}
+                >
+                    {isSaving ? '저장 중...' : '저장하기'}
+                </button>
+            </div>
 
         </div>
     );

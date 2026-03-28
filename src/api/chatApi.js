@@ -153,6 +153,16 @@ export async function logout() {
   return res.data;
 }
 
+export async function sendVerifyEmailApi(email) {
+  const res = await api.post("/auth/verify/send", { email });
+  return res.data;
+}
+
+export async function checkVerifyCodeApi(email, code) {
+  const res = await api.post("/auth/verify/check", { email, code });
+  return res.data;
+}
+
 // ─── mypage ──────────────────────────────────────────────
 
 export async function getMypageOverview() {
@@ -213,7 +223,7 @@ export async function submitInquiry(content) {
 
 export async function getModel() {
   const res = await api.get("/mypage/model");
-  return res.data;
+  return res.data; // { credit, model }
 }
 
 export async function updateModel(model) {
