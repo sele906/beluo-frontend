@@ -19,6 +19,7 @@ function MyPageCharactersEdit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isPublic, setIsPublic] = useState(true);
+  const [errors, setErrors] = useState({});
 
   const [form, setForm] = useState({
     characterName: "",
@@ -67,9 +68,48 @@ function MyPageCharactersEdit() {
     handleFileChange(file);
   };
 
+  const validate = () => {
+    const newErrors = {};
+    if (!form.characterName.trim()) {
+      newErrors.characterName = "캐릭터 이름을 입력해주세요.";
+    } else if (form.characterName.trim().length > 30) {
+      newErrors.characterName = "이름은 30자 이하로 입력해주세요.";
+    }
+    if (!form.summary.trim()) {
+      newErrors.summary = "캐릭터 요약을 입력해주세요.";
+    } else if (form.summary.trim().length > 100) {
+      newErrors.summary = "요약은 100자 이하로 입력해주세요.";
+    }
+    if (!form.personality.trim()) {
+      newErrors.personality = "성격/설정을 입력해주세요.";
+    } else if (form.personality.trim().length > 1000) {
+      newErrors.personality = "성격/설정은 1000자 이하로 입력해주세요.";
+    }
+    if (!form.firstMessage.trim()) {
+      newErrors.firstMessage = "첫 번째 메세지를 입력해주세요.";
+    } else if (form.firstMessage.trim().length > 500) {
+      newErrors.firstMessage = "첫 번째 메세지는 500자 이하로 입력해주세요.";
+    }
+    return newErrors;
+  };
+
+  const clearError = (field) => {
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
   const handleTagKeyDown = (e) => {
     if ((e.key === "Enter" || e.key === ",") && tagInput.trim()) {
       e.preventDefault();
+      if (tags.length >= 10) {
+        toast.error("태그는 최대 10개까지 추가할 수 있습니다.");
+        return;
+      }
+      if (tagInput.trim().length > 20) {
+        toast.error("태그는 20자 이하로 입력해주세요.");
+        return;
+      }
       if (!tags.includes(tagInput.trim())) {
         setTags([...tags, tagInput.trim()]);
       }
@@ -86,6 +126,13 @@ function MyPageCharactersEdit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
     setIsSubmitting(true);
 
     const characterData = {
@@ -179,11 +226,12 @@ function MyPageCharactersEdit() {
                   id="characterName"
                   name="characterName"
                   type="text"
-                  className={classes.input}
+                  className={`${classes.input} ${errors.characterName ? classes.inputError : ""}`}
                   placeholder="캐릭터 이름을 입력하세요"
                   value={form.characterName}
-                  onChange={(e) => setForm({ ...form, characterName: e.target.value })}
+                  onChange={(e) => { setForm({ ...form, characterName: e.target.value }); clearError("characterName"); }}
                 />
+                {errors.characterName && <span className={classes.errorMsg}>{errors.characterName}</span>}
               </div>
 
               <div className={classes.field}>
@@ -195,11 +243,12 @@ function MyPageCharactersEdit() {
                   id="summary"
                   name="summary"
                   type="text"
-                  className={classes.input}
+                  className={`${classes.input} ${errors.summary ? classes.inputError : ""}`}
                   placeholder="한 줄로 캐릭터를 소개하세요"
                   value={form.summary}
-                  onChange={(e) => setForm({ ...form, summary: e.target.value })}
+                  onChange={(e) => { setForm({ ...form, summary: e.target.value }); clearError("summary"); }}
                 />
+                {errors.summary && <span className={classes.errorMsg}>{errors.summary}</span>}
               </div>
 
               <div className={classes.field}>
@@ -210,12 +259,13 @@ function MyPageCharactersEdit() {
                 <textarea
                   id="personality"
                   name="personality"
-                  className={`${classes.input} ${classes.textarea}`}
+                  className={`${classes.input} ${classes.textarea} ${errors.personality ? classes.inputError : ""}`}
                   placeholder="캐릭터의 성격, 배경, 말투 등을 자세히 설명해주세요"
                   rows={5}
                   value={form.personality}
-                  onChange={(e) => setForm({ ...form, personality: e.target.value })}
+                  onChange={(e) => { setForm({ ...form, personality: e.target.value }); clearError("personality"); }}
                 />
+                {errors.personality && <span className={classes.errorMsg}>{errors.personality}</span>}
               </div>
 
               <div className={classes.field}>
@@ -226,12 +276,13 @@ function MyPageCharactersEdit() {
                 <textarea
                   id="firstMessage"
                   name="firstMessage"
-                  className={`${classes.input} ${classes.textarea}`}
+                  className={`${classes.input} ${classes.textarea} ${errors.firstMessage ? classes.inputError : ""}`}
                   placeholder="대화 시작 시 캐릭터가 보낼 첫 메세지"
                   rows={3}
                   value={form.firstMessage}
-                  onChange={(e) => setForm({ ...form, firstMessage: e.target.value })}
+                  onChange={(e) => { setForm({ ...form, firstMessage: e.target.value }); clearError("firstMessage"); }}
                 />
+                {errors.firstMessage && <span className={classes.errorMsg}>{errors.firstMessage}</span>}
               </div>
 
               {/* 태그 */}

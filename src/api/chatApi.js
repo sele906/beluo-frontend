@@ -148,6 +148,17 @@ export async function join(user, file) {
   return res.data;
 }
 
+export async function oauthJoin(name, birth, file) {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("birth", birth);
+    if (file) formData.append("file", file);
+    const res = await api.post("/auth/oauth2/join", formData, {
+      headers: { "Content-Type": undefined },
+    });
+    return res.data;
+  }
+
 export async function logout() {
   const res = await api.post("/auth/logout");
   return res.data;

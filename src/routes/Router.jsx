@@ -22,6 +22,7 @@ import MyPageInquiry from "../pages/mypage/MyPageInquiry";
 import Login from "../pages/auth/Login";
 import Join from "../pages/auth/Join";
 import OAuth2Redirect from "../pages/auth/OAuth2Redirect";
+import OAuth2Join from "../pages/auth/OAuth2Join";
 
 import CharacterDetailModal, {loader as characterDetailLoader} from "../components/common/CharacterDetailModal";
 import PrivateRoute from "../components/common/PrivateRoute";
@@ -76,6 +77,7 @@ const Router = createBrowserRouter([
     ]},
     {path: '/login', element: <Login/>},
     {path: '/join', element: <Join/>},
+    {path: '/oauth2/join', element: <OAuth2Join/>},
     {path: '/oauth2/redirect', element: <OAuth2Redirect/>},
 ]);
 
