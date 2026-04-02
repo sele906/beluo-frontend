@@ -1,6 +1,7 @@
 # Beluo Frontend
 
-AI 캐릭터와 나누는 대화 서비스, Beluo의 프론트엔드입니다.
+AI 캐릭터 채팅 플랫폼 Beluo의 프론트엔드입니다.
+사용자가 직접 AI 캐릭터를 만들고, 다양한 AI 모델과 채팅할 수 있는 서비스입니다.
 
 ## 프로젝트 설계
 
@@ -26,9 +27,9 @@ AI 캐릭터와 나누는 대화 서비스, Beluo의 프론트엔드입니다.
 
 ```bash
 npm install
-npm run dev      # 개발 서버 실행 (http://localhost:5173)
-npm run build    # 프로덕션 빌드
-npm run preview  # 빌드 결과 미리보기
+npm run dev      
+npm run build    
+npm run preview  
 ```
 
 **환경 변수 설정 (`.env`)**
@@ -123,3 +124,9 @@ src/
 - 차단한 캐릭터 목록
 - AI 모델 선택 및 크레딧 조회
 - 문의 제출
+
+---
+
+## 관련 레포지토리
+Backend: [beluo-api](https://github.com/sele906/beluo-backend.git)
+
