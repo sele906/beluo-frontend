@@ -9,10 +9,11 @@ const Layout = () => {
     const { conversations } = useLoaderData();
     const location = useLocation();
     const isChatRoom = location.pathname.startsWith('/chat/');
+    const isModelPage = location.pathname === '/mypage/model';
 
     return (
-        <div className={`${classes.wrapper} ${isChatRoom ? classes.chatMode : ''}`}>
-            <div className={classes.header}>
+        <div className={`${classes.wrapper} ${isChatRoom ? classes.headerHide : ''} ${isModelPage ? classes.headerHide : ''}`}>
+                <div className={classes.header}>
                 <Header />
             </div>
             

@@ -10,19 +10,19 @@ const MODEL_OPTIONS = [
     {
         value: 'free',
         label: '베이직',
-        desc: '빠르고 가벼운 기본 대화를 제공해요',
+        desc: '빠르고 가벼운 기본 대화 제공',
         credit: 1,
     },
     {
         value: 'gpt',
         label: '스탠다드',
-        desc: 'gpt-5-mini 기반의 빠르고 안정적인 답변을 제공해요',
+        desc: 'gpt-5-mini 기반 모델',
         credit: 3,
     },
     {
         value: 'claude',
         label: '프로',
-        desc: 'Claude Sonnet 4.6 기반의 풍부하고 자연스러운 답변을 제공해요',
+        desc: 'Claude Sonnet 기반 모델',
         credit: 5,
     },
 ];
@@ -74,7 +74,7 @@ function MyPageModel() {
 
             {/* ── 크레딧 섹션 ── */}
             <div className={classes.creditSection}>
-                <div className={classes.creditTop}>
+            <div className={classes.creditTop}>
                     <BiWallet className={classes.creditIcon} />
                     <span className={classes.creditSectionLabel}>내 크레딧</span>
                 </div>
@@ -95,7 +95,6 @@ function MyPageModel() {
             <div className={classes.modelSection}>
                 <div className={classes.modelSectionHeader}>
                     <span className={classes.modelSectionTitle}>모델 선택</span>
-                    <span className={classes.modelSectionDesc}>모델마다 차감되는 크레딧이 달라요</span>
                 </div>
                 <div className={classes.options}>
                     {MODEL_OPTIONS.map((opt) => (

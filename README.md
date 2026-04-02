@@ -130,5 +130,5 @@ src/
 ---
 
 ## 관련 레포지토리
-Backend: [beluo-api](https://github.com/sele906/beluo-backend.git)
+Backend: [beluo-backend](https://github.com/sele906/beluo-backend.git)
 

@@ -44,7 +44,7 @@
         ;
     }
 
-    .chatMode {
+    .headerHide {
         grid-template-rows: 1fr 60px;
         grid-template-areas:
             "main"
@@ -52,7 +52,7 @@
         ;
     }
 
-    .chatMode .header {
+    .headerHide .header {
         display: none;
     }
 
