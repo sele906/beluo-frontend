@@ -48,6 +48,7 @@ function ChatRoom() {
   const [activeModal, setActiveModal] = useState(null); // 'rename' | 'delete' | null
 
   // ── Refs ─────────────────────────────────────────────────
+  const isLoadingRef = useRef(false);
   const kebabRef = useRef(null);
   const bottomRef = useRef(null);
   const shouldScrollBottom = useRef(false);
@@ -131,12 +132,16 @@ function ChatRoom() {
   }, [kebabOpen]);
 
   useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  useEffect(() => {
     return () => {
-      if (isLoading) {
+      if (isLoadingRef.current) {
         navigator.sendBeacon(`${import.meta.env.VITE_API_URL}/api/chat/orphan?sessionId=${sessionId}`);
       }
     };
-  }, [isLoading, sessionId]);
+  }, []);
 
   // ── 슬라이더 네비게이션 ──────────────────────────────────
 
