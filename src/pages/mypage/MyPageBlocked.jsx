@@ -37,7 +37,7 @@ function MyPageBlocked() {
             setBlocked((prev) => prev.filter((b) => b.id !== id));
         } catch (error) {
             if (error.response?.status !== 401) {
-                toast.error('차단 해제에 실패했어요');
+                toast.error(error.response?.data || '차단 해제에 실패했어요');
             }
         }
     }

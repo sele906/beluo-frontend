@@ -21,7 +21,7 @@ function MyPageInquiry() {
             setIsDone(true);
         } catch (err) {
             console.error('문의 제출 실패:', err);
-            toast.error('문의 제출에 실패했어요. 다시 시도해주세요.');
+            toast.error(err.response?.data || '문의 제출에 실패했어요. 다시 시도해주세요.');
         } finally {
             setIsSubmitting(false);
         }

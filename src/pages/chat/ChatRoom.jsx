@@ -184,7 +184,7 @@ function ChatRoom() {
         setMessages((prev) => [...prev, { role: "ai", content: replies[replyIdx] }]);
       } catch (error) {
         console.error("자동 확정 실패:", error);
-        toast.error("응답 저장에 실패했어요. 다시 시도해주세요.");
+        toast.error(error.response?.data || "응답 저장에 실패했어요. 다시 시도해주세요.");
         return;
       }
       setReplies([]);
@@ -258,7 +258,7 @@ function ChatRoom() {
       setTypingText("");
     } catch (err) {
       console.error("확정 실패:", err);
-      toast.error("확정에 실패했어요. 다시 시도해주세요.");
+      toast.error(err.response?.data || "확정에 실패했어요. 다시 시도해주세요.");
     }
   };
 
@@ -291,14 +291,14 @@ function ChatRoom() {
         } catch (err) {
           console.error("편집 후 AI 응답 실패:", err);
           setReplyIdx(Math.max(0, newIdx - 1));
-          toast.error("AI 응답 생성에 실패했어요. 다시 시도해주세요.");
+          toast.error(err.response?.data || "AI 응답 생성에 실패했어요. 다시 시도해주세요.");
         } finally {
           setIsRegenerating(false);
         }
       }
     } catch (err) {
       console.error("메시지 수정 실패:", err);
-      toast.error("수정에 실패했어요. 다시 시도해주세요.");
+      toast.error(err.response?.data || "수정에 실패했어요. 다시 시도해주세요.");
     }
   };
 
@@ -312,7 +312,7 @@ function ChatRoom() {
       navigate("/chatlist");
     } catch (err) {
       console.error("채팅방 삭제 실패:", err);
-      toast.error("삭제에 실패했어요. 다시 시도해주세요.");
+      toast.error(err.response?.data || "삭제에 실패했어요. 다시 시도해주세요.");
     }
   };
 

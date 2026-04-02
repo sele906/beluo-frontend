@@ -34,7 +34,7 @@ function CharacterDetailModal() {
             setLikeCount(prev => liked ? prev - 1 : prev + 1);
         } catch (error) {
             if (error.response?.status !== 401) {
-                toast.error('좋아요 처리에 실패했어요');
+                toast.error(error.response?.data || '좋아요 처리에 실패했어요');
             }
         }
     };
@@ -52,7 +52,7 @@ function CharacterDetailModal() {
             navigate(-1);
         } catch (error) {
             if (error.response?.status !== 401) {
-                toast.error('차단 처리에 실패했어요');
+                toast.error(error.response?.data || '차단 처리에 실패했어요');
             }
         }
     };

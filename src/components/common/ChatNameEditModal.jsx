@@ -17,7 +17,7 @@ function ChatNameEditModal({ sessionId, conversationName, onNameUpdate, onClose 
             onClose();
         } catch (err) {
             console.error('이름 변경 실패:', err);
-            toast.error('이름 변경에 실패했어요. 다시 시도해주세요.');
+            toast.error(err.response?.data || '이름 변경에 실패했어요. 다시 시도해주세요.');
         } finally {
             setIsSubmitting(false);
         }

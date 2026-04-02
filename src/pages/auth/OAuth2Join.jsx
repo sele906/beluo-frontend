@@ -79,8 +79,8 @@ function OAuth2Join() {
             const birth = toBirth(birthYear.value, birthMonth.value, birthDay.value);
             await oauthJoin(name, birth, fileObj);
             navigate("/", { replace: true });
-        } catch {
-            toast.error("정보 저장에 실패했어요. 다시 시도해주세요.");
+        } catch (e) {
+            toast.error(e.response?.data || "정보 저장에 실패했어요. 다시 시도해주세요.");
         } finally {
             setIsSubmitting(false);
         }

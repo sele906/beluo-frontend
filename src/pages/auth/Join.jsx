@@ -93,8 +93,8 @@ function Join() {
             startTimer();
             setFieldError("email", "");
             toast.success("인증번호가 발송되었습니다.");
-        } catch {
-            toast.error("인증번호 발송에 실패했습니다.");
+        } catch (e) {
+            toast.error(e.response?.data || "인증번호 발송에 실패했습니다.");
         }
     };
 
@@ -106,8 +106,8 @@ function Join() {
             setVerifyStep("verified");
             setFieldError("email", "");
             toast.success("이메일 인증이 완료되었습니다.");
-        } catch {
-            toast.error("인증번호가 올바르지 않습니다.");
+        } catch (e) {
+            toast.error(e.response?.data || "인증번호가 올바르지 않습니다.");
         }
     };
 
@@ -145,8 +145,8 @@ function Join() {
             await joinApi({ email, password, name, ...(birth && { birth }) }, fileObj);
             toast.success("회원가입이 완료되었습니다.");
             navigate("/login");
-        } catch {
-            toast.error("회원가입에 실패했습니다.");
+        } catch (e) {
+            toast.error(e.response?.data || "회원가입에 실패했습니다.");
         }
     };
 

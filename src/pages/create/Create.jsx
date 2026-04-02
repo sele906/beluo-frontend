@@ -154,7 +154,7 @@ function Create() {
       console.error("캐릭터 생성 실패:", err);
       clearInterval(interval);
       toast.dismiss(toastId);
-      toast.error("저장에 실패했어요. 다시 시도해주세요.");
+      toast.error(err.response?.data || "저장에 실패했어요. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }

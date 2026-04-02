@@ -43,7 +43,7 @@ function MyPageCharactersEdit() {
       })
       .catch((err) => {
         console.error("캐릭터 정보 불러오기 실패:", err);
-        toast.error("캐릭터 정보를 불러오는데 실패했어요.");
+        toast.error(err.response?.data || "캐릭터 정보를 불러오는데 실패했어요.");
         navigate("/mypage/characters");
       })
       .finally(() => setIsLoading(false));
@@ -135,6 +135,13 @@ function MyPageCharactersEdit() {
     setErrors({});
     setIsSubmitting(true);
 
+    let pct = 0;
+    const toastId = toast.loading("캐릭터 수정중.. 0%");
+    const interval = setInterval(() => {
+      pct = Math.min(pct + Math.floor(Math.random() * 8) + 3, 90);
+      toast.loading(`캐릭터 수정중.. ${pct}%`, { id: toastId });
+    }, 400);
+
     const characterData = {
       characterName: form.characterName,
       summary: form.summary,
@@ -153,10 +160,14 @@ function MyPageCharactersEdit() {
 
     try {
       await updateCharacter(id, formData);
-      navigate("/mypage/characters");
+      clearInterval(interval);
+      toast.loading("캐릭터 수정중.. 100%", { id: toastId });
+      setTimeout(() => { toast.dismiss(toastId); navigate("/mypage/characters"); }, 300);
     } catch (err) {
       console.error("캐릭터 수정 실패:", err);
-      toast.error("저장에 실패했어요. 다시 시도해주세요.");
+      clearInterval(interval);
+      toast.dismiss(toastId);
+      toast.error(err.response?.data || "저장에 실패했어요. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }

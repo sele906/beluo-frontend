@@ -37,7 +37,7 @@ function MyPageLiked() {
             setLiked((prev) => prev.filter((l) => l.id !== id));
         } catch (error) {
             if (error.response?.status !== 401) {
-                toast.error('좋아요 취소에 실패했어요');
+                toast.error(error.response?.data || '좋아요 취소에 실패했어요');
             }
         }
     }

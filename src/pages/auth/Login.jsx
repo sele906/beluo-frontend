@@ -25,7 +25,7 @@ function Login() {
             login();
             navigate("/");
         } catch (e) {
-            toast.error("이메일 또는 비밀번호가 올바르지 않습니다.");
+            toast.error(e.response?.data || "이메일 또는 비밀번호가 올바르지 않습니다.");
         }
     };
 

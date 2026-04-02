@@ -118,8 +118,8 @@ function MyPageProfile() {
             startEmailTimer();
             setFieldError('newEmail', '');
             toast.success('인증번호가 발송되었습니다.');
-        } catch {
-            toast.error('인증번호 발송에 실패했습니다.');
+        } catch (e) {
+            toast.error(e.response?.data || '인증번호 발송에 실패했습니다.');
         }
     };
 
@@ -132,8 +132,8 @@ function MyPageProfile() {
             setEmailEditing(false);
             setFieldError('newEmail', '');
             toast.success('이메일 인증이 완료되었습니다.');
-        } catch {
-            toast.error('인증번호가 올바르지 않습니다.');
+        } catch (e) {
+            toast.error(e.response?.data || '인증번호가 올바르지 않습니다.');
         }
     };
 
@@ -206,7 +206,7 @@ function MyPageProfile() {
             navigate("/mypage");
         } catch (err) {
             console.error("프로필 수정 실패:", err);
-            toast.error("저장에 실패했어요. 다시 시도해주세요.");
+            toast.error(err.response?.data || "저장에 실패했어요. 다시 시도해주세요.");
         } finally {
             setIsSubmitting(false);
         }
@@ -221,7 +221,7 @@ function MyPageProfile() {
             navigate("/");
         } catch (err) {
             console.error("회원 탈퇴 실패:", err);
-            toast.error("탈퇴에 실패했어요. 다시 시도해주세요.");
+            toast.error(err.response?.data || "탈퇴에 실패했어요. 다시 시도해주세요.");
         }
     };
 

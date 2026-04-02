@@ -54,7 +54,7 @@ function MyPageModel() {
             toast.success('모델 설정이 저장되었어요.');
         } catch (err) {
             console.error('모델 설정 실패:', err);
-            toast.error('저장에 실패했어요. 다시 시도해주세요.');
+            toast.error(err.response?.data || '저장에 실패했어요. 다시 시도해주세요.');
         } finally {
             setIsSaving(false);
         }
