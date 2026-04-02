@@ -50,16 +50,16 @@ export async function editChat(chatId, sessionId, content) {
 }
 
 export async function getMessageList(sessionId, before) {
-  const params = { sessionId };
-  if (before) params.before = before;
-  const res = await api.get("/chat/messages", { params });
+  const res = await api.get(`/chat/messages/${sessionId}`, {
+    params: before ? { before } : {}
+  });
   return res.data;
 }
 
 // ─── conversation ────────────────────────────────────────
 
 export async function createConversation(characterId) {
-  const res = await api.get("/conversation/create", { params: { characterId } });
+  const res = await api.post(`/conversation/create/${characterId}`);
   return res.data;
 }
 
@@ -74,7 +74,7 @@ export async function getConversationList() {
 }
 
 export async function getConversationDetail(sessionId) {
-  const res = await api.get("/conversation/detail", { params: { sessionId } });
+  const res = await api.get(`/conversation/detail/${sessionId}`);
   return res.data;
 }
 
@@ -234,7 +234,7 @@ export async function submitInquiry(content) {
 
 export async function getModel() {
   const res = await api.get("/mypage/model");
-  return res.data; // { credit, model }
+  return res.data; 
 }
 
 export async function updateModel(model) {

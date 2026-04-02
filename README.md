@@ -32,10 +32,12 @@ npm run build
 npm run preview  
 ```
 
-**환경 변수 설정 (`.env`)**
+## 환경 변수
 
-```
-VITE_API_URL=http://localhost:8080
+환경 변수는 `.env.example`을 참고해 `.env` 파일을 생성하세요.
+
+```bash
+cp .env.example .env
 ```
 
 ---
