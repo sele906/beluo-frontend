@@ -29,7 +29,7 @@ import PrivateRoute from "../components/common/PrivateRoute";
 
 const Router = createBrowserRouter([
     {path: '/', element: <Layout />, loader: async () => ({
-      conversations: await getConversationList()
+      conversations: (await getConversationList()).conversations
     }), children: [
         
         // 메인

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { BiMessageDetail, BiChevronRight } from "react-icons/bi";
 import { getConversationList } from "../../api/chatApi";
+import { useInfiniteScroll } from "../../hook/useInfiniteScroll";
 import Avatar from "../../components/common/Avatar";
 import SearchBar from "../../components/common/SearchBar";
 
@@ -11,12 +12,17 @@ function ChatList() {
     const [conversationList, setConversationList] = useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(false);
+    const [nextCursor, setNextCursor] = useState(null);
 
     useEffect(() => {
         async function fetchConversations() {
             try {
                 const data = await getConversationList();
-                setConversationList(data);
+                setConversationList(data.conversations);
+                setHasMore(data.hasMore);
+                setNextCursor(data.nextCursor);
             } catch (error) {
                 console.error("대화 목록 불러오기 실패:", error);
             } finally {
@@ -25,6 +31,23 @@ function ChatList() {
         }
         fetchConversations();
     }, []);
+
+    const loadMore = useCallback(async () => {
+        if (!hasMore || isLoadingMore) return;
+        setIsLoadingMore(true);
+        try {
+            const data = await getConversationList(nextCursor);
+            setConversationList((prev) => [...prev, ...data.conversations]);
+            setHasMore(data.hasMore);
+            setNextCursor(data.nextCursor);
+        } catch (error) {
+            console.error("대화 목록 추가 불러오기 실패:", error);
+        } finally {
+            setIsLoadingMore(false);
+        }
+    }, [hasMore, isLoadingMore, nextCursor]);
+
+    const sentinelRef = useInfiniteScroll(loadMore);
 
     const filtered = conversationList.filter((c) =>
         c.conversationName.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -82,7 +105,17 @@ function ChatList() {
                             <span className={classes.arrow}><BiChevronRight /></span>
                         </Link>
                 ))}
+
+                {/* 무한 스크롤 sentinel */}
+                {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
             </div>
+
+            {/* 추가 로딩 인디케이터 */}
+            {isLoadingMore && (
+                <div className={classes.loader}>
+                    <span className={classes.loadingDots}><span /><span /><span /></span>
+                </div>
+            )}
 
         </div>
     );

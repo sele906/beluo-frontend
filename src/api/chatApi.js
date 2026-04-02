@@ -63,13 +63,14 @@ export async function createConversation(characterId) {
   return res.data;
 }
 
-export async function getConversationList() {
+export async function getConversationList(cursor = null) {
   try {
-    const res = await api.get("/conversation/list");
+    const params = cursor ? { before: cursor } : {};
+    const res = await api.get("/conversation/list", { params });
     return res.data;
   } catch (error) {
     console.error("채팅방 목록 불러오기 실패:", error);
-    return [];
+    return { conversations: [], hasMore: false, nextCursor: null };
   }
 }
 
