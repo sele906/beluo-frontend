@@ -130,6 +130,14 @@ function ChatRoom() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [kebabOpen]);
 
+  useEffect(() => {
+    return () => {
+      if (isLoading) {
+        navigator.sendBeacon(`${import.meta.env.VITE_API_URL}/api/chat/orphan?sessionId=${sessionId}`);
+      }
+    };
+  }, [isLoading, sessionId]);
+
   // ── 슬라이더 네비게이션 ──────────────────────────────────
 
   const goToPrev = () => {
