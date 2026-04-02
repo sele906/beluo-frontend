@@ -50,8 +50,8 @@ function Main() {
                 <div className={classes.betaBanner}>
                     
                     <p className={classes.betaBadge}>BETA</p>
-                    <p className={classes.betaTitle}>지금은 베타 기간이에요</p>
-                    <p className={classes.betaDesc}>하루 50번까지 자유롭게 대화해보세요</p>
+                    <p className={classes.betaTitle}>지금은 베타 기간이에요 (4.2 ~ 5.2)</p>
+                    <p className={classes.betaDesc}>매일 50 크레딧 무료 제공!</p>
                 </div>
 
                 {showLiked && (
