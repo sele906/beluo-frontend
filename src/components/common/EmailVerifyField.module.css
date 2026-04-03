@@ -61,6 +61,7 @@
     transition: border-color 0.2s, background 0.2s;
     white-space: nowrap;
     flex-shrink: 0;
+    width: 77px;
 }
 
 .verifyBtn:hover:not(:disabled) {
