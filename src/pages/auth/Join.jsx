@@ -213,7 +213,7 @@ function Join() {
                             onChange={(v) => { handleChange("email", v, setEmail); setVerifyStep("none"); }}
                             onBlur={(v) => handleBlur("email", v)}
                             verifyStep={verifyStep}
-                            sendLabel={verifyStep === "sent" ? "재발송" : "인증번호 받기"}
+                            sendLabel={verifyStep === "sent" ? "재발송" : "인증하기"}
                             onSend={handleSendVerify}
                             code={verifyCode}
                             onCodeChange={setVerifyCode}
