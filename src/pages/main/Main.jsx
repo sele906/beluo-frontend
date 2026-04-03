@@ -65,9 +65,9 @@ function Main() {
                     </section>
                 )}
 
-                <Section title="🔥 요즘 뜨는 캐릭터" characters={characterList.popular} />
+                <Section title="🔥 요즘 뜨는 캐릭터" characters={characterList.popular ?? []} />
 
-                <Section title="✨ 신규 캐릭터" characters={characterList.recent} />
+                <Section title="✨ 신규 캐릭터" characters={characterList.recent ?? []} />
             </div>
         </>
     );

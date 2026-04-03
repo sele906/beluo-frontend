@@ -4,7 +4,7 @@ import Avatar from "../../components/common/Avatar";
 
 import classes from "./Sidebar.module.css";
 
-function Sidebar({conversations}) {
+function Sidebar({ conversations = [] }) {
 
     return (
         <>
