@@ -7,7 +7,6 @@ import { BiLeftArrowAlt, BiCheckCircle } from "react-icons/bi";
 import Avatar from '../../components/common/Avatar';
 import AvatarUpload from '../../components/common/AvatarUpload';
 import BirthdaySelect from '../../components/common/BirthdaySelect';
-import EmailVerifyField from '../../components/common/EmailVerifyField';
 
 import classes from './MyPageProfile.module.css';
 
@@ -32,6 +31,9 @@ const validateNewPw = (v) => {
     return "";
 };
 
+const formatTime = (sec) =>
+    `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
+
 const validateEmail = (v) => {
     if (!v.trim()) return "이메일을 입력해주세요.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "올바른 이메일 형식이 아닙니다.";
@@ -42,6 +44,7 @@ function MyPageProfile() {
     const navigate = useNavigate();
     const { logout } = useAuth();
     const emailTimerRef = useRef(null);
+    const emailInputRef = useRef(null);
 
     const [user, setUser] = useState();
     const [preview, setPreview] = useState(null);
@@ -81,6 +84,7 @@ function MyPageProfile() {
     useEffect(() => {
         if (!user) return;
         setName(user.name ?? '');
+        setNewEmail(user.email ?? '');
         const parsed = parseBirth(user.birth);
         if (parsed) {
             setBirthYear ({ value: parsed.year,  label: `${parsed.year}년`  });
@@ -173,7 +177,7 @@ function MyPageProfile() {
         const nameErr = validateName(name);
         if (nameErr) newErrors.name = nameErr;
 
-        if (!isGoogle && emailEditing) newErrors.newEmail = "이메일 인증을 완료해주세요.";
+        if (!isGoogle && newEmail !== user.email && emailVerifyStep !== 'verified') newErrors.newEmail = "이메일 인증을 완료해주세요.";
 
         if (!isGoogle && newPw) {
             const newPwErr = validateNewPw(newPw);
@@ -189,6 +193,7 @@ function MyPageProfile() {
         const profileData = {
             name,
             userImgUrl: user.userImgUrl,
+            provider: user.provider,
             ...(birthYear && birthMonth && birthDay && {
                 birth: toBirth(birthYear.value, birthMonth.value, birthDay.value),
             }),
@@ -284,54 +289,86 @@ function MyPageProfile() {
                     <div className={classes.field}>
                         <label className={classes.label}>이메일</label>
 
-                        {/* 기본: readonly + 변경하기 버튼 */}
-                        {!emailEditing && (
+                        <div className={classes.inlineRow}>
+                            <input
+                                ref={emailInputRef}
+                                className={`${classes.input} ${(!emailEditing || emailVerifyStep === 'verified') ? classes.inputDisabled : ''} ${errors.newEmail ? classes.inputError : ''}`}
+                                type="email"
+                                value={newEmail}
+                                disabled={!emailEditing || emailVerifyStep === 'verified'}
+                                onChange={(e) => {
+                                    const v = e.target.value;
+                                    setNewEmail(v);
+                                    setEmailVerifyStep('none');
+                                    setEmailVerifyCode('');
+                                    if (errors.newEmail) setFieldError('newEmail', validateEmail(v));
+                                }}
+                                autoComplete="email"
+                            />
+
+                            {/* 변경하기 */}
+                            {!isGoogle && !emailEditing && emailVerifyStep !== 'verified' && (
+                                <button
+                                    type="button"
+                                    className={classes.verifyBtn}
+                                    onClick={() => {
+                                        setEmailEditing(true);
+                                        setTimeout(() => emailInputRef.current?.focus(), 0);
+                                    }}
+                                >
+                                    변경하기
+                                </button>
+                            )}
+
+                            {/* 인증하기 / 재발송 */}
+                            {!isGoogle && emailEditing && newEmail !== user.email && emailVerifyStep !== 'verified' && (
+                                <button
+                                    type="button"
+                                    className={classes.verifyBtn}
+                                    onClick={handleSendEmailVerify}
+                                    disabled={!newEmail.trim()}
+                                >
+                                    {emailVerifyStep === 'sent' ? '재발송' : '인증하기'}
+                                </button>
+                            )}
+
+                            {/* 인증 완료 */}
+                            {emailVerifyStep === 'verified' && (
+                                <div className={classes.verifiedBadge}>
+                                    <BiCheckCircle size={15} />
+                                    인증 완료
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 인증코드 입력 */}
+                        {emailVerifyStep === 'sent' && (
                             <div className={classes.inlineRow}>
-                                <input
-                                    className={`${classes.input} ${classes.inputDisabled}`}
-                                    type="email"
-                                    value={emailVerifyStep === 'verified' ? newEmail : user.email}
-                                    disabled
-                                />
-                                {!isGoogle && emailVerifyStep !== 'verified' && (
-                                    <button
-                                        type="button"
-                                        className={classes.verifyBtn}
-                                        onClick={() => setEmailEditing(true)}
-                                    >
-                                        변경하기
-                                    </button>
-                                )}
-                                {emailVerifyStep === 'verified' && (
-                                    <div className={classes.verifiedBadge}>
-                                        <BiCheckCircle size={15} />
-                                        인증 완료
-                                    </div>
-                                )}
+                                <div className={classes.codeWrap}>
+                                    <input
+                                        className={classes.input}
+                                        value={emailVerifyCode}
+                                        onChange={(e) => setEmailVerifyCode(e.target.value.replace(/\D/g, ''))}
+                                        placeholder="인증번호 6자리"
+                                        maxLength={6}
+                                        inputMode="numeric"
+                                    />
+                                    {emailTimeLeft > 0 && (
+                                        <span className={classes.timer}>{formatTime(emailTimeLeft)}</span>
+                                    )}
+                                </div>
+                                <button
+                                    type="button"
+                                    className={classes.verifyBtn}
+                                    onClick={handleCheckEmailVerify}
+                                    disabled={emailVerifyCode.length < 6}
+                                >
+                                    확인
+                                </button>
                             </div>
                         )}
 
-                        {/* 편집 중: EmailVerifyField */}
-                        {emailEditing && (
-                            <EmailVerifyField
-                                value={newEmail}
-                                onChange={(v) => {
-                                    setNewEmail(v);
-                                    setEmailVerifyStep('none');
-                                    if (errors.newEmail) setFieldError('newEmail', validateEmail(v));
-                                }}
-                                verifyStep={emailVerifyStep}
-                                sendLabel={emailVerifyStep === 'sent' ? '재발송' : '인증하기'}
-                                onSend={handleSendEmailVerify}
-                                code={emailVerifyCode}
-                                onCodeChange={setEmailVerifyCode}
-                                onConfirm={handleCheckEmailVerify}
-                                timeLeft={emailTimeLeft}
-                                error={errors.newEmail}
-                                placeholder="변경할 이메일"
-                                autoFocus
-                            />
-                        )}
+                        {errors.newEmail && <span className={classes.errorMsg}>{errors.newEmail}</span>}
                     </div>
                 </div>
 

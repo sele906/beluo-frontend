@@ -18,6 +18,7 @@ function EmailVerifyField({
     error,
     placeholder = '이메일을 입력하세요',
     autoFocus = false,
+    showActions = true,
 }) {
     return (
         <div className={classes.wrap}>
@@ -29,11 +30,11 @@ function EmailVerifyField({
                     onChange={(e) => onChange(e.target.value)}
                     onBlur={onBlur ? (e) => onBlur(e.target.value) : undefined}
                     placeholder={placeholder}
-                    disabled={verifyStep === 'verified'}
+                    disabled={showActions && verifyStep === 'verified'}
                     autoComplete="email"
                     autoFocus={autoFocus}
                 />
-                {verifyStep !== 'verified' ? (
+                {showActions && (verifyStep !== 'verified' ? (
                     <button
                         type="button"
                         className={classes.verifyBtn}
@@ -47,10 +48,10 @@ function EmailVerifyField({
                         <BiCheckCircle size={15} />
                         인증 완료
                     </div>
-                )}
+                ))}
             </div>
 
-            {verifyStep === 'sent' && (
+            {showActions && verifyStep === 'sent' && (
                 <div className={classes.row}>
                     <div className={classes.codeWrap}>
                         <input

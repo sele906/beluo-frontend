@@ -233,6 +233,7 @@
     transition: border-color 0.2s, background 0.2s;
     white-space: nowrap;
     flex-shrink: 0;
+    width: 77px;
 }
 
 .verifyBtn:hover:not(:disabled) {
@@ -245,6 +246,27 @@
     cursor: default;
 }
 
+
+.codeWrap {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+}
+
+.codeWrap .input {
+    padding-right: 60px;
+}
+
+.timer {
+    position: absolute;
+    right: 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    pointer-events: none;
+}
 
 .verifiedBadge {
     display: flex;
