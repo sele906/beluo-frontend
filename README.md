@@ -46,21 +46,21 @@ cp .env.example .env
 
 ```
 src/
-├── api/          # Axios 인스턴스 및 API 함수
-├── components/   # 재사용 컴포넌트
-│   ├── layout/   # Header, Sidebar, Footer
-│   ├── chat/     # 채팅 관련 컴포넌트
-│   └── common/   # 공통 컴포넌트
-├── hook/         # 커스텀 훅 (인증, 무한스크롤, 타이핑 효과)
-├── pages/        # 페이지 컴포넌트
-│   ├── auth/     # 로그인, 회원가입, OAuth2
-│   ├── main/     # 메인, 캐릭터 검색
-│   ├── chat/     # 채팅 목록, 채팅방
-│   ├── create/   # 캐릭터 생성
-│   └── mypage/   # 마이페이지
-├── routes/       # React Router 설정
-├── store/        # Zustand 스토어
-└── styles/       # 글로벌 CSS
+├── api/          
+├── components/  
+│   ├── layout/   
+│   ├── chat/     
+│   └── common/   
+├── hook/         
+├── pages/       
+│   ├── auth/     
+│   ├── main/    
+│   ├── chat/    
+│   ├── create/  
+│   └── mypage/   
+├── routes/       
+├── store/        
+└── styles/       
 ```
 
 ---
@@ -72,9 +72,9 @@ src/
 **로그인 / 회원가입**
 
 - 일반 로그인 및 회원가입
-- OAuth2 소셜 로그인 (카카오 등)
+- OAuth2 소셜 로그인 
 - 이메일 인증 코드 발송 및 검증
-- JWT 기반 인증 (자동 토큰 갱신)
+- JWT 기반 인증 
 
 ### 캐릭터
 
@@ -86,7 +86,7 @@ src/
 
 **관리**
 
-- 캐릭터 생성 (이미지 업로드 포함)
+- 캐릭터 생성 
 - 찜하기 / 찜 취소
 - 차단하기 / 차단 취소
 
@@ -95,11 +95,11 @@ src/
 **대화**
 
 - AI 캐릭터와 실시간 대화
-- AI 응답 슬라이더 (여러 응답 중 선택)
+- AI 응답 슬라이더 
 - 응답 재생성
 - 메시지 편집 후 재응답
 - 타이핑 효과 애니메이션
-- 무한 스크롤 (이전 메시지 로드)
+- 무한 스크롤
 
 **채팅방 관리**
 
