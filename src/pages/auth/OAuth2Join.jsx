@@ -78,7 +78,8 @@ function OAuth2Join() {
         try {
             const birth = toBirth(birthYear.value, birthMonth.value, birthDay.value);
             await oauthJoin(name, birth, fileObj);
-            navigate("/", { replace: true });
+            toast.success("회원가입이 완료되었습니다. 구글로 로그인 해주세요");
+            navigate("/login", { replace: true });
         } catch (e) {
             toast.error(e.response?.data || "정보 저장에 실패했어요. 다시 시도해주세요.");
         } finally {

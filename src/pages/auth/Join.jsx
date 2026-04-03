@@ -143,7 +143,7 @@ function Join() {
                 ? toBirth(birthYear.value, birthMonth.value, birthDay.value)
                 : undefined;
             await joinApi({ email, password, name, ...(birth && { birth }) }, fileObj);
-            toast.success("회원가입이 완료되었습니다.");
+            toast.success("회원가입이 완료되었습니다. 로그인 해주세요");
             navigate("/login");
         } catch (e) {
             toast.error(e.response?.data || "회원가입에 실패했습니다.");
