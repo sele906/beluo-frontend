@@ -129,6 +129,12 @@ src/
 
 ---
 
-## 관련 레포지토리
-Backend: [beluo-backend](https://github.com/sele906/beluo-backend.git)
+## 추가 정보
+
+### 🔗 관련 레포지토리
+Backend: [beluo-backend](https://github.com/sele906/beluo-backend.git) 
+
+### 📄 라이선스
+이 프로젝트는 Apache License 2.0을 따릅니다.
+
 
