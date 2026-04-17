@@ -297,8 +297,10 @@ function ChatRoom() {
                             <div className={rowClasses.aiAvatar}>
                                 <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
                             </div>
-                            <div className={`${rowClasses.bubble} ${rowClasses.bubbleAi}`}>
-                                <span className={classes.loadingDots}><span /><span /><span /></span>
+                            <div className={rowClasses.msgWrapper}>
+                                <div className={`${rowClasses.bubble} ${rowClasses.bubbleAi}`}>
+                                    <span className={classes.loadingDots}><span /><span /><span /></span>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -309,8 +311,10 @@ function ChatRoom() {
                             <div className={rowClasses.aiAvatar}>
                                 <Avatar filePath={info.characterImgUrl} name={info.characterName} size={150} />
                             </div>
-                            <div className={`${rowClasses.bubble} ${rowClasses.bubbleAi}`}>
-                                {typingText}
+                            <div className={rowClasses.msgWrapper}>
+                                <div className={`${rowClasses.bubble} ${rowClasses.bubbleAi}`}>
+                                    {typingText}
+                                </div>
                             </div>
                         </div>
                     )}
