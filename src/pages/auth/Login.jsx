@@ -1,5 +1,5 @@
 import { BiX } from "react-icons/bi";
-import { login as loginApi } from "../../api/chatApi";
+import { login as loginApi, guestLogin as guestLoginApi } from "../../api/chatApi";
 import { toast } from "sonner";
 import { useAuth } from "../../hook/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import classes from "./Login.module.css";
 
 function Login() {
 
-    const { login } = useAuth();
+    const { login, guestLogin } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -26,6 +26,16 @@ function Login() {
             navigate("/");
         } catch (e) {
             toast.error(e.response?.data || "이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
+    };
+
+    const handleGuestLogin = async () => {
+        try {
+            await guestLoginApi();
+            guestLogin();
+            navigate("/");
+        } catch (e) {
+            toast.error("게스트 로그인에 실패했습니다.");
         }
     };
 
@@ -68,6 +78,10 @@ function Login() {
                 </form>
 
                 <div className={classes.divider}>또는</div>
+
+                <button className={classes.guestButton} onClick={handleGuestLogin}>
+                    게스트로 시작하기
+                </button>
 
                 <button className={classes.googleButton} onClick={toGoogle}>
                     <BiLogoGoogle className={classes.googleIcon} />

@@ -26,6 +26,7 @@ import OAuth2Join from "../pages/auth/OAuth2Join";
 
 import CharacterDetailModal, {loader as characterDetailLoader} from "../components/common/CharacterDetailModal";
 import PrivateRoute from "../components/common/PrivateRoute";
+import UserOnlyRoute from "../components/common/UserOnlyRoute";
 
 const Router = createBrowserRouter([
     {path: '/', element: <Layout />, loader: async () => ({
@@ -49,28 +50,33 @@ const Router = createBrowserRouter([
 
             {path: '/chat/:id', element: <ChatRoom />},
 
-            //추가하기
-            {path: '/create', element: <Create />},
+            // 회원 전용 (게스트 불가)
+            { element: <UserOnlyRoute />, children: [
 
-            //마이페이지
-            { path: '/mypage', element: <MyPage />, children: [
-                {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+                //추가하기
+                {path: '/create', element: <Create />},
+
+                //마이페이지
+                { path: '/mypage', element: <MyPage />, children: [
+                    {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+                ]},
+
+                { path: '/mypage/profile', element: <MyPageProfile /> },
+
+                { path: '/mypage/characters', element: <MyPageCharacters />, children: [
+                    {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+                ]},
+                { path: '/mypage/character/:id/edit', element: <MyPageCharactersEdit /> },
+
+                { path: '/mypage/liked', element: <MyPageLiked />, children: [
+                    {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
+                ]},
+
+                { path: '/mypage/blocked', element: <MyPageBlocked /> },
+                { path: '/mypage/model', element: <MyPageModel /> },
+                { path: '/mypage/inquiry', element: <MyPageInquiry /> },
+
             ]},
-
-            { path: '/mypage/profile', element: <MyPageProfile /> },
-
-            { path: '/mypage/characters', element: <MyPageCharacters />, children: [
-                {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
-            ]},
-            { path: '/mypage/character/:id/edit', element: <MyPageCharactersEdit /> },
-
-            { path: '/mypage/liked', element: <MyPageLiked />, children: [
-                {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
-            ]},
-
-            { path: '/mypage/blocked', element: <MyPageBlocked /> },
-            { path: '/mypage/model', element: <MyPageModel /> },
-            { path: '/mypage/inquiry', element: <MyPageInquiry /> },
 
         ]},
 

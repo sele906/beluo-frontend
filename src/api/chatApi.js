@@ -160,6 +160,11 @@ export async function oauthJoin(name, birth, file) {
     return res.data;
   }
 
+export async function guestLogin() {
+  const res = await api.post("/auth/guest");
+  return res.data;
+}
+
 export async function logout() {
   const res = await api.post("/auth/logout");
   return res.data;

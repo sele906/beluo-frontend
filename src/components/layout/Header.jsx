@@ -8,7 +8,7 @@ import classes from "./Header.module.css";
 import logo from "../../assets/logo.svg";
 
 function Header() {
-    const { isLoggedIn, logout } = useAuth();
+    const { isLoggedIn, isGuest, logout } = useAuth();
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ function Header() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const closeMenu = () => setUserMenuOpen(false);
     const menuItems = [
-        { to: "/mypage", icon: <BiUser />, label: "마이메뉴" },
+        ...(!isGuest ? [{ to: "/mypage", icon: <BiUser />, label: "마이메뉴" }] : []),
         { icon: <BiLogOut />, label: "로그아웃", onClick: handleLogout },
     ];
 
