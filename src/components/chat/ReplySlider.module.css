@@ -1,0 +1,17 @@
+@keyframes slideFromRight {
+    from { transform: translateX(12px); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes slideFromLeft {
+    from { transform: translateX(-12px); opacity: 0; }
+    to   { transform: translateX(0);     opacity: 1; }
+}
+
+.slideFromRight {
+    animation: slideFromRight 0.22s ease;
+}
+
+.slideFromLeft {
+    animation: slideFromLeft 0.22s ease;
+}

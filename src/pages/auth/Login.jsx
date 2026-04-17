@@ -1,4 +1,4 @@
-import { BiX } from "react-icons/bi";
+import { BiX, BiUser } from "react-icons/bi";
 import { login as loginApi, guestLogin as guestLoginApi } from "../../api/chatApi";
 import { toast } from "sonner";
 import { useAuth } from "../../hook/AuthContext";
@@ -79,7 +79,8 @@ function Login() {
 
                 <div className={classes.divider}>또는</div>
 
-                <button className={classes.guestButton} onClick={handleGuestLogin}>
+                <button className={classes.googleButton} onClick={handleGuestLogin}>
+                    <BiUser className={classes.googleIcon} />
                     게스트로 시작하기
                 </button>
 
