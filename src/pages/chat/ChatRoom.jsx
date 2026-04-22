@@ -38,13 +38,10 @@ function ChatRoom() {
     const [typingText, setTypingText] = useState("");
 
     // ── 재생성 슬라이더 ───────────────────────────────────────
-    // replies[]      : 재생성된 답변 목록 (미확정)
-    // sliderIdx      : 0 = 저장된 답변, 1+ = replies[sliderIdx-1]
-    // lastAiMessageId: 현재 저장된 AI 메시지 ID
-    //                  확정 시 previousMessageId로 넘겨 DB에서 이전 메시지 삭제
+    // replies[]  : 재생성된 답변 목록 (미확정)
+    // sliderIdx  : 0 = 저장된 답변, 1+ = replies[sliderIdx-1]
     const [replies, setReplies] = useState([]);
     const [sliderIdx, setSliderIdx] = useState(0);
-    const [lastAiMessageId, setLastAiMessageId] = useState(null);
 
     // ── 메시지 편집 ──────────────────────────────────────────
     const [editingId, setEditingId] = useState(null);
@@ -106,7 +103,6 @@ function ChatRoom() {
         try {
             const { reply } = await sendChat(text, sessionId);
             const { messageId } = await confirmChat(sessionId, reply);
-            setLastAiMessageId(messageId ?? null);
 
             // 타이핑 시작 — savedMsg는 클로저로 캡처, 완료 시 messages[]에 추가
             const savedMsg = { role: "assistant", content: reply, id: messageId };
@@ -168,13 +164,10 @@ function ChatRoom() {
     };
 
     // ── 확정 (체크버튼) ───────────────────────────────────────
-    // confirmChat(previousMessageId) → 백엔드가 이전 AI 메시지 삭제 후 새로 저장
-    // 답변박스(messages[] 마지막 AI 메시지) 내용을 선택한 답변으로 교체
     const handleConfirm = async () => {
         const content = replies[sliderIdx - 1];
         try {
-            const { messageId } = await confirmChat(sessionId, content, lastAiMessageId);
-            setLastAiMessageId(messageId ?? null);
+            const { messageId } = await confirmChat(sessionId, content);
             setMessages(prev => {
                 const msgs = [...prev];
                 const lastAiIdx = msgs.findLastIndex(m => m.role === "assistant");
@@ -189,9 +182,6 @@ function ChatRoom() {
     };
 
     // ── 메시지 편집 ──────────────────────────────────────────
-    // AI 메시지 편집: editChat → DB 수정
-    // 유저 메시지 편집: editChat → regenerateChat → confirmChat → messages[]에 바로 추가
-    //   (editChat 시 백엔드에서 이후 AI 메시지 자동 삭제 → previousMessageId = null)
     const handleEditSave = async () => {
         if (!editValue.trim() || !editingId) return;
         const editingRole = messages.find(m => m.id === editingId)?.role;
@@ -204,12 +194,10 @@ function ChatRoom() {
             setHasMore(msgData.hasMore ?? false);
 
             if (editingRole === "user") {
-                setLastAiMessageId(null);
                 setIsRegenerating(true);
                 try {
                     const { reply } = await regenerateChat(sessionId);
-                    const { messageId } = await confirmChat(sessionId, reply, null);
-                    setLastAiMessageId(messageId ?? null);
+                    const { messageId } = await confirmChat(sessionId, reply);
                     setMessages(prev => [...prev, { role: "assistant", content: reply, id: messageId }]);
                     requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }));
                 } catch (err) {

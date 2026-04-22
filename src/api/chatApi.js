@@ -40,8 +40,8 @@ export async function regenerateChat(sessionId) {
   return res.data;
 }
 
-export async function confirmChat(sessionId, reply, previousMessageId = null) {
-  const res = await api.post("/chat/confirm", { sessionId, reply, previousMessageId });
+export async function confirmChat(sessionId, reply) {
+  const res = await api.post("/chat/confirm", { sessionId, reply });
   return res.data;
 }
 
