@@ -151,7 +151,7 @@
 /* ── 모바일 ── */
 @media (max-width: 600px) {
     .betaBanner {
-        display: block;
+        display: none;
     }
 
     .main {
