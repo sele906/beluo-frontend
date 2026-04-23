@@ -167,7 +167,7 @@ function ChatRoom() {
     const handleConfirm = async () => {
         const content = replies[sliderIdx - 1];
         try {
-            const { messageId } = await confirmChat(sessionId, content);
+            const { messageId } = await confirmChat(sessionId, content, true);
             setMessages(prev => {
                 const msgs = [...prev];
                 const lastAiIdx = msgs.findLastIndex(m => m.role === "assistant");
