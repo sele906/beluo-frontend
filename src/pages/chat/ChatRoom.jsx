@@ -188,23 +188,38 @@ function ChatRoom() {
         try {
             await editChat(editingId, sessionId, editValue.trim());
             setEditingId(null);
-            const msgData = await getMessageList(sessionId, null);
-            setMessages(msgData.messages ?? []);
-            setNextCursor(msgData.nextCursor ?? null);
-            setHasMore(msgData.hasMore ?? false);
 
             if (editingRole === "user") {
-                setIsRegenerating(true);
+                // 편집된 메시지 이후 즉시 제거 → 로딩 dots 전에 기존 AI 메시지 사라짐
+                setMessages(prev => {
+                    const idx = prev.findIndex(m => m.id === editingId);
+                    if (idx < 0) return prev;
+                    return prev.slice(0, idx + 1).map(m => m.id === editingId ? { ...m, content: editValue.trim() } : m);
+                });
+                setIsLoading(true);
                 try {
                     const { reply } = await regenerateChat(sessionId);
                     const { messageId } = await confirmChat(sessionId, reply);
-                    setMessages(prev => [...prev, { role: "assistant", content: reply, id: messageId }]);
-                    requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }));
+                    const savedMsg = { role: "assistant", content: reply, id: messageId };
+                    const scrollBottom = () => requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }));
+                    setIsTyping(true);
+                    scrollBottom();
+                    typeText(reply, setTypingText, scrollBottom, () => {
+                        setIsTyping(false);
+                        setTypingText("");
+                        setMessages(prev => [...prev, savedMsg]);
+                        scrollBottom();
+                    });
                 } catch (err) {
                     toast.error(err.response?.data || "AI 응답 생성에 실패했어요.");
                 } finally {
-                    setIsRegenerating(false);
+                    setIsLoading(false);
                 }
+            } else {
+                const msgData = await getMessageList(sessionId, null);
+                setMessages(msgData.messages ?? []);
+                setNextCursor(msgData.nextCursor ?? null);
+                setHasMore(msgData.hasMore ?? false);
             }
         } catch (err) {
             toast.error(err.response?.data || "수정에 실패했어요.");
