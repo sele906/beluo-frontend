@@ -19,6 +19,8 @@ import MyPageBlocked from "../pages/mypage/MyPageBlocked";
 import MyPageModel from "../pages/mypage/MyPageModel";
 import MyPageInquiry from "../pages/mypage/MyPageInquiry";
 
+import PaymentSuccess from "../pages/payment/PaymentSuccess";
+
 import Login from "../pages/auth/Login";
 import Join from "../pages/auth/Join";
 import OAuth2Redirect from "../pages/auth/OAuth2Redirect";
@@ -75,6 +77,9 @@ const Router = createBrowserRouter([
                 { path: '/mypage/blocked', element: <MyPageBlocked /> },
                 { path: '/mypage/model', element: <MyPageModel /> },
                 { path: '/mypage/inquiry', element: <MyPageInquiry /> },
+
+                //결제
+                {path: '/payment/success', element: <PaymentSuccess />},
 
             ]},
 

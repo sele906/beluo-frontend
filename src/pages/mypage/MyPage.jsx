@@ -27,6 +27,22 @@ function MyPage() {
 
     if (!user) return <Outlet />
 
+    const handlePolarCheckout = async () => {
+        const res = await fetch("http://localhost:8080/api/payment/polar/checkout", {
+            method: "POST",
+            credentials: "include",
+        });
+
+        if (!res.ok) {
+            const text = await res.text();
+            console.error("checkout error:", res.status, text);
+            return;
+        }
+
+        const data = await res.json();
+        window.location.href = data.checkoutUrl;
+    };
+
     return (
         <div className={classes.page}>
 
@@ -80,6 +96,9 @@ function MyPage() {
                 <button className={classes.menuItem} onClick={() => navigate('/mypage/inquiry')}>
                     <span>문의사항</span>
                     <BiChevronRight className={classes.menuChevron} />
+                </button>
+                <button onClick={handlePolarCheckout}>
+                    Buy Credits
                 </button>
             </div>
 
