@@ -248,3 +248,10 @@ export async function updateModel(model) {
     headers: { "Content-Type": "text/plain" },
   });
 }
+
+// ─── payment ──────────────────────────────────────────────
+
+export async function createPolarCheckout() {
+  const res = await api.post("/payment/polar/checkout");
+  return res.data;
+}

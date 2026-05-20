@@ -1,6 +1,6 @@
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getMypageOverview } from '../../api/chatApi';
+import { getMypageOverview, createPolarCheckout} from '../../api/chatApi';
 import Avatar from '../../components/common/Avatar';
 import { BiChevronRight, BiRightArrowAlt } from 'react-icons/bi';
 import classes from './MyPage.module.css';
@@ -27,20 +27,15 @@ function MyPage() {
 
     if (!user) return <Outlet />
 
+    
+
     const handlePolarCheckout = async () => {
-        const res = await fetch("http://localhost:8080/api/payment/polar/checkout", {
-            method: "POST",
-            credentials: "include",
-        });
-
-        if (!res.ok) {
-            const text = await res.text();
-            console.error("checkout error:", res.status, text);
-            return;
+        try {
+            const data = await createPolarCheckout();
+            window.location.href = data.checkoutUrl;
+        } catch (error) {
+            console.error("checkout error:", error);
         }
-
-        const data = await res.json();
-        window.location.href = data.checkoutUrl;
     };
 
     return (
