@@ -281,6 +281,63 @@
     overflow: hidden;
 }
 
+/* ── 크레딧 충전 카드 ── */
+.creditCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--accent-glow-md);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.creditText {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.creditTitle {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.creditDesc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.creditChargeBtn {
+    flex-shrink: 0;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    background: var(--accent);
+    color: var(--accent-contrast, #fff);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 8px 18px var(--accent-glow-sm);
+}
+
+.creditChargeBtn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+}
+
+.creditChargeBtn:active {
+    transform: translateY(0);
+    opacity: 0.85;
+}
+
 /* ── 모바일 ── */
 @media (max-width: 600px) {
     .page {

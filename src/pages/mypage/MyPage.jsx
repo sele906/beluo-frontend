@@ -62,6 +62,20 @@ function MyPage() {
                 </button>
             </div>
 
+            {/* ── 크레딧 충전 카드 ── */}
+            <div className={classes.creditCard}>
+                <div className={classes.creditText}>
+                    <span className={classes.creditTitle}>크레딧 충전</span>
+                    <span className={classes.creditDesc}>
+                        AI 캐릭터와 더 오래 대화할 수 있어요.
+                    </span>
+                </div>
+
+                <button className={classes.creditChargeBtn} onClick={handlePolarCheckout}>
+                    충전하기
+                </button>
+            </div>
+
             {/* ── 내 캐릭터 미리보기 ── */}
             <PreviewSection
                 title="내 캐릭터"
@@ -91,9 +105,6 @@ function MyPage() {
                 <button className={classes.menuItem} onClick={() => navigate('/mypage/inquiry')}>
                     <span>문의사항</span>
                     <BiChevronRight className={classes.menuChevron} />
-                </button>
-                <button onClick={handlePolarCheckout}>
-                    Buy Credits
                 </button>
             </div>
 
