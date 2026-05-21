@@ -29,7 +29,7 @@ const CREDIT_PRODUCTS = [
     },
 ];
 
-function MypageCredit() {
+function MyPageCredit() {
     const navigate = useNavigate();
     const [loadingKey, setLoadingKey] = useState(null);
 
@@ -99,4 +99,4 @@ function MypageCredit() {
     );
 }
 
-export default MypageCredit;
+export default MyPageCredit;
