@@ -27,17 +27,6 @@ function MyPage() {
 
     if (!user) return <Outlet />
 
-    
-
-    const handlePolarCheckout = async () => {
-        try {
-            const data = await createPolarCheckout();
-            window.location.href = data.checkoutUrl;
-        } catch (error) {
-            console.error("checkout error:", error);
-        }
-    };
-
     return (
         <div className={classes.page}>
 
@@ -45,35 +34,28 @@ function MyPage() {
 
             {/* ── 프로필 카드 ── */}
             <div className={classes.profileCard}>
-                <div className={classes.avatar}>
-                    <Avatar
-                        filePath={user.userImgUrl}
-                        name={user.name}
-                        size={128}
-                    />
-                </div>
                 <div className={classes.profileInfo}>
-                    <span className={classes.name}>{user.name}</span>
-                    <span className={classes.email}>{user.email}</span>
-                    <span className={classes.creditBadge}>{(user.credit ?? 0).toLocaleString()} 크레딧</span>
+                    <div className={classes.avatar}>
+                        <Avatar
+                            filePath={user.userImgUrl}
+                            name={user.name}
+                            size={128}
+                        />
+                    </div>
+                    <div className={classes.info}>
+                        <span className={classes.name}>{user.name}</span>
+                        <span className={classes.email}>{user.email}</span>
+                        <span className={classes.creditBadge}>{(user.credit ?? 0).toLocaleString()} 크레딧</span>
+                    </div>
+                    <button className={classes.creditChargeBtn} onClick={() => navigate('/mypage/credit')}>
+                        충전하기
+                    </button>
                 </div>
-                <button className={classes.editBtn} onClick={() => navigate('/mypage/profile')}>
-                    회원정보 수정
-                </button>
-            </div>
-
-            {/* ── 크레딧 충전 카드 ── */}
-            <div className={classes.creditCard}>
-                <div className={classes.creditText}>
-                    <span className={classes.creditTitle}>크레딧 충전</span>
-                    <span className={classes.creditDesc}>
-                        AI 캐릭터와 더 오래 대화할 수 있어요.
-                    </span>
+                <div className={classes.profileEdit}>
+                    <button className={classes.editBtn} onClick={() => navigate('/mypage/profile')}>
+                        회원정보 수정
+                    </button>
                 </div>
-
-                <button className={classes.creditChargeBtn} onClick={handlePolarCheckout}>
-                    충전하기
-                </button>
             </div>
 
             {/* ── 내 캐릭터 미리보기 ── */}

@@ -12,6 +12,7 @@ import Create from "../pages/create/Create";
 
 import MyPage from "../pages/mypage/MyPage";
 import MyPageProfile from "../pages/mypage/MyPageProfile";
+import MyPageCredit from "../pages/mypage/MyPageCredit";
 import MyPageCharacters from "../pages/mypage/MyPageCharacters";
 import MyPageCharactersEdit from "../pages/mypage/MyPageCharactersEdit";
 import MyPageLiked from "../pages/mypage/MyPageLiked";
@@ -64,6 +65,8 @@ const Router = createBrowserRouter([
                 ]},
 
                 { path: '/mypage/profile', element: <MyPageProfile /> },
+
+                { path: '/mypage/credit', element: <MyPageCredit /> },
 
                 { path: '/mypage/characters', element: <MyPageCharacters />, children: [
                     {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}

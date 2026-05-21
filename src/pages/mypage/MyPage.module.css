@@ -20,12 +20,18 @@
 /* ── 프로필 카드 ── */
 .profileCard {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    flex-direction: column;
+    gap: 16px;
     padding: 24px 28px;
     background: var(--surface-2);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
+}
+
+.profileInfo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .avatar {
@@ -38,7 +44,7 @@
     font-size: 24px;
 }
 
-.profileInfo {
+.info {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -63,7 +69,6 @@
     text-overflow: ellipsis;
 }
 
-
 .creditBadge {
     display: inline-flex;
     align-items: center;
@@ -78,9 +83,13 @@
     margin-top: 2px;
 }
 
+.profileEdit {
+    display: flex;
+}
+
 .editBtn {
-    flex-shrink: 0;
-    padding: 8px 18px;
+    flex: 1;
+    padding: 9px 18px;
     background: transparent;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -89,7 +98,6 @@
     font-weight: 500;
     cursor: pointer;
     transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    white-space: nowrap;
 }
 
 .editBtn:hover {
@@ -281,38 +289,6 @@
     overflow: hidden;
 }
 
-/* ── 크레딧 충전 카드 ── */
-.creditCard {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 18px 22px;
-    background: linear-gradient(135deg, var(--surface-2), var(--surface));
-    border: 1px solid var(--accent-glow-md);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-}
-
-.creditText {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
-}
-
-.creditTitle {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.creditDesc {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.4;
-}
-
 .creditChargeBtn {
     flex-shrink: 0;
     border: none;
@@ -348,7 +324,6 @@
     .profileCard {
         padding: 18px 20px;
         gap: 14px;
-        flex-wrap: wrap;
     }
 
     .avatar {
@@ -359,12 +334,6 @@
 
     .name {
         font-size: 16px;
-    }
-
-    .editBtn {
-        width: 100%;
-        padding: 10px;
-        text-align: center;
     }
 
     .section {

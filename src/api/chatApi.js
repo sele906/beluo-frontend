@@ -251,7 +251,10 @@ export async function updateModel(model) {
 
 // ─── payment ──────────────────────────────────────────────
 
-export async function createPolarCheckout() {
-  const res = await api.post("/payment/polar/checkout");
-  return res.data;
+export async function createPolarCheckout(packageKey) {
+    const res = await api.post("/payment/polar/checkout", {
+        packageKey,
+    });
+
+    return res.data;
 }
