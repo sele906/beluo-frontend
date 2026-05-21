@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPolarCheckout } from "../../api/chatApi";
 import { BiLeftArrowAlt } from "react-icons/bi";
-import classes from "./MypageCredit.module.css";
+import classes from "./MyPageCredit.module.css";
 
 const CREDIT_PRODUCTS = [
     {
