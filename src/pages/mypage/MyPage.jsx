@@ -1,12 +1,14 @@
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getMypageOverview, createPolarCheckout} from '../../api/chatApi';
+import { useAuth } from '../../hook/AuthContext';
 import Avatar from '../../components/common/Avatar';
 import { BiChevronRight, BiRightArrowAlt } from 'react-icons/bi';
 import classes from './MyPage.module.css';
 
 function MyPage() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { setAdmin } = useAuth();
     const [user, setUser] = useState(null);
     const [myCharacters, setMyCharacters] = useState(null);
     const [likedCharacters, setLikedCharacters] = useState(null);
@@ -18,6 +20,7 @@ function MyPage() {
                 setUser(data.info);
                 setMyCharacters(data.created);
                 setLikedCharacters(data.liked);
+                setAdmin(data.info.role === "ADMIN");
             } catch (error) {
                 console.error("유저 정보 불러오기 실패:", error);
             }
@@ -47,9 +50,11 @@ function MyPage() {
                         <span className={classes.email}>{user.email}</span>
                         <span className={classes.creditBadge}>{(user.credit ?? 0).toLocaleString()} 크레딧</span>
                     </div>
-                    <button className={classes.creditChargeBtn} onClick={() => navigate('/mypage/credit')}>
-                        충전하기
-                    </button>
+                    {user.role === "ADMIN" && (
+                        <button className={classes.creditChargeBtn} onClick={() => navigate('/mypage/credit')}>
+                            충전하기
+                        </button>
+                    )}
                 </div>
                 <div className={classes.profileEdit}>
                     <button className={classes.editBtn} onClick={() => navigate('/mypage/profile')}>

@@ -30,6 +30,7 @@ import OAuth2Join from "../pages/auth/OAuth2Join";
 import CharacterDetailModal, {loader as characterDetailLoader} from "../components/common/CharacterDetailModal";
 import PrivateRoute from "../components/common/PrivateRoute";
 import UserOnlyRoute from "../components/common/UserOnlyRoute";
+import AdminOnlyRoute from "../components/common/AdminOnlyRoute";
 
 const Router = createBrowserRouter([
     {path: '/', element: <Layout />, loader: async () => ({
@@ -66,7 +67,9 @@ const Router = createBrowserRouter([
 
                 { path: '/mypage/profile', element: <MyPageProfile /> },
 
-                { path: '/mypage/credit', element: <MyPageCredit /> },
+                { element: <AdminOnlyRoute />, children: [
+                    { path: '/mypage/credit', element: <MyPageCredit /> },
+                ]},
 
                 { path: '/mypage/characters', element: <MyPageCharacters />, children: [
                     {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}

@@ -21,8 +21,8 @@ function Login() {
         };
 
         try {
-            await loginApi(data);
-            login();
+            const res = await loginApi(data);
+            login(res.role);
             navigate("/");
         } catch (e) {
             toast.error(e.response?.data || "이메일 또는 비밀번호가 올바르지 않습니다.");
@@ -31,8 +31,8 @@ function Login() {
 
     const handleGuestLogin = async () => {
         try {
-            await guestLoginApi();
-            guestLogin();
+            const data = await guestLoginApi();
+            guestLogin(data.role);
             navigate("/");
         } catch (e) {
             toast.error("게스트 로그인에 실패했습니다.");

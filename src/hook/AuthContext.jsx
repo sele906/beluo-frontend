@@ -10,6 +10,9 @@ export function AuthProvider({ children }) {
     const [isGuest, setIsGuest] = useState(
         localStorage.getItem("isGuest") === "true"
     );
+    const [isAdmin, setIsAdmin] = useState(
+        localStorage.getItem("isAdmin") === "true"
+    );
 
     useEffect(() => {
         if (!isLoggedIn) return;
@@ -21,29 +24,46 @@ export function AuthProvider({ children }) {
         });
     }, []);
 
-    const login = () => {
+    const login = (role) => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.removeItem("isGuest");
         setIsLoggedIn(true);
         setIsGuest(false);
+        setAdmin(role === "ADMIN");
     };
 
-    const guestLogin = () => {
+    const guestLogin = (role) => {
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("isGuest", "true");
+        const guest = role === "GUEST";
+        if (guest) {
+            localStorage.setItem("isGuest", "true");
+        } else {
+            localStorage.removeItem("isGuest");
+        }
         setIsLoggedIn(true);
-        setIsGuest(true);
+        setIsGuest(guest);
+    };
+
+    const setAdmin = (value) => {
+        if (value) {
+            localStorage.setItem("isAdmin", "true");
+        } else {
+            localStorage.removeItem("isAdmin");
+        }
+        setIsAdmin(value);
     };
 
     const logout = () => {
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("isGuest");
+        localStorage.removeItem("isAdmin");
         setIsLoggedIn(false);
         setIsGuest(false);
+        setIsAdmin(false);
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, isGuest, login, guestLogin, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, isGuest, isAdmin, login, guestLogin, setAdmin, logout }}>
             {children}
         </AuthContext.Provider>
     );
