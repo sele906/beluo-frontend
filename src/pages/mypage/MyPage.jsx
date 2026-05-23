@@ -50,11 +50,9 @@ function MyPage() {
                         <span className={classes.email}>{user.email}</span>
                         <span className={classes.creditBadge}>{(user.credit ?? 0).toLocaleString()} 크레딧</span>
                     </div>
-                    {user.role === "ADMIN" && (
-                        <button className={classes.creditChargeBtn} onClick={() => navigate('/mypage/credit')}>
-                            충전하기
-                        </button>
-                    )}
+                    <button className={classes.creditChargeBtn} onClick={() => navigate('/mypage/credit')}>
+                        충전하기
+                    </button>
                 </div>
                 <div className={classes.profileEdit}>
                     <button className={classes.editBtn} onClick={() => navigate('/mypage/profile')}>

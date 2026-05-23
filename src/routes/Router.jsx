@@ -67,9 +67,7 @@ const Router = createBrowserRouter([
 
                 { path: '/mypage/profile', element: <MyPageProfile /> },
 
-                { element: <AdminOnlyRoute />, children: [
-                    { path: '/mypage/credit', element: <MyPageCredit /> },
-                ]},
+                { path: '/mypage/credit', element: <MyPageCredit /> },
 
                 { path: '/mypage/characters', element: <MyPageCharacters />, children: [
                     {path: 'character/:id', element: <CharacterDetailModal />, loader: characterDetailLoader}
