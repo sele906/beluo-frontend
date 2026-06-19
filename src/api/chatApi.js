@@ -258,3 +258,13 @@ export async function createPolarCheckout(packageKey) {
 
     return res.data;
 }
+
+// ─── notification ────────────────────────────────────────
+
+export async function sendToken(token) {
+    const res = await api.post("/fcm/token", {
+        token,
+    });
+
+    return res.data;
+}
