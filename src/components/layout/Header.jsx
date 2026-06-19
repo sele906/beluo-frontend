@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BiSearch, BiX, BiSolidUser, BiUser, BiLogIn, BiLogOut } from "react-icons/bi";
+import { BiSearch, BiX, BiSolidUser, BiUser, BiLogIn, BiLogOut, BiBell } from "react-icons/bi";
 import { useAuth } from "../../hook/AuthContext";
 import { logout as logoutApi } from "../../api/chatApi";
+import { requestPermissionAndGetToken } from "../../api/firebase";
+import { toast } from "sonner";
 
 import classes from "./Header.module.css";
 import logo from "../../assets/logo.svg";
@@ -35,11 +37,19 @@ function Header() {
         }
     };
 
+    const handleEnableNotification = async () => {
+        const token = await requestPermissionAndGetToken();
+        toast.info("알림이 설정되었습니다.", {
+            duration: 1000, 
+        });
+    };
+
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const closeMenu = () => setUserMenuOpen(false);
     const menuItems = [
+        { icon: <BiBell />, label: "알림 켜기", onClick: handleEnableNotification },
         ...(!isGuest ? [{ to: "/mypage", icon: <BiUser />, label: "마이메뉴" }] : []),
-        { icon: <BiLogOut />, label: "로그아웃", onClick: handleLogout },
+        { icon: <BiLogOut />, label: "로그아웃", onClick: handleLogout }
     ];
 
     return (

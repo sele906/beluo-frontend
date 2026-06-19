@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { getCharacterOverviewList } from "../../api/chatApi";
-import { requestPermissionAndGetToken } from "../../api/firebase";
 import { Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../../hook/AuthContext";
 import CharacterCard from "../../components/common/CharacterCard";
@@ -43,11 +42,6 @@ function Main() {
 
     const showLiked = isLoggedIn && characterList.liked?.length > 0;
 
-    const handleEnableNotification = async () => {
-        const token = await requestPermissionAndGetToken();
-        // 지금은 콘솔에서 토큰 복사가 목적
-    };
-
     return (
         <>
             <Outlet />
@@ -74,10 +68,6 @@ function Main() {
                 <Section title="🔥 요즘 뜨는 캐릭터" characters={characterList.popular ?? []} />
 
                 <Section title="✨ 신규 캐릭터" characters={characterList.recent ?? []} />
-
-                <button onClick={handleEnableNotification}>
-                    알림 켜기
-                </button>
             </div>
         </>
     );
