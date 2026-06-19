@@ -12,21 +12,20 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// 알림 수신
+// 알림 수신 tag로 중복방지
 messaging.onBackgroundMessage((payload) => {
   console.log('백그라운드 알림 수신:', payload);
 
-  const { title, body, sessionId } = payload.data ?? {};
+  const title = payload.notification?.title || payload.data?.title || 'Beluo 알림';
+  const body = payload.notification?.body || payload.data?.body || '';
+  const sessionId = payload.data?.sessionId;
 
-  self.registration.showNotification(
-    title ?? 'Beluo 알림',
-    {
-      body: body ?? '',
-      requireInteraction: false,
-      tag: sessionId,
-      data: { sessionId: sessionId },
-    }
-  );
+  self.registration.showNotification(title, {
+    body: body,
+    tag: sessionId,  
+    renotify: false,
+    data: { sessionId: sessionId },
+  });
 });
 
 // 클릭 핸들러 — 최상위 레벨에 독립적으로
@@ -36,14 +35,14 @@ self.addEventListener('notificationclick', (event) => {
 
   event.notification.close();
 
-  const sessionId = event.notification.data?.sessionId;
+  const sessionId = event.notification.data?.sessionId || event.notification.data?.FCM_MSG?.data?.sessionId;
+
   if (!sessionId) {
     console.error('sessionId가 없습니다.');
     return;
   }
 
-  const targetPath = `/chat/${sessionId}`;
-  const targetUrl = new URL(targetPath, self.location.origin).href;
+  const targetUrl = new URL(`/chat/${sessionId}`, self.location.origin).href;
 
   event.waitUntil(
     self.clients
@@ -53,14 +52,12 @@ self.addEventListener('notificationclick', (event) => {
       })
       .then((clientList) => {
 
-        // 이미 정확한 채팅방이 열려 있으면 포커스
         for (const client of clientList) {
-          if (client.url.includes(`${sessionId}`) && "focus" in client) {
+          if (client.url === targetUrl && "focus" in client) {
             return client.focus();
           }
         }
 
-        // 해당 페이지가 없으면 새 창/탭 열기
         if (self.clients.openWindow) {
           return self.clients.openWindow(targetUrl);
         }
