@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
-import {sendToken} from "./chatApi";
+import { getMessaging, getToken, deleteToken as fcmDeleteToken} from "firebase/messaging";
+import {sendToken, deleteToken} from "./chatApi";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -15,26 +15,40 @@ const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 // 권한 요청 + 토큰 발급
-export async function requestPermissionAndGetToken() {
+export async function enableNotification() {
   try {
     const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-      console.log("❌ 알림 권한 거부됨");
-      return null;
-    }
+    if (permission !== "granted") return null;
 
     const token = await getToken(messaging, {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
     });
 
     if (token) {
-      const result = await sendToken(token);
-      console.log(result);
+      await sendToken(token);
+      return true;
     }
-    return token;
 
   } catch (err) {
     console.error("토큰 발급 실패:", err);
     return null;
+  }
+}
+
+//알림 끄기 - 현재 토큰 db 삭제 및 브라우저 토큰 폐기 
+export async function disableNotification() {
+  try {
+    const token = await getToken(messaging, {
+      vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+    });
+
+    if (token) {
+      await deleteToken(token); //db 삭제
+      await fcmDeleteToken(messaging); //브라우저의 fcm 토큰 자체를 폐기
+    }
+    return true;
+  } catch (err) {
+    console.error("알림 해제 실패:", err);
+    return false;
   }
 }

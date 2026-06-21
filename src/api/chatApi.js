@@ -268,3 +268,9 @@ export async function sendToken(token) {
 
     return res.data;
 }
+
+export async function deleteToken(token) {
+    const res = await api.delete("/fcm/token", {
+        data: {token},
+    });
+}
