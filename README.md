@@ -21,6 +21,10 @@ AI 캐릭터 채팅 플랫폼 Beluo의 프론트엔드입니다.<br/>
 
 <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
 
+**Notification**
+
+<img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black"> <img src="https://img.shields.io/badge/rabbitmq-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white">
+
 ---
 
 ## 실행 방법
@@ -47,6 +51,8 @@ cp .env.example .env
 ```
 src/
 ├── api/          
+│   ├── chatApi.js
+│   └── firebase.js            
 ├── components/  
 │   ├── layout/   
 │   ├── chat/     
@@ -135,6 +141,15 @@ src/
 - Polar 결제 연동을 통한 크레딧 충전
 - 3가지 크레딧 패키지 선택
 - 결제 완료 후 크레딧 자동 지급
+
+### 알림
+
+**푸시 알림 (FCM + RabbitMQ)**
+
+- 알림 권한 요청 및 FCM 토큰 발급
+- 알림 켜기 / 끄기
+- 백그라운드 알림 수신
+- 알림 클릭 시 해당 채팅방으로 이동
 
 ---
 
